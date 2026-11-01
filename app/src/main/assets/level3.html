@@ -4350,18 +4350,18 @@ scene.fog.color.copy(envCur.fog);
 scene.fog.density=envCur.density;
 bgCol.copy(envCur.bg);
 const u=compMat.uniforms;
-u.uNoise.value=clamp(envCur.noise+glitchEnv*0.30+(fever?0.05:0)+WR.getSG()*0.05,0,0.88);
-u.uAberr.value=envCur.aberr+glitchEnv*0.010+WR.getSG()*0.0035;
-u.uGlitch.value=0.04+glitchEnv+WR.getSG()*0.08;
+u.uNoise.value=clamp(envCur.noise*0.55+glitchEnv*0.30+(fever?0.05:0)+WR.getSG()*0.05,0,0.88);
+u.uAberr.value=envCur.aberr*0.55+glitchEnv*0.010+WR.getSG()*0.0035;
+u.uGlitch.value=0.02+glitchEnv+WR.getSG()*0.08;
 u.uInvert.value=(invertFlash&&glitchEnv>0.45)?(Math.random()<0.5?0.85:0):0;
 u.uFadeB.value=fadeB;
 u.uFadeW.value=fadeW;
 u.uSolar.value=solar;
-u.uTape.value=0.22+glitchEnv*0.9+(fever?0.15:0);
+u.uTape.value=0.11+glitchEnv*0.9+(fever?0.15:0);
 u.uSolarPal.value=feverPal;
 u.uBloom.value=envCur.bloom+glitchEnv*0.10+(fever?0.04:0);
-u.uGhost.value=envCur.ghost+(fever?0.05:0)+glitchEnv*0.06;
-u.uDof.value=envCur.dof+solar*0.15;
+u.uGhost.value=envCur.ghost*0.55+(fever?0.05:0)+glitchEnv*0.06;
+u.uDof.value=envCur.dof*0.65+solar*0.15;
 u.uWarm.value=envCur.warm+solar*0.10;
 u.uWash.value=envCur.wash;
 }
@@ -4743,7 +4743,8 @@ showWhisper('lo recuperaste');
 if(dreamsCollected>=6&&!completed&&collapseAt===0){
 collapseAt=sagaSeconds()+2.0;
 if(TERROR)TERROR.beginFinalRec();
-announce('SEÑAL INESTABLE','algo se está rompiendo');
+if(item.data.ent||origin)showWhisper('algo se está rompiendo');
+else announce('SEÑAL INESTABLE','algo se está rompiendo');
 }
 }
 }
