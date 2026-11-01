@@ -42,13 +42,13 @@ background-position:24% 30%,66% 24%,46% 52%,80% 48%,12% 64%,58% 10%;background-r
 to{background-position:24% 54%,66% 50%,46% 80%,80% 74%,12% 90%,58% 38%;}}
 #blood .wash{position:absolute;inset:0;opacity:0;background:radial-gradient(ellipse at 50% 50%,rgba(90,0,0,.5),rgba(25,0,0,.92) 100%);transition:opacity 1.3s ease-out;}
 #blood.show .wash{opacity:1;}
-#scanlines{ position:fixed; inset:0; z-index:12; pointer-events:none; background:repeating-linear-gradient(0deg, rgba(0,0,0,.07) 0 1px, transparent 1px 3px); mix-blend-mode:multiply; }
+#scanlines{ position:fixed; inset:0; z-index:12; pointer-events:none; background:repeating-linear-gradient(0deg, rgba(0,0,0,.065) 0 1px, transparent 1px 4px); mix-blend-mode:multiply; }
 #signal-film{
-position:fixed; inset:-5%; z-index:13; pointer-events:none; opacity:.14; transition:opacity .5s ease;
+position:fixed; inset:-5%; z-index:13; pointer-events:none; opacity:.13;
 background:
-radial-gradient(ellipse at 50% 44%, transparent 28%, rgba(0,0,0,.08) 58%, rgba(0,0,0,.34) 100%),
-repeating-linear-gradient(0deg, rgba(255,255,255,.012) 0 1px, transparent 1px 5px),
-repeating-linear-gradient(90deg, rgba(255,0,180,.009) 0 1px, transparent 1px 7px);
+radial-gradient(ellipse at 50% 44%, transparent 28%, rgba(0,0,0,.08) 58%, rgba(0,0,0,.68) 100%),
+repeating-linear-gradient(0deg, rgba(255,255,255,.025) 0 1px, transparent 1px 5px),
+repeating-linear-gradient(90deg, rgba(255,0,180,.018) 0 1px, transparent 1px 7px);
 mix-blend-mode:screen;
 transform:translate3d(0,0,0);
 }
@@ -60,6 +60,21 @@ body.playing #signal-film{ animation:signalDrift 8s steps(7,end) infinite; }
 63%{ transform:translate3d(-.2%,.3%,0) scale(1.02); }
 81%{ transform:translate3d(.45%,0,0) scale(1.026); }
 }
+/* [v3.12] CAPA DE INTERFERENCIA (muerte sin sangre): estática de señal ligera */
+#sigdeath{ position:fixed; inset:0; z-index:15; pointer-events:none; opacity:0; transition:opacity .35s linear;
+background:
+repeating-linear-gradient(0deg, rgba(255,255,255,.09) 0 1px, transparent 1px 3px),
+repeating-linear-gradient(90deg, rgba(255,255,255,.04) 0 2px, transparent 2px 7px),
+radial-gradient(ellipse at 50% 40%, rgba(0,0,0,0) 20%, rgba(0,0,0,.55) 100%);
+mix-blend-mode:screen; }
+#sigdeath.on{ animation:sigJitter .16s steps(2,end) infinite; }
+@keyframes sigJitter{ 0%{ transform:translate3d(0,0,0) } 50%{ transform:translate3d(-.4%,.35%,0) } 100%{ transform:translate3d(.35%,-.3%,0) } }
+#sigdeath.loss{ mix-blend-mode:normal; background:
+repeating-linear-gradient(0deg, rgba(255,255,255,.16) 0 1px, transparent 1px 2px),
+repeating-linear-gradient(90deg, rgba(255,255,255,.07) 0 2px, transparent 2px 5px),
+radial-gradient(ellipse at 50% 50%, rgba(0,0,0,.25) 0%, rgba(0,0,0,.92) 100%); }
+#death-overlay{ opacity:1; transition:opacity .9s ease-out; }
+#death-overlay.fading{ opacity:0; }
 #ui-layer{ position:absolute; inset:0; z-index:10; pointer-events:none; }
 #crosshair{ position:absolute; top:50%; left:50%; width:8px; height:8px; background:rgba(0,255,247,.85); transform:translate(-50%,-50%); border-radius:50%; box-shadow:0 0 8px #ff2bd6, 0 0 2px #fff; opacity:.85; }
 #touch-left,#touch-right{ position:absolute; top:0; height:100%; width:50%; pointer-events:auto; }
@@ -110,17 +125,6 @@ pointer-events:none; opacity:0; font-style:italic; z-index:15;
 #ann-sub{ margin-top:10px; font-size:clamp(11px,2vw,15px); letter-spacing:5px; color:#9fe8dd; }
 .overlay{ position:fixed; inset:0; z-index:60; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; background:rgba(2,2,6,.82); color:#fff; }
 .hidden{ display:none !important; }
-#canvas-container{transition:opacity 1.1s ease,filter 1.1s ease;}
-#death-overlay{opacity:0;transition:opacity .75s ease;}
-body.death-corrupt #signal-film{opacity:.94;background:repeating-linear-gradient(0deg,rgba(255,255,255,.16) 0 1px,transparent 1px 3px),repeating-linear-gradient(90deg,rgba(255,43,214,.12) 0 2px,transparent 2px 7px),radial-gradient(ellipse at center,rgba(255,255,255,.08),rgba(0,0,0,.88));animation:deathInterference .12s steps(2,end) infinite;}
-body.death-corrupt #scanlines{opacity:.65;}
-body.death-lost #canvas-container{opacity:0;filter:brightness(.08);}
-body.gameover #blood{display:none !important;}
-body.gameover-visible #death-overlay{opacity:1;}
-body.retrying #death-overlay{opacity:0;}
-body.retrying #signal-film{opacity:0;}
-body.retrying #scanlines{opacity:.07;}
-@keyframes deathInterference{0%{transform:translate3d(0,0,0);filter:contrast(1.1);}50%{transform:translate3d(-.4%,.15%,0);filter:contrast(1.8);}100%{transform:translate3d(.25%,-.1%,0);filter:contrast(1.25);}}
 .ov-title{ font-size:clamp(26px,6vw,48px); font-weight:bold; letter-spacing:10px; text-shadow:3px 0 var(--magenta), -3px 0 var(--cyan); filter:url(#dream-warp); }
 .ov-sub{ margin-top:16px; letter-spacing:4px; color:#9fe8dd; font-size:13px; }
 .ov-big{ font-size:clamp(40px,10vw,100px); font-weight:bold; letter-spacing:14px; position:relative; color:#fff; filter:url(#dream-warp); }
@@ -295,6 +299,7 @@ background:#0a0a12;border:1px solid var(--cyan);color:#fff}
 <div id="blood"><div class="wash"></div><div class="splats"></div><div class="drips"></div></div>
 <div id="scanlines"></div>
 <div id="signal-film"></div>
+<div id="sigdeath"></div>
 <div id="ui-layer">
 <div id="crosshair"></div>
 <div id="touch-left"></div>
@@ -1053,7 +1058,7 @@ const cvSignBeacon=genSign('EL FARO','la señal llama desde aquí',512,256);
 const cvSignBroken=genSign('THE BROKEN','esto no es un nivel',512,256);
 const cvSign404=genSign('404','REALIDAD NO ENCONTRADA',512,256);
 /* ========== 02 · PIPELINE ========== */
-const scene=new THREE.Scene();
+let scene=new THREE.Scene();
 const bgCol=new THREE.Color(0x150c26);
 scene.background=bgCol;
 scene.fog=new THREE.FogExp2(0x150c26,0.0060);
@@ -1107,11 +1112,11 @@ depthTest:false,depthWrite:false,
 uniforms:{
 tScene:{value:null},tBloom:{value:null},
 uTime:{value:0},uRes:{value:new THREE.Vector2(640,480)},
-uNoise:{value:0.09},uAberr:{value:0.00175},uGlitch:{value:0.025},
+uNoise:{value:0.09},uAberr:{value:0.0018},uGlitch:{value:0.02},
 uInvert:{value:0},uFadeB:{value:0},uFadeW:{value:0},
 uScan:{value:0.022},uVig:{value:0.50},
-uSolar:{value:0},uTape:{value:0.5},uSolarPal:{value:0},
-uBloom:{value:0.30},uGhost:{value:0.035},uDof:{value:0.18},uWarm:{value:0.45},uWash:{value:0}
+uSolar:{value:0},uTape:{value:0.25},uSolarPal:{value:0},
+uBloom:{value:0.30},uGhost:{value:0.035},uDof:{value:0.14},uWarm:{value:0.45},uWash:{value:0}
 },
 vertexShader:QUAD_VERT,
 fragmentShader:`
@@ -1663,14 +1668,14 @@ const e=new THREE.LineSegments(new THREE.EdgesGeometry(m.geometry),new THREE.Lin
 m.add(e);
 }
 if(opts.solid){
-colliders.box.push({minX:x-w/2,maxX:x+w/2,minZ:z-d/2,maxZ:z+d/2,top:y+h/2,bottom:y-h/2});
+colliders.box.push({minX:x-w/2+COFF.x,maxX:x+w/2+COFF.x,minZ:z-d/2+COFF.z,maxZ:z+d/2+COFF.z,top:y+h/2,bottom:y-h/2});
 }
 if(opts.platform){
-platforms.push({minX:x-w/2,maxX:x+w/2,minZ:z-d/2,maxZ:z+d/2,top:y+h/2});
+platforms.push({minX:x-w/2+COFF.x,maxX:x+w/2+COFF.x,minZ:z-d/2+COFF.z,maxZ:z+d/2+COFF.z,top:y+h/2});
 }
 return m;
 }
-function cylCol(x,z,r){colliders.cyl.push({x:x,z:z,r:r});}
+function cylCol(x,z,r){colliders.cyl.push({x:x+COFF.x,z:z+COFF.z,r:r});}
 function pyramid(r,h,x,z,mat,edgeCol){
 const g=new THREE.ConeGeometry(r,h,4);
 const m=new THREE.Mesh(g,mat);
@@ -1681,9 +1686,36 @@ if(edgeCol)m.add(new THREE.LineSegments(new THREE.EdgesGeometry(g,10),new THREE.
 cylCol(x,z,r*0.92);
 return m;
 }
+/* ============================================================
+   [v3.12] SEPARACIÓN FÍSICA ENTRE SECTORES (+50% de recorrido)
+   ------------------------------------------------------------
+   Medición v3.11 (centros): plaza(0,0) · sala(200,0) · ciudad(-200,0)
+   · monolitos(0,200)+(0,292) · void(0,-230) · laguna(0,430) · broken(0,-520).
+   v3.12 traslada cada sector en bloque (interiores intactos, sin reescalar
+   arquitectura) hasta estas distancias (+50%): sala(300,0), ciudad(-300,0),
+   monolitos(0,300)+(0,392), void(0,-345), laguna(0,645), broken(0,-780).
+   El offset se aplica UNA vez: la geometría entra en un grupo trasladado
+   (buildInZone) y los DATOS de colisión/suelo/islas/rampas lo reciben aquí.
+   ============================================================ */
+const ZOFF={spawn:[0,0],room:[100,0],city:[-100,0],gray:[0,100],red:[0,-115],lagoon:[0,215],broken:[0,-260]};
+let COFF={x:0,z:0};
+/* constantes finales del sector THE BROKEN (antes -470/-520/-545/-562) */
+const BRK_Z=-780,BRK_SPAWN_Z=-730,BRK_BEACON_X=-40,BRK_BEACON_Z=-805,BRK_EXIT_Z=-822,BRK_ZONE_Z=-680;
+function buildInZone(k,fn){
+const off=ZOFF[k]||[0,0];
+const g=new THREE.Group();
+g.name='sector-'+k;
+g.position.set(off[0],0,off[1]);
+scene.add(g);
+const prev=scene;
+COFF={x:off[0],z:off[1]};
+scene=g;
+try{fn();}finally{scene=prev;COFF={x:0,z:0};}
+return g;
+}
 function addRamp(minX,maxX,minZ,maxZ,axis,h0,h1,mat,thick){
 thick=thick||0.9;
-ramps.push({minX:minX,maxX:maxX,minZ:minZ,maxZ:maxZ,axis:axis,h0:h0,h1:h1});
+ramps.push({minX:minX+COFF.x,maxX:maxX+COFF.x,minZ:minZ+COFF.z,maxZ:maxZ+COFF.z,axis:axis,h0:h0,h1:h1});
 const cx=(minX+maxX)/2,cz=(minZ+maxZ)/2;
 const len=axis==='x'?(maxX-minX):(maxZ-minZ);
 const wid=axis==='x'?(maxZ-minZ):(maxX-minX);
@@ -1867,7 +1899,7 @@ makeCloud(-60,60,20,70);
 makeCloud(55,58,40,80);
 }
 function buildRoom(){
-islands.push({type:'r',minX:153,maxX:247,minZ:-55,maxZ:55});
+islands.push({type:'r',minX:253,maxX:347,minZ:-55,maxZ:55});
 const floor=new THREE.Mesh(new THREE.PlaneGeometry(94,110),M.roomFloor);
 floor.rotation.x=-Math.PI/2;floor.position.set(200,0.02,0);scene.add(floor);
 register404(floor);
@@ -1930,7 +1962,7 @@ floaty(ccb,0.3,1.1,0.5);
 flickerSign(cvSignSpawn,7,2.4,244.2,4.2,44,-Math.PI/2);
 }
 function buildCity(){
-islands.push({type:'c',x:-200,z:0,r:106});
+islands.push({type:'c',x:-300,z:0,r:106});
 const ground=new THREE.Mesh(new THREE.CircleGeometry(106,56),M.cityGround);
 ground.rotation.x=-Math.PI/2;ground.position.set(-200,0.01,0);scene.add(ground);
 register404(ground);
@@ -1967,7 +1999,7 @@ cylCol(-146,34,10.5);
 void lgB;
 }
 function buildGray(){
-islands.push({type:'c',x:0,z:200,r:92});
+islands.push({type:'c',x:0,z:300,r:92});
 const ground=new THREE.Mesh(new THREE.CircleGeometry(92,56),M.zig);
 ground.rotation.x=-Math.PI/2;ground.position.set(0,0.01,200);scene.add(ground);
 register404(ground);
@@ -2045,7 +2077,7 @@ m3.rotation.y=Math.PI/4+rand(-0.2,0.2);
 scene.add(m3);
 cylCol(m3.position.x,m3.position.z,w3*0.72);
 }
-islands.push({type:'c',x:0,z:292,r:66});
+islands.push({type:'c',x:0,z:392,r:66});
 const backGround=new THREE.Mesh(new THREE.CircleGeometry(69,56),M.zig);
 backGround.rotation.x=-Math.PI/2;backGround.position.set(0,0.012,292);scene.add(backGround);
 register404(backGround);
@@ -2076,7 +2108,7 @@ floaty(beaconOrb,0.5,0.9,0.7);
 flickerSign(cvSignBeacon,8,4,-12,3,300,0.5);
 }
 function buildRed(){
-islands.push({type:'c',x:0,z:-230,r:88});
+islands.push({type:'c',x:0,z:-345,r:88});
 const ground=new THREE.Mesh(new THREE.CircleGeometry(88,56),M.spot);
 ground.rotation.x=-Math.PI/2;ground.position.set(0,0.01,-230);scene.add(ground);
 register404(ground);
@@ -2142,7 +2174,7 @@ cylCol(sx,sz,1.8);
 }
 }
 function buildLagoon(){
-islands.push({type:'c',x:0,z:430,r:106});
+islands.push({type:'c',x:0,z:645,r:106});
 const waterMat=new THREE.ShaderMaterial({
 uniforms:{uTime:{value:0}},
 vertexShader:'varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }',
@@ -2268,7 +2300,7 @@ const farRing=new THREE.Mesh(new THREE.TorusGeometry(13,.4,8,40),new THREE.MeshB
 farRing.rotation.x=-Math.PI/2;farRing.position.set(24,0.5,508);scene.add(farRing);
 }
 function buildBroken(){
-islands.push({type:'c',x:0,z:-520,r:85});
+islands.push({type:'c',x:0,z:BRK_Z,r:85});
 const ground=new THREE.Mesh(new THREE.CircleGeometry(85,48),new THREE.MeshBasicMaterial({map:ctex(cvAcid,5,5)}));
 ground.rotation.x=-Math.PI/2;ground.position.set(0,0.01,-520);scene.add(ground);
 const rbMat=new THREE.MeshBasicMaterial({map:rbSmooth});
@@ -2320,40 +2352,63 @@ exG.material.color.set(0xffffff);
 }
 const portals=[];
 function buildPortals(){
-portals.push({x:0,z:-562,to:'exit'});
+portals.push({x:0,z:BRK_EXIT_Z,to:'exit'});
 }
 function buildBridges(){
-const segs=[
-[125,0,60,10],
-[-105,0,22,10],
-[0,108,10,26],
-[0,-128,10,66]
+/* [v3.12] puentes RE-AUTORIZADOS para la nueva separación. Cada vano une el
+   borde real de una isla con el de la siguiente; el tablero sigue a top
+   +0.06 sobre los discos de suelo (0.009-0.02), así que se ve entero.
+   MEDIDAS (centro → centro): plaza 112 | sala 253 | ciudad -194 | gray 208
+   | red -257 | laguna 539 | broken -695. */
+const decks=[
+/* x0,x1,z,w  (vanos horizontales) */
+[-190,-108,0,10],     /* plaza ↔ ciudad   (82 m) */
+[95,258,0,10],        /* plaza ↔ sala     (163 m) */
+/* z0,z1,x,w  (vanos verticales) */
+[106,212,0,10],       /* plaza ↔ monolitos (106 m) */
+[-260,-106,0,10],     /* plaza ↔ void rojo (154 m) */
+[440,545,0,10]        /* monolitos ↔ laguna (105 m) */
 ];
-/* [v3.10] puentes POR ENCIMA de los discos de suelo (0.009-0.02): antes el
-   tablero (top y=0) quedaba enterrado bajo la isla en los tramos de solape
-   y solo se veía el vano. Top a +0.06: el puente se ve ENTERO, con su filo
-   neón, apoyado sobre ambas islas. La altura de paso no cambia (islas= y 0). */
-for(const s of segs){
-const b=box(s[2],1,s[3],M.hazard,s[0],-0.44,s[1]);
+for(let i=0;i<decks.length;i++){
+const s=decks[i];
+let b,cx,cz,len;
+if(i<2){cx=(s[0]+s[1])/2;cz=s[2];len=s[1]-s[0];b=box(len,1,s[3],M.hazard,cx,-0.44,cz);}
+else{cx=s[2];cz=(s[0]+s[1])/2;len=s[1]-s[0];b=box(s[3],1,len,M.hazard,cx,-0.44,cz);}
+b.userData.bridge=true;
 b.add(new THREE.LineSegments(new THREE.EdgesGeometry(b.geometry),new THREE.LineBasicMaterial({color:0xffee00})));
+/* hitos de transición: postes neón cada ~34 m a ambos lados del tablero */
+const n=Math.max(2,Math.round(len/34));
+for(let k=1;k<n;k++){
+const t=k/n;
+if(i<2){
+const px=s[0]+(s[1]-s[0])*t;
+box(0.5,7,0.5,M.hazard,px,3.5,cz-5.2);
+box(0.5,7,0.5,M.hazard,px,3.5,cz+5.2);
+}else{
+const pz=s[0]+(s[1]-s[0])*t;
+box(0.5,7,0.5,M.hazard,cx-5.2,3.5,pz);
+box(0.5,7,0.5,M.hazard,cx+5.2,3.5,pz);
+}
+}
 }
 islands.push(
-{type:'r',minX:95,maxX:155,minZ:-5,maxZ:5},
-{type:'r',minX:-116,maxX:-94,minZ:-5,maxZ:5},
-{type:'r',minX:-5,maxX:5,minZ:95,maxZ:121},
-{type:'r',minX:-5,maxX:5,minZ:-161,maxZ:-95}
+{type:'r',minX:-190,maxX:-108,minZ:-5,maxZ:5},
+{type:'r',minX:95,maxX:258,minZ:-5,maxZ:5},
+{type:'r',minX:-5,maxX:5,minZ:106,maxZ:212},
+{type:'r',minX:-5,maxX:5,minZ:-260,maxZ:-106},
+{type:'r',minX:-5,maxX:5,minZ:440,maxZ:545}
 );
 }
 function buildVoidDebris(){
 const neons=[0x00fff7,0xff2bd6,0xffee00,0xffffff];
 function blocked(x,z){
-const C=[[0,0,140],[-200,0,124],[0,200,110],[0,-230,102],[0,430,126],[0,-520,120]];
+const C=[[0,0,140],[-300,0,124],[0,300,110],[0,-345,102],[0,645,126],[0,BRK_Z,120]];
 for(const c of C)if(Math.hypot(x-c[0],z-c[1])<c[2])return true;
-if(Math.abs(x-125)<18&&Math.abs(z)<16)return true;
-if(Math.abs(x+105)<16&&Math.abs(z)<16)return true;
-if(Math.abs(x)<16&&Math.abs(z-108)<20)return true;
-if(Math.abs(x)<16&&Math.abs(z+128)<20)return true;
-if(Math.abs(x)<16&&Math.abs(z-310)<20)return true;
+if(Math.abs(x-176)<95&&Math.abs(z)<16)return true;
+if(Math.abs(x+149)<55&&Math.abs(z)<16)return true;
+if(Math.abs(x)<16&&Math.abs(z-159)<70)return true;
+if(Math.abs(x)<16&&Math.abs(z+183)<90)return true;
+if(Math.abs(x)<16&&Math.abs(z-492)<70)return true;
 return false;
 }
 let tries=0;
@@ -2377,25 +2432,18 @@ scene.add(m);
 floaty(m,0.1,2,0.25);
 }
 }
+/* [v3.12] posiciones ya trasladadas por ZOFF (+50% de separación) y
+   `ent` = entidad local que el sueño LIBERA (identidad explícita). */
 const dreamsData=[
-{id:1,name:'CASSETTE DORADO',  zone:'Plaza Neón',      pos:[-58,3.4,-78],  color:0xffee00},
-{id:2,name:'ESFERA DE ESTÁTICA',zone:'Sala Estática',  pos:[228,3.4,47],   color:0x00fff7},
-{id:3,name:'PRISMA DE NEÓN',   zone:'Ciudad Febril',   pos:[-238,3.4,-62], color:0xff2bd6},
-{id:4,name:'MONOLITO RAINBOW', zone:'Monolitos Grises',pos:[24,3.2,330],   color:0x39ff6a},
-{id:5,name:'NÚCLEO DEL VOID',  zone:'Void Rojo',       pos:[0,2.6,-305],   color:0xff2200},
-{id:6,name:'SOL VAPOR',        zone:'Laguna Vapor',    pos:[24,3.0,508],   color:0xff8af0}
+{id:1,name:'CASSETTE DORADO',  zone:'Plaza Neón',      pos:[-58,3.4,-78],  color:0xffee00,ent:'ella',      zk:'spawn'},
+{id:2,name:'ESFERA DE ESTÁTICA',zone:'Sala Estática',  pos:[328,3.4,47],   color:0x00fff7,ent:'patrullador',zk:'room'},
+{id:3,name:'PRISMA DE NEÓN',   zone:'Ciudad Febril',   pos:[-338,3.4,-62], color:0xff2bd6,ent:'ladron',    zk:'city'},
+{id:4,name:'MONOLITO RAINBOW', zone:'Monolitos Grises',pos:[24,3.2,430],   color:0x39ff6a,ent:'acechador', zk:'gray'},
+{id:5,name:'NÚCLEO DEL VOID',  zone:'Void Rojo',       pos:[0,2.6,-420],   color:0xff2200,ent:'corredor',  zk:'red'},
+{id:6,name:'SOL VAPOR',        zone:'Laguna Vapor',    pos:[24,3.0,723],   color:0xff8af0,ent:'merodeador',zk:'lagoon'}
 ];
 const dreamItems=[];
 let dreamsCollected=0;
-const DREAM_ENTITY={1:'ella',2:'patrullador',3:'ladron',4:'acechador',5:'corredor',6:'merodeador'};
-const DREAM_ENTITY_LABEL={ella:'A ELLA',patrullador:'AL PATRULLADOR ESTÁTICO',ladron:'AL LADRÓN OLVIDADO',acechador:'AL ACECHADOR',corredor:'AL CORREDOR DEL VACÍO',merodeador:'AL MERODEADOR DE LOS CIELOS'};
-function dreamRetained(entityKey){
-const dreamId=Object.keys(DREAM_ENTITY).find(function(id){return DREAM_ENTITY[id]===entityKey;});
-if(!dreamId)return false;
-const item=dreamItems.find(function(it){return it.data.id===+dreamId;});
-return !!(item&&item.collected);
-}
-function entityEligible(entityKey,homeZone){return curZone===homeZone||dreamRetained(entityKey);}
 /* [v3.9] visual de los sueños rehecho: octaedro wireframe + núcleo blanco
    que late + DOS anillos contrarrotantes + 6 motas que orbitan + halo.
    El HAZ vertical solo existe si llevas el MAPA DE ENSUEÑO recogido:
@@ -2431,7 +2479,7 @@ new THREE.MeshBasicMaterial({color:d.color,transparent:true,opacity:0,blending:T
 beam.position.set(d.pos[0],d.pos[1]+29,d.pos[2]);
 beam.userData.wrSkip=true;
 scene.add(beam);
-const item={data:d,mesh:mesh,grp:grp,inner:inner,ringA:ringA,ringB:ringB,motes:motes,beam:beam,glow:glowSp,collected:false,stolenBy:null,home:[d.pos[0],d.pos[1],d.pos[2]]};
+const item={data:d,mesh:mesh,grp:grp,inner:inner,ringA:ringA,ringB:ringB,motes:motes,beam:beam,glow:glowSp,collected:false,respawned:false,stolenBy:null,home:[d.pos[0],d.pos[1],d.pos[2]]};
 dreamItems.push(item);
 addAnim(function(t){
 if(mesh.visible){
@@ -2453,13 +2501,13 @@ glowSp.scale.set(dreamsBeaconOn?14:10,dreamsBeaconOn?14:10,1);
 });
 }
 }
-buildSpawn();
-buildRoom();
-buildCity();
-buildGray();
-buildRed();
-buildLagoon();
-buildBroken();
+buildInZone('spawn',buildSpawn);
+buildInZone('room',buildRoom);
+buildInZone('city',buildCity);
+buildInZone('gray',buildGray);
+buildInZone('red',buildRed);
+buildInZone('lagoon',buildLagoon);
+buildInZone('broken',buildBroken);
 buildBridges();
 buildPortals();
 buildVoidDebris();
@@ -3471,42 +3519,70 @@ panicPulse=Math.max(0,panicPulse-dt*5.5);
 }
 /* ========== 08 · ZONAS ========== */
 const ZONES={
-spawn:{name:'PLAZA NEÓN',sub:'todo respira aquí',fog:0x150c26,density:0.0060,noise:0.115,aberr:0.0035,respawn:[0,60],yaw:0,bloom:0.30,ghost:0.05,dof:0.25,warm:0.45},
-room:{name:'SALA ESTÁTICA',sub:'transmisión sin emisor',fog:0x000000,density:0.016,noise:0.11,aberr:0.0045,respawn:[168,0],yaw:-Math.PI/2,bloom:0.22,ghost:0.08,dof:0.30,warm:0.30},
-city:{name:'CIUDAD FEBRIL',sub:'¿alguna vez existió?',fog:0x2a0524,density:0.012,noise:0.165,aberr:0.0050,respawn:[-118,0],yaw:Math.PI/2,bloom:0.36,ghost:0.06,dof:0.28,warm:0.55},
-gray:{name:'MONOLITOS GRISES',sub:'silencio en blanco',fog:0xe9e9e9,density:0.011,noise:0.15,aberr:0.0025,respawn:[0,132],yaw:Math.PI,bg:0xf4f4f4,bloom:0.42,ghost:0.04,dof:0.42,warm:0.35},
-red:{name:'VOID ROJO',sub:'no mires atrás',fog:0x1a0303,density:0.014,noise:0.14,aberr:0.0060,respawn:[0,-172],yaw:0,bloom:0.26,ghost:0.10,dof:0.22,warm:0.18},
-lagoon:{name:'LAGUNA VAPOR',sub:'el sol nunca se pone',fog:0x87919e,density:0.0060,noise:0.13,aberr:0.0040,respawn:[0,366],yaw:Math.PI,bg:0x87919e,bloom:0.58,ghost:0.05,dof:0.52,warm:0.85},
-broken:{name:'THE BROKEN',sub:'el vertedero de los mundos',fog:0x000000,density:0.010,noise:0.40,aberr:0.008,respawn:null,bg:0x000000,bloom:0.50,ghost:0.14,dof:0.45,warm:0.15,wash:0.55},
-void:{name:'EL VACÍO',sub:'no deberías estar aquí',fog:0x010101,density:0.013,noise:0.15,aberr:0.0045,respawn:null,bloom:0.20,ghost:0.08,dof:0.30,warm:0.25}
+spawn:{name:'PLAZA NEÓN',sub:'todo respira aquí',fog:0x150c26,density:0.0060,noise:0.058,aberr:0.0018,respawn:[0,60],yaw:0,bloom:0.30,ghost:0.025,dof:0.13,warm:0.45},
+room:{name:'SALA ESTÁTICA',sub:'transmisión sin emisor',fog:0x000000,density:0.016,noise:0.055,aberr:0.0022,respawn:[268,0],yaw:-Math.PI/2,bloom:0.22,ghost:0.040,dof:0.15,warm:0.30},
+city:{name:'CIUDAD FEBRIL',sub:'¿alguna vez existió?',fog:0x2a0524,density:0.012,noise:0.083,aberr:0.0024,respawn:[-218,0],yaw:Math.PI/2,bloom:0.36,ghost:0.030,dof:0.14,warm:0.55},
+gray:{name:'MONOLITOS GRISES',sub:'silencio en blanco',fog:0xe9e9e9,density:0.011,noise:0.075,aberr:0.0013,respawn:[0,232],yaw:Math.PI,bg:0xf4f4f4,bloom:0.42,ghost:0.020,dof:0.21,warm:0.35},
+red:{name:'VOID ROJO',sub:'no mires atrás',fog:0x1a0303,density:0.014,noise:0.070,aberr:0.0028,respawn:[0,-287],yaw:0,bloom:0.26,ghost:0.050,dof:0.11,warm:0.18},
+lagoon:{name:'LAGUNA VAPOR',sub:'el sol nunca se pone',fog:0x87919e,density:0.0060,noise:0.065,aberr:0.0020,respawn:[0,581],yaw:Math.PI,bg:0x87919e,bloom:0.58,ghost:0.025,dof:0.26,warm:0.85},
+broken:{name:'THE BROKEN',sub:'el vertedero de los mundos',fog:0x000000,density:0.010,noise:0.200,aberr:0.0035,respawn:null,bg:0x000000,bloom:0.50,ghost:0.070,dof:0.22,warm:0.15,wash:0.55},
+void:{name:'EL VACÍO',sub:'no deberías estar aquí',fog:0x010101,density:0.013,noise:0.075,aberr:0.0022,respawn:null,bloom:0.20,ghost:0.040,dof:0.15,warm:0.25}
 };
 const SKY={
-spawn:{top:0xf8f7f2,hor:0xffffff,cl:0xf2f0e9,hi:0xffffff,cover:0.55,stretch:1.0},
-room:{top:0x777487,hor:0xc3bdcf,cl:0x918b9d,hi:0xd5d0dc,cover:0.30,stretch:1.0},
-city:{top:0x5e9fce,hor:0xb6e2f4,cl:0x75b4df,hi:0xd3f1ff,cover:0.60,stretch:1.0},
-gray:{top:0xbec3ca,hor:0xf1f2f3,cl:0xd6d9de,hi:0xffffff,cover:0.90,stretch:0.35},
-red:{top:0x26030b,hor:0x650b1b,cl:0x3a0710,hi:0x8a1728,cover:0.55,stretch:1.0},
-lagoon:{top:0xc67f83,hor:0xffd4bc,cl:0xe8a8a1,hi:0xffe6cf,cover:0.80,stretch:0.7},
-broken:{top:0x010103,hor:0x08070b,cl:0x020203,hi:0x111015,cover:0.15,stretch:1.0},
-void:{top:0x090a25,hor:0x24234f,cl:0x10112f,hi:0x39386e,cover:0.40,stretch:1.0}};
-const skyTgt={top:new THREE.Color(0xf8f7f2),hor:new THREE.Color(0xffffff),cl:new THREE.Color(0xf2f0e9),hi:new THREE.Color(0xffffff),cover:0.55,stretch:1.0};
+/* [v3.12] Cielo 3D con identidad por sector (mismos uniformes que v3.11:
+   uTop/uHor/uCl/uHi/uCover/uStretch). Transiciones suaves vía skyCur.lerp */
+spawn:{top:0xd9e6ff,hor:0xfff4ea,cl:0xf2e8ff,hi:0xffffff,cover:0.72,stretch:1.0},   /* blanco luminoso, irreal */
+room:{top:0x2c2434,hor:0x7a6d88,cl:0x1d1724,hi:0x9d90ab,cover:0.62,stretch:1.0},   /* violeta grisáceo */
+city:{top:0x2f74b8,hor:0xa8d8f2,cl:0x5a97c8,hi:0xe4f6ff,cover:0.66,stretch:1.0},   /* celeste */
+gray:{top:0xb4bbc6,hor:0xeff2f6,cl:0xa2aab5,hi:0xffffff,cover:0.88,stretch:0.4},   /* plateado */
+red:{top:0x1c0004,hor:0x5e0c14,cl:0x2a0207,hi:0x8e1824,cover:0.58,stretch:1.0},   /* carmesí oscuro */
+lagoon:{top:0x6d3a52,hor:0xffb98d,cl:0x8b4d63,hi:0xffdcbe,cover:0.80,stretch:0.75},   /* melocotón/rosado cálido */
+broken:{top:0x020203,hor:0x0b0b0e,cl:0x000000,hi:0x17171c,cover:0.14,stretch:1.0},   /* casi negro */
+void:{top:0x080b26,hor:0x1e2a63,cl:0x04060f,hi:0x30407f,cover:0.44,stretch:1.0}};   /* índigo oscuro */
+const skyTgt={top:new THREE.Color(0xd9e6ff),hor:new THREE.Color(0xfff4ea),cl:new THREE.Color(0xf2e8ff),hi:new THREE.Color(0xffffff),cover:0.72,stretch:1.0};
 const skyCur={top:skyTgt.top.clone(),hor:skyTgt.hor.clone(),cl:skyTgt.cl.clone(),hi:skyTgt.hi.clone(),cover:0.55,stretch:1.0};
 function zoneAt(x,z){
-/* [v3.9] las zonas exteriores se comprueban ANTES que la plaza: donde
-   los círculos ampliados se solapan (lente entre islas), manda la zona
-   propietaria del terreno, no la plaza central */
-if(x>153&&x<247&&z>-55&&z<55)return 'room';
-if(x>=262&&x<=290&&z>=-13&&z<=13)return 'room';
-if(Math.hypot(x+200,z)<106)return 'city';
-if(Math.hypot(x,z-200)<92||Math.hypot(x,z-292)<66)return 'gray';
-if(Math.hypot(x,z+230)<88)return 'red';
-if(Math.hypot(x,z-430)<106)return 'lagoon';
-if(Math.hypot(x,z+520)<85)return 'broken';
+/* [v3.12] Las zonas exteriores se comprueban ANTES que la plaza: donde los
+   círculos ampliados se solapan (lente entre islas), manda la zona
+   propietaria del terreno, no la plaza central.
+   Coordenadas ya TRASLADADAS por ZOFF (separación +50% entre sectores). */
+if(x>253&&x<347&&z>-55&&z<55)return 'room';
+if(x>=362&&x<=390&&z>=-13&&z<=13)return 'room';
+if(Math.hypot(x+300,z)<106)return 'city';
+if(Math.hypot(x,z-300)<92||Math.hypot(x,z-392)<66)return 'gray';
+if(Math.hypot(x,z+345)<88)return 'red';
+if(Math.hypot(x,z-645)<106)return 'lagoon';
+if(Math.hypot(x,z+780)<85)return 'broken';
 if(Math.hypot(x,z)<112)return 'spawn';
 return 'void';
 }
-const envTgt={fog:new THREE.Color(0x150c26),bg:new THREE.Color(0x150c26),density:0.0060,noise:0.18,aberr:0.0035,bloom:0.30,ghost:0.06,dof:0.25,warm:0.45,wash:0};
-const envCur={fog:new THREE.Color(0x150c26),bg:new THREE.Color(0x150c26),density:0.0060,noise:0.18,aberr:0.0035,bloom:0.30,ghost:0.06,dof:0.25,warm:0.45,wash:0};
+
+/* ============================================================
+   [v3.12] TRANSFORMACIÓN CARTOGRÁFICA ÚNICA (mundo → mapa)
+   El eje Z (el largo del nivel) va en horizontal y +X sube en pantalla.
+   Los límites encuadran TODO el mundo trasladado: x ∈ [-412,398],
+   z ∈ [-872,762]. Ningún sector queda recortado en el panel.
+   ============================================================ */
+const MAPB={minX:-412,maxX:398,minZ:-872,maxZ:762};
+const MAPPAD={l:26,r:26,t:34,b:40};
+function mapScaleFor(W,H){
+const s=Math.min((W-MAPPAD.l-MAPPAD.r)/(MAPB.maxZ-MAPB.minZ),(H-MAPPAD.t-MAPPAD.b)/(MAPB.maxX-MAPB.minX));
+return {s:s,cw:(MAPB.maxZ-MAPB.minZ)*s,ch:(MAPB.maxX-MAPB.minX)*s};
+}
+/* Sectores y puentes tal como se dibujan en el mapa (coordenadas de mundo). */
+const MAPZ=[
+{k:'spawn', n:'PLAZA NEÓN',      x:0,   z:0,    r:112,c:'#ff2bd6',side:1},
+{k:'room',  n:'SALA ESTÁTICA',   x:300, z:0,    r:0,  c:'#a2a7ae',side:1,rect:[94,110]},
+{k:'city',  n:'CIUDAD FEBRIL',   x:-300,z:0,    r:106,c:'#4fc8ff',side:-1},
+{k:'gray',  n:'MONOLITOS GRISES',x:0,   z:300,  r:92, c:'#cfd4da',side:1},
+{k:'grayB', n:'ISLA TRASERA',    x:0,   z:392,  r:66, c:'#9aa3ad',side:-1},
+{k:'red',   n:'VOID ROJO',       x:0,   z:-345, r:88, c:'#ff4040',side:1},
+{k:'lagoon',n:'LAGUNA VAPOR',    x:0,   z:645,  r:106,c:'#ffb073',side:-1},
+{k:'broken',n:'THE BROKEN',      x:0,   z:-780, r:85, c:'#a45cff',side:1}
+];
+const MAPBRI=[[-190,0,-108,0],[95,0,258,0],[0,106,0,212],[0,-260,0,-106],[0,440,0,545]];
+const envTgt={fog:new THREE.Color(0x150c26),bg:new THREE.Color(0x150c26),density:0.0060,noise:0.09,aberr:0.0018,bloom:0.30,ghost:0.03,dof:0.13,warm:0.45,wash:0};
+const envCur={fog:new THREE.Color(0x150c26),bg:new THREE.Color(0x150c26),density:0.0060,noise:0.09,aberr:0.0018,bloom:0.30,ghost:0.03,dof:0.13,warm:0.45,wash:0};
 /* ========== [PROGRESO / LOCALSTORAGE — BACKROOMS_SAVE_V1] ========== */
 const SAVE_KEY='BACKROOMS_SAVE_V1';
 function defaultSave(){
@@ -3773,29 +3849,6 @@ const deathStats=document.getElementById('death-stats');
 const btnRetry=document.getElementById('btn-retry');
 const bloodEl=document.getElementById('blood');
 const panicRedEl=document.getElementById('panic-red');
-let gameOverStarted=false,retryStarted=false,deathTransitionTimer=null;
-function showGameOver(attacker,statsHtml){
-if(gameOverStarted)return;
-gameOverStarted=true;dead=true;started=false;state='dead';
-if(deathTransitionTimer){clearTimeout(deathTransitionTimer);deathTransitionTimer=null;}
-const who=attacker||'ENTIDAD DESCONOCIDA';
-deathStats.innerHTML=statsHtml||('SUEÑOS · '+dreamsCollected+'/6<br>'+who+' · '+fmtTime(sagaSeconds()));
-const sub=document.getElementById('death-sub');
-if(sub)sub.textContent=(who==='ELLA'?'ELLA TE ALCANZÓ':who+' TE MATÓ')+' · EL SUEÑO NO TE SUELTA';
-bloodEl.classList.remove('show');panicRedEl.style.opacity='0';
-heart.stop(.4);chaseMusic.stop(.3);sfxEntityKill.stop(0);AudioFX.duckAmbient(false);
-document.body.classList.remove('playing');
-document.body.classList.add('death-corrupt','gameover');
-/* Interferencia gradual, pérdida de imagen y aparición suave de la interfaz. */
-deathTransitionTimer=setTimeout(function(){
-document.body.classList.add('death-lost');
-deathTransitionTimer=setTimeout(function(){
-deathOverlay.classList.remove('hidden');
-requestAnimationFrame(function(){document.body.classList.add('gameover-visible');});
-deathTransitionTimer=null;
-},900);
-},1200);
-}
 const post={uniforms:compMat.uniforms};
 function updateLivesHud(){
 elLives.textContent='⚡ ×'+lives;
@@ -3820,17 +3873,95 @@ const m=AudioFX.toggleMute();
 btnSound.textContent='SONIDO: '+(m?'NO':'SÍ');
 }
 btnSound.addEventListener('click',function(e){e.stopPropagation();toggleSound();});
-btnRetry.addEventListener('click',function(){
-if(gameOverStarted){
-if(retryStarted)return;
-retryStarted=true;
-document.body.classList.add('retrying');
-setTimeout(function(){deathOverlay.classList.add('hidden');retryLevel();},480);
-}else retryLevel();
-});
+btnRetry.addEventListener('click',function(){retryLevel();});
+/* ============================================================
+   [v3.12] SECUENCIA DE MUERTE POR INTERFERENCIA (sin sangre)
+   1) corrupción de señal  2) pérdida de señal  3) Game Over con fade-in
+   4) REINTENTAR: fade-out de UI/estática y vuelta progresiva del mundo.
+   Un único estado (SIGD) → ni temporizadores duplicados ni doble ejecución.
+   ============================================================ */
+const sigDeathEl=document.getElementById('sigdeath');
+const SIGD={active:false,phase:'off',t:0,who:'',revealed:false};
+function sigDeathBegin(who){
+if(SIGD.active)return false;              /* idempotente: una sola secuencia */
+SIGD.active=true;SIGD.phase='corrupt';SIGD.t=0;SIGD.who=who||'ELLA';SIGD.revealed=false;
+bloodEl.classList.remove('show');
+deathOverlay.classList.add('fading');
+if(sigDeathEl){sigDeathEl.classList.add('on');sigDeathEl.classList.remove('loss');sigDeathEl.style.opacity='0.10';}
+heart.setDying(true);heart.setThreat(1);
+chaseMusic.stop(0.3);
+AudioFX.duckAmbient(false);
+sfxEntityKill.stop(0);
+AudioFX.burst(0.5,0.2);
+AudioFX.blip(60,1.2,'sawtooth',0.09,24);
+firePulse(1,1,true);
+return true;
+}
+function sigDeathEnd(){
+SIGD.phase='gameover';SIGD.t=0;SIGD.revealed=true;
+dead=true;started=false;state='dead';
+document.body.classList.remove('playing');
+deathStats.innerHTML='SUEÑOS · '+dreamsCollected+'/6<br>'+SIGD.who+' · '+fmtTime(sagaSeconds());
+const dsub=document.getElementById('death-sub');
+if(dsub)dsub.textContent=SIGD.who+' TE INTERRUMPIÓ · LA SEÑAL NO TE SUELTA';
+deathOverlay.classList.remove('hidden');
+deathOverlay.classList.add('fading');
+/* fade-in suave real: dos frames para que el navegador aplique opacity 0 */
+requestAnimationFrame(function(){requestAnimationFrame(function(){deathOverlay.classList.remove('fading');});});
+if(sigDeathEl){sigDeathEl.classList.remove('loss');sigDeathEl.classList.add('on');sigDeathEl.style.opacity='0.16';}
+heart.setDying(false);
+}
+function sigDeathTick(dt){
+if(!SIGD.active)return;
+SIGD.t+=dt;
+const u=compMat.uniforms;
+if(SIGD.phase==='corrupt'){
+/* 1 · corrupción: la estática sube y la imagen pierde claridad */
+const k=clamp(SIGD.t/1.5,0,1);
+u.uNoise.value=Math.max(u.uNoise.value,0.10+0.75*k);
+u.uGlitch.value=Math.max(u.uGlitch.value,0.05+0.85*k);
+u.uScan.value=0.022+0.11*k;
+u.uVig.value=0.50+0.10*k;
+u.uAberr.value=0.0018+0.010*k;
+fadeBt=0.10+0.36*k;              /* la pantalla se oscurece poco a poco */
+if(sigDeathEl)sigDeathEl.style.opacity=(0.10+0.60*k).toFixed(3);
+camera.position.x=pos.x+(Math.random()-0.5)*0.06;
+camera.position.z=pos.z+(Math.random()-0.5)*0.06;
+if(k>=1){
+SIGD.phase='loss';SIGD.t=0;
+if(sigDeathEl){sigDeathEl.classList.add('loss');sigDeathEl.style.opacity='1';}
+AudioFX.burst(0.7,0.3);
+}
+}else if(SIGD.phase==='loss'){
+/* 2 · pérdida de señal: estática máxima y el mundo se apaga */
+fadeBt=1;
+u.uNoise.value=0.62;u.uGlitch.value=0.60;u.uScan.value=0.12;u.uVig.value=0.60;
+if(sigDeathEl)sigDeathEl.style.opacity='1';
+if(SIGD.t>0.85)sigDeathEnd();
+}else{
+/* 3 · Game Over: la estática baja y la UI ya está en fade-in */
+const k=Math.min(1,dt*3);
+u.uScan.value+=(0.022-u.uScan.value)*k;
+u.uVig.value+=(0.50-u.uVig.value)*k;
+u.uGlitch.value+=(0.025-u.uGlitch.value)*k;
+u.uNoise.value+=(0.09-u.uNoise.value)*k;
+u.uAberr.value+=(0.0018-u.uAberr.value)*k;
+if(sigDeathEl)sigDeathEl.style.opacity=Math.max(0,0.16-SIGD.t*0.2).toFixed(3);
+}
+}
+function sigDeathReset(){
+SIGD.active=false;SIGD.phase='off';SIGD.t=0;SIGD.revealed=false;
+if(sigDeathEl){sigDeathEl.classList.remove('on','loss');sigDeathEl.style.opacity='0';}
+deathOverlay.classList.add('fading');
+deathOverlay.classList.add('hidden');
+deathOverlay.style.opacity='';
+fadeBt=0;
+const u=compMat.uniforms;
+u.uNoise.value=0.09;u.uGlitch.value=0.02;u.uScan.value=0.022;u.uVig.value=0.50;u.uAberr.value=0.0018;
+heart.setDying(false);
+}
 function retryLevel(){
-if(deathTransitionTimer){clearTimeout(deathTransitionTimer);deathTransitionTimer=null;}
-gameOverStarted=false;retryStarted=false;
+sigDeathReset();
 lives=initialLives;dead=false;dyingT=-1;js=null;started=true;state='play';
 girlState.active=false;girlState.vanishing=false;girlState.mode='watch';
 girl.visible=false;girlAura.visible=false;
@@ -3844,21 +3975,21 @@ item.glow.visible=true;
 item.beam.visible=true;
 item.home=[item.data.pos[0],item.data.pos[1],item.data.pos[2]];
 item.grp.position.set(item.home[0],item.home[1],item.home[2]);
-item.respawned=false;
-item.stolenBy=null;
+item.respawned=false;item.stolenBy=null;
 }
-lastDreamItem=null;
-dreamsCollected=0;elDreams.textContent='SUEÑOS 0/6';elSecret.style.display='none';
+DREAMRELEASE.refresh();
+/* [v3.12] los punteros al sueño robado/último también se reinician: una
+   partida nueva no puede heredar el objetivo de la anterior */
+lastStolenItem=null;lastDreamItem=null;respawnedDreamPending=false;
+syncDreamCount();elSecret.style.display='none';
 collapseAt=0;collapseT=-1;completed=false;overlayShown=false;overlayTimer=0;
 entering4=false;
 pos.set(0,EYE,60);vel.set(0,0,0);yaw=0;pitch=0;lastSafe={p:[0,60],yaw:0};invulnT=2;
 WR.reset();
 WR.warmup(0,60,55);
 TERROR.reset();
-if(window.ZENT404&&ZENT404.reset)ZENT404.reset();
 deathOverlay.classList.add('hidden');completeEl.classList.add('hidden');
 bloodEl.classList.remove('show');panicRedEl.style.opacity='0';
-document.body.classList.remove('death-corrupt','death-lost','gameover','gameover-visible','retrying');
 document.body.classList.add('playing');
 sfxEntityKill.load();
 chaseMusic.stop(0);
@@ -4020,7 +4151,7 @@ feverPal=(zk==='city'||zk==='lagoon'||zk==='red'||zk==='broken')?0:1;
 elZlName.textContent=Z.name;
 elZlSub.textContent=Z.sub;
 if(Z.respawn)lastSafe={p:Z.respawn,yaw:Z.yaw};
-if(brokenEnding&&zk==='broken')lastSafe={p:[0,-470],yaw:0}; /* CAPA 5+: mirando al centro, al haz rojo y a la salida */
+if(brokenEnding&&zk==='broken')lastSafe={p:[0,BRK_SPAWN_Z],yaw:0}; /* CAPA 5+: mirando al centro, al haz rojo y a la salida */
 if(!visited.has(zk)){
 visited.add(zk);
 if(zk==='void'){
@@ -4174,7 +4305,7 @@ u.uInvert.value=(invertFlash&&glitchEnv>0.45)?(Math.random()<0.5?0.85:0):0;
 u.uFadeB.value=fadeB;
 u.uFadeW.value=fadeW;
 u.uSolar.value=solar;
-u.uTape.value=0.32+glitchEnv*0.9+(fever?0.15:0);
+u.uTape.value=0.16+glitchEnv*0.45+(fever?0.075:0);
 u.uSolarPal.value=feverPal;
 u.uBloom.value=envCur.bloom+glitchEnv*0.10+(fever?0.04:0);
 u.uGhost.value=envCur.ghost*0.55+(fever?0.05:0)+glitchEnv*0.06;
@@ -4224,10 +4355,10 @@ completed=true;
 brokenEnding=true;
 collapseFast=false;
 solarHold=-1;solar=0;glitchEnv=0;
-noclipTo(0,-470,0); /* CAPA 5+: arreglado — antes miraba al vacío (Math.PI);
+noclipTo(0,BRK_SPAWN_Z,0); /* CAPA 5+: arreglado — antes miraba al vacío (Math.PI);
    ahora miras hacia el centro de THE BROKEN: el haz rojo del PUNTO ROJO
    se ve desde el primer instante, a la izquierda, y la salida al fondo */
-lastSafe={p:[0,-470],yaw:0};
+lastSafe={p:[0,BRK_SPAWN_Z],yaw:0};
 curZone=null;
 announce('THE BROKEN','el sueño se rompió');
 showWhisper("I'm talking to YOU, THE PLAYER");
@@ -4278,7 +4409,8 @@ if(curZone==='broken'){girlState.cd=12;return;}
 /* [v3.9] ELLA SOLO en su isla: LA PLAZA NEÓN. En las demás zonas la
    amenaza la pone la entidad local (ver ZENT404). La persecución de la
    Entidad (TERROR) y THE BROKEN quedan intactas. */
-if(curZone!=='spawn'&&!dreamRetained('ella')){girlState.cd=6;return;}
+/* [v3.12] ELLA sale de su Plaza si conservas el CASSETTE DORADO */
+if(curZone!=='spawn'&&!DREAMRELEASE.isHeld('ella')){girlState.cd=6;return;}
 if(TERROR.pocket||TERROR.lock){girlState.cd=8;return;}
 /* CAPA 5: durante la persecución del Observador, Ella no interviene */
 if(TERROR.pursuit){girlState.cd=8;return;}
@@ -4477,45 +4609,127 @@ extraShards+=1;
 updateLivesHud();
 }
 }
+/* ============================================================
+   [v3.12] LIBERACIÓN DE ENTIDADES SEGÚN EL SUEÑO CONSERVADO
+   ------------------------------------------------------------
+   El permiso se deriva del ESTADO REAL del sueño en el inventario
+   (item.collected && !item.stolenBy), nunca de dreamsCollected ni de
+   curZone. ZNATIVE sigue siendo la restricción de origen antes de
+   recoger el sueño.
+   ============================================================ */
+const ZNATIVE={ella:'spawn',patrullador:'room',ladron:'city',acechador:'gray',corredor:'red',merodeador:'lagoon'};
+const ENT_LABEL={ella:'A ELLA',patrullador:'AL PATRULLADOR ESTÁTICO',ladron:'AL LADRÓN OLVIDADO',
+acechador:'AL ACECHADOR',corredor:'AL CORREDOR DEL VACÍO',merodeador:'AL MERODEADOR DE LOS CIELOS'};
+const DREAMRELEASE={
+_onChange:null,
+itemFor:function(ent){
+for(const it of dreamItems)if(it.data&&it.data.ent===ent)return it;
+return null;
+},
+/* ¿el jugador CONSERVA ese sueño? (recogido y no robado) */
+isHeld:function(ent){
+const it=this.itemFor(ent);
+return !!(it&&it.collected&&!it.stolenBy);
+},
+allowedHere:function(ent,zk){
+return zk===ZNATIVE[ent]||this.isHeld(ent);
+},
+/* robo/re cobro: recalcula permisos y retira entidades que dejaron de estar
+   liberadas (idempotente: despawn por estado, nunca duplica spawns) */
+refresh:function(){
+if(typeof this._onChange==='function'){
+try{this._onChange();}catch(_){}
+}
+},
+state:function(){
+const out={};
+for(const k in ZNATIVE){
+const it=this.itemFor(k);
+out[k]={native:ZNATIVE[k],held:this.isHeld(k),collected:!!(it&&it.collected),stolenBy:it?(it.stolenBy||null):null};
+}
+return out;
+}
+};
+window.DREAMRELEASE=DREAMRELEASE;
 function checkDreamPickups(){
 for(const item of dreamItems){
 if(item.collected)continue;
 const dx=pos.x-item.grp.position.x,dy=pos.y-item.grp.position.y,dz=pos.z-item.grp.position.z;
 if(dx*dx+dy*dy+dz*dz<3.4*3.4){
-const stolenBy=item.stolenBy||null;
 item.collected=true;
-item.stolenBy=null;
-respawnedDreamPending=dreamItems.some(function(it){return it.stolenBy==='final_pursuit';});
 lastDreamItem=item;
+/* [v3.12] ORIGEN EXPLÍCITO: el objeto del sueño dice quién lo robó.
+   `respawned` ya NO decide nada por sí solo: se consume aquí, una sola vez. */
+const origin=item.stolenBy||null;
+item.stolenBy=null;
 item.respawned=false;
 item.grp.visible=false;
 item.glow.visible=false;
 item.beam.visible=false;
-dreamsCollected++;
+if(lastStolenItem===item)lastStolenItem=null;
 AudioFX.pickup();
-const entityKey=DREAM_ENTITY[item.data.id],entityLabel=DREAM_ENTITY_LABEL[entityKey];
-if(entityLabel)announce('LIBERASTE '+entityLabel,'Ahora puede aparecer en cualquier zona.');
-else announce('SUEÑO ENCONTRADO',item.data.name+' · '+item.data.zone);
-elDreams.textContent='SUEÑOS '+dreamsCollected+'/6';
+syncDreamCount();
 firePulse(0.4,0.6,false);
-if(stolenBy==='final_pursuit'){
-/* Solo la recuperación marcada por la persecución narrativa puede reencolarla. */
-respawnedDreamPending=dreamItems.some(function(it){return it.stolenBy==='final_pursuit';});
+const ent=item.data.ent||null;
+let main='SUEÑO ENCONTRADO',sub=item.data.name+' · '+item.data.zone;
+if(origin==='final_pursuit'){
+main='SUEÑO RECUPERADO';
+sub=item.data.name+' · la persecución vuelve a por ti';
+}else if(origin){
+main='SUEÑO RECUPERADO';
+sub=item.data.name+' · '+item.data.zone;
+}
+if(ent){
+main='LIBERASTE '+ENT_LABEL[ent];
+sub=item.data.name+' · ahora puede aparecer en cualquier zona';
+if(origin==='final_pursuit')sub+=' · y ELLA te busca';
+}
+announce(main,sub);
+/* el permiso de la entidad se recalcula desde el inventario */
+DREAMRELEASE.refresh();
+if(origin==='final_pursuit'){
+/* única ruta narrativa: recuperar un sueño robado POR LA PERSECUCIÓN */
+respawnedDreamPending=false;
 if(TERROR&&!TERROR.pursuit&&!TERROR.pursuitDone){
 showWhisper('volvió a mirarte');
 TERROR.requeuePursuit();
 }
-}else if(stolenBy){
-/* Robos de entidades locales restauran inventario, nunca la persecución final. */
+}else if(origin){
+/* robo LOCAL (Ladrón/Patrullador/...): sin persecución, sin temporizador */
+respawnedDreamPending=false;
+showWhisper('el sueño volvió a ti');
 }
 if(dreamsCollected>=6&&!completed&&collapseAt===0){
 collapseAt=sagaSeconds()+2.0;
 if(TERROR)TERROR.beginFinalRec();
-if(!entityLabel)announce('SEÑAL INESTABLE','algo se está rompiendo');
-else showWhisper('algo se está rompiendo');
+if(ent||origin)showWhisper('algo se está rompiendo');
+else announce('SEÑAL INESTABLE','algo se está rompiendo');
 }
 }
 }
+}
+/* [v3.12] CAUSA RAÍZ: un único robo, con el origen explícito en el sueño.
+   Una sola función para todas las entidades y para la persecución final. */
+function stealDreamCore(origin){
+if(dreamsCollected<=0)return null;
+let item=lastDreamItem;
+if(!item||item.collected){
+for(let i=dreamItems.length-1;i>=0;i--){if(dreamItems[i].collected){item=dreamItems[i];break}}
+}
+if(!item)return null;
+item.collected=false;item.respawned=true;
+/* el origen viaja EN el sueño; sin origen no hay narrativa final */
+item.stolenBy=origin||null;
+item.home=[item.data.pos[0],item.data.pos[1],item.data.pos[2]];
+item.grp.position.set(item.home[0],item.home[1],item.home[2]);
+item.glow.position.set(item.home[0],item.home[1],item.home[2]);
+item.beam.position.set(item.home[0],item.home[1]+29,item.home[2]);
+item.grp.visible=true;item.mesh.visible=true;item.glow.visible=true;item.beam.visible=true;
+lastStolenItem=item;
+syncDreamCount();
+/* al perder el sueño, la entidad asociada deja de estar liberada YA */
+DREAMRELEASE.refresh();
+return item;
 }
 /* ========== 12B+ · CAPA 6 · EL BUCLE DEL SUEÑO ROBADO ==========
 Al morir cazado por la Entidad, el ÚLTIMO SUEÑO QUE AGARRASTE reaparece
@@ -4523,9 +4737,19 @@ en su sitio original (siempre visible, sin niebla). Al agarrarlo de nuevo,
 la Entidad vuelve a aparecer y a cazarte: bucle hasta que sobrevivas la
 cacería el tiempo suficiente para llegar a THE BROKEN. */
 let lastDreamItem=null;
+let lastStolenItem=null;      /* [v3.12] el ÚLTIMO sueño realmente robado */
 let respawnedDreamPending=false;
-function respawnLastDream(stolenBy,silentNotice){
-let item=lastDreamItem&&lastDreamItem.collected?lastDreamItem:null;
+/* el contador SIEMPRE se deriva del inventario real: nunca puede desviarse */
+function syncDreamCount(){
+dreamsCollected=0;
+for(const it of dreamItems)if(it.collected)dreamsCollected++;
+elDreams.textContent='SUEÑOS '+dreamsCollected+'/6';
+return dreamsCollected;
+}
+function respawnLastDream(){
+/* [v3.12] se re-coloca el sueño que se robó de verdad, no "el último que
+   tocaste": si no, el contador y la liberación de la entidad se desviaban. */
+let item=(lastStolenItem&&!lastStolenItem.collected)?lastStolenItem:lastDreamItem;
 if(!item){
 for(let i=dreamItems.length-1;i>=0;i--){
 if(dreamItems[i].collected){item=dreamItems[i];break;}
@@ -4533,11 +4757,8 @@ if(dreamItems[i].collected){item=dreamItems[i];break;}
 }
 if(!item)return false;
 item.collected=false;
-item.stolenBy=stolenBy||null;
 item.respawned=true;
-dreamsCollected=Math.max(0,dreamsCollected-1);
-elDreams.textContent='SUEÑOS '+dreamsCollected+'/6';
-if(window.ZENT404&&ZENT404.syncDreamPermissions)ZENT404.syncDreamPermissions();
+item.stolenBy='final_pursuit';   /* [v3.12] origen explícito del reaparición */
 let hx=item.data.pos[0],hy=item.data.pos[1],hz=item.data.pos[2];
 let where=item.data.name+' · '+item.data.zone;
 /* CAPA 7: si te cazó dentro de THE BROKEN, el sueño robado reaparece
@@ -4545,9 +4766,9 @@ let where=item.data.name+' · '+item.data.zone;
    el bucle (agarrarlo → la Entidad reaparece) siga en SU terreno.
    Nota de scope: el faro (redGroup) vive dentro del IIFE de TERROR y
    su posición es FIJA (-40,-545); se usa la constante, no la referencia. */
-if(completed&&(curZone==='broken'||pos.z<-420)){
+if(completed&&(curZone==='broken'||pos.z<BRK_ZONE_Z)){
 const rx=lastSafe.p[0],rz=lastSafe.p[1];
-const bdx=-40-rx,bdz=(-545)-rz;
+const bdx=BRK_BEACON_X-rx,bdz=BRK_BEACON_Z-rz;
 const bl=Math.max(.001,Math.hypot(bdx,bdz));
 hx=rx+bdx/bl*20+10;
 hz=rz+bdz/bl*20-7;
@@ -4562,8 +4783,10 @@ item.grp.visible=true;
 item.mesh.visible=true;
 item.glow.visible=true;
 item.beam.visible=true;
-respawnedDreamPending=dreamItems.some(function(it){return it.stolenBy==='final_pursuit';});
-if(!silentNotice)announce('EL SUEÑO ROBADO VOLVIÓ',where+' · vuelven a mirarte');
+lastStolenItem=item;
+syncDreamCount();
+respawnedDreamPending=true;
+announce('EL SUEÑO ROBADO VOLVIÓ',where+' · vuelven a mirarte');
 return true;
 }
 /* ========== 12C · PORTALES ========== */
@@ -4956,7 +5179,10 @@ let propCd=48,propCheck=0;
 const zc={spawn:[0,0,95],grayA:[0,200,80],grayB:[0,292,58],red:[0,-230,70],lagoon:[0,430,90]};
 for(const m of snapTargets){
 if(!m||!m.position)continue;
-const zk=zoneAt(m.position.x,m.position.z);
+/* [v3.12] m.position es LOCAL al grupo del sector: zoneAt trabaja en
+   coordenadas de mundo, así que sumamos el offset del grupo contenedor. */
+const wp=p=>m.position[p]+((m.parent&&m.parent.position)?m.parent.position[p]:0);
+const zk=zoneAt(wp('x'),wp('z'));
 if(zk!=='spawn'&&zk!=='room'&&zk!=='gray'&&zk!=='red'&&zk!=='lagoon')continue;
 if(m.position.y>28)continue;
 let cl;
@@ -4967,8 +5193,13 @@ m.userData.tp={mode:'base',bx:m.position.x,bz:m.position.z,restoreAt:0};
 props.push({m:m,cl:cl});
 }
 })();
+/* [v3.12] los props viven dentro del grupo de su sector: su position es
+   LOCAL. Estas dos funciones dan la posición de mundo para comparar con
+   el jugador (antes la comparación se desviaba ~100 m por sector). */
+function wxOf(m){return m.position.x+((m.parent&&m.parent.position)?m.parent.position.x:0);}
+function wzOf(m){return m.position.z+((m.parent&&m.parent.position)?m.parent.position.z:0);}
 function unseen(m){
-const dx=m.position.x-pos.x,dz=m.position.z-pos.z;
+const dx=wxOf(m)-pos.x,dz=wzOf(m)-pos.z;
 const d=Math.hypot(dx,dz);
 if(d<15)return false;
 const fx=-Math.sin(yaw),fz=-Math.cos(yaw);
@@ -4976,7 +5207,7 @@ return (dx*fx+dz*fz)/d<-0.08;
 }
 function forcePropChange(){
 const near=props.filter(function(p){
-return p.m.userData.tp.mode!=='hidden'&&Math.hypot(p.m.position.x-pos.x,p.m.position.z-pos.z)<75&&unseen(p.m);
+return p.m.userData.tp.mode!=='hidden'&&Math.hypot(wxOf(p.m)-pos.x,wzOf(p.m)-pos.z)<75&&unseen(p.m);
 });
 if(!near.length)return false;
 const p=pick(near);
@@ -5012,7 +5243,7 @@ propCheck=0;
 for(const p of props){
 const tp=p.m.userData.tp;
 if(tp.mode==='hidden'&&sagaSeconds()>tp.restoreAt&&
-(unseen(p.m)||Math.hypot(p.m.position.x-pos.x,p.m.position.z-pos.z)>24)){
+(unseen(p.m)||Math.hypot(wxOf(p.m)-pos.x,wzOf(p.m)-pos.z)>24)){
 p.m.visible=true;
 tp.mode='moved';
 }
@@ -5102,11 +5333,11 @@ const storyCam=new THREE.PerspectiveCamera(58,REC_W/REC_H,0.1,700);
 storyCam.layers.enable(1);
 storyCam.updateProjectionMatrix();
 const STORY_VIEWS={
-lagoon:{cam:[6,5,395],look:[0,8,445],zone:'lagoon',walk:[-8,410,10,414],ella:[0,3.4,421]},
-red:{cam:[10,4.5,-206],look:[-8,3.5,-230],zone:'red',walk:[4,-208,-8,-232],ella:[-10,3.2,-226]},
-gray:{cam:[22,6,197],look:[-4,4,181],zone:'gray',walk:[14,190,-8,184],ella:[-2,3.6,187]},
-city:{cam:[-150,5,28],look:[-170,3,41],zone:'city',walk:[-156,44,-174,36],ella:[-166,3.2,39]},
-room:{cam:[168,4.5,16],look:[200,6,6],zone:'room',walk:[240,-26,218,8],ella:[186,3.4,-6]}
+lagoon:{cam:[6,5,610],look:[0,8,660],zone:'lagoon',walk:[-8,625,10,629],ella:[0,3.4,636]},
+red:{cam:[10,4.5,-321],look:[-8,3.5,-345],zone:'red',walk:[4,-323,-8,-347],ella:[-10,3.2,-341]},
+gray:{cam:[22,6,297],look:[-4,4,281],zone:'gray',walk:[14,290,-8,284],ella:[-2,3.6,287]},
+city:{cam:[-250,5,28],look:[-270,3,41],zone:'city',walk:[-256,44,-274,36],ella:[-266,3.2,39]},
+room:{cam:[268,4.5,16],look:[300,6,6],zone:'room',walk:[340,-26,318,8],ella:[286,3.4,-6]}
 };
 /* colocación de la figura lejana: DENTRO del encuadre real de cada cámara,
    a distancia legible y con verificación de oclusión por raycast contra la
@@ -5937,12 +6168,12 @@ cylCol(270,5,0.75);
 pocket.chairCol=colliders.cyl[colliders.cyl.length-1];
 pocket.chair=chair;
 /* monitor interior */
-makeMonitor({id:3,label:'CAM-04',zone:'room',pos:[276,3.2,-11.26],look:[270.5,1.2,5.5],delay:2.5,girlCd:1e9});
+makeMonitor({id:3,label:'CAM-04',zone:'room',pos:[376,3.2,-11.26],look:[370.5,1.2,5.5],delay:2.5,girlCd:1e9});
 })();
 /* monitores del mundo: altura natural, junto a rutas y señales existentes */
-makeMonitor({id:0,label:'CAM-01',zone:'room',pos:[155.7,3.1,11],look:[170,1.5,4],fov:66,delay:4.2,bracket:true});
+makeMonitor({id:0,label:'CAM-01',zone:'room',pos:[255.7,3.1,11],look:[270,1.5,4],fov:66,delay:4.2,bracket:true});
 makeMonitor({id:1,label:'CAM-02',zone:'spawn',pos:[7.5,3.4,-24.7],look:[0,1.6,26],fov:66,delay:5.0,girlCd:150,pole:true});
-makeMonitor({id:2,label:'CAM-03',zone:'city',pos:[-124,3.0,9],look:[-108,1.6,-3],delay:3.6,girlCd:170,pole:true});
+makeMonitor({id:2,label:'CAM-03',zone:'city',pos:[-224,3.0,9],look:[-208,1.6,-3],delay:3.6,girlCd:170,pole:true});
 function doorRoll(){
 if(pocket.doorDone||pocket.doorVisible||S.roomEntries<2||dreamsCollected<1)return;
 if(curZone!=='room')return;
@@ -6740,7 +6971,7 @@ redGlow.material.color.set(0xff3848);
 const redGlow2=addSprite(cvGlow,0,2.6,0,60,60,0.4);
 redGlow2.material.color.set(0xb01830);
 redGroup.add(redCore);redGroup.add(redInner);redGroup.add(redCol);redGroup.add(redBeam);redGroup.add(redNucleus);redGroup.add(redSky);redGroup.add(redGlow);redGroup.add(redGlow2);
-redGroup.position.set(-40,2.3,-545);
+redGroup.position.set(BRK_BEACON_X,2.3,BRK_BEACON_Z);
 redGroup.visible=false;
 scene.add(redGroup);
 addAnim(function(t){
@@ -7014,15 +7245,17 @@ Te quita 1 sueño, la Entidad que te persigue DESAPARECE y el último sueño
 que agarraste REAPARECE en su sitio: agárralo y volverá a lanzarse sobre ti.
 Bucle hasta que sobrevivas la cacería y llegues a THE BROKEN. */
 PURS.catches++;MEM.catches++;
+/* [v3.12] el sueño sale del inventario de verdad (el contador se deriva) */
+if(dreamsCollected>0)stealDreamCore('final_pursuit');
 obsDeathEnd();
 return;
 }
 /* ===== APARICIÓN: la cacería empieza ===== */
-const inBroken=completed&&(curZone==='broken'||pos.z<-420);
+const inBroken=completed&&(curZone==='broken'||pos.z<BRK_ZONE_Z);
 /* CAPA 7: mientras DECLARA no te caza — te deja leer su promesa */
 PURS.guard=inBroken?6:15;
 /* te arranca un sueño (la primera aparición; luego te lo quita al morir) */
-if(PURS.appearances<2&&dreamsCollected>0)respawnLastDream('final_pursuit',true);
+if(PURS.appearances<2&&dreamsCollected>0)stealDreamCore('final_pursuit');
 /* y te suelta lejos: fade a negro, reapareces sin ese sueño */
 respawnState='out';fadeBt=1;
 AudioFX.burst(0.45,0.16);
@@ -7070,7 +7303,7 @@ respawnState='out';fadeBt=1;
 AudioFX.burst(0.45,0.16);
 AudioFX.blip(120,0.6,'sawtooth',0.06,40);
 /* el sueño robado VUELVE a su sitio: agárralo para provocarla otra vez */
-respawnLastDream('final_pursuit');
+respawnLastDream();
 showWhisper('te solt\u00f3... por ahora');
 setTimeout(function(){
 showObsDeclare('NO PUEDES ESCAPAR DE M\u00cd',2600);
@@ -7119,7 +7352,7 @@ AudioFX.obsScare(1);
 if(!J.sfxLive)sfxEntityKill.play(1,1.0);
 heart.cut();
 stingerBurst=1.6;
-bloodEl.classList.add('show');
+/* [v3.12] sin sangre: la interferencia de #sigdeath cubre la muerte */
 camera.fov=78;camera.updateProjectionMatrix();
 }
 if(J.lunged){
@@ -7197,7 +7430,7 @@ if(!girlState.active)entityThreat=1;
 if(PURS.phase===1){
 if(!PURS.eyesDone&&PURS.t>5){PURS.eyesDone=true;showEyes(true,1.1);}
 /* la persecución CRUZA el colapso y entra en THE BROKEN */
-if(completed&&(curZone==='broken'||pos.z<-420)){
+if(completed&&(curZone==='broken'||pos.z<BRK_ZONE_Z)){
 PURS.phase=2;
 PURS.t2=0;
 const bx=Math.sin(yaw),bz=Math.cos(yaw);
@@ -7241,7 +7474,7 @@ if(PURS.dist<9&&PURS.e4helps<(MEM.catches>2?4:3)&&PURS.helpCd<=0)interfere();
 if(!PURS.stuckMsg&&t>150){PURS.stuckMsg=true;redBoost=1;e4Msg('EL PUNTO ROJO. AHORA.');}
 /* aviso si insiste con la salida blanca vieja: ahora TAMBIÉN despierta */
 if(!PURS.portalHint){
-if(Math.hypot(pos.x-0,pos.z+562)<9){PURS.portalHint=true;e4Msg('LA SALIDA DESPERT\u00d3. ENTRA.');}
+if(Math.hypot(pos.x-0,pos.z-BRK_EXIT_Z)<9){PURS.portalHint=true;e4Msg('LA SALIDA DESPERT\u00d3. ENTRA.');}
 }
 }
 function interfere(){
@@ -7310,7 +7543,14 @@ if(MEM.profile==='superficial')return 'NUNCA MIRASTE LAS C\u00C1MARAS. YO S\u00C
 if(MEM.profile==='obsesivo')return 'T\u00DA TAMBI\u00C9N MIRASTE. DEMASIADO.';
 return 'NOS MIR\u00C1BAMOS.';
 }
-function mapXY(x,z){return [360+x*0.41,230-(z+40)*0.41];}
+/* [v3.12] transformación cartográfica ÚNICA (mundo → mapa). El eje Z
+   (el largo del nivel) va en horizontal; +X sube en pantalla. Encuadra
+   TODO el mundo trasladado: x ∈ [-412,398], z ∈ [-872,762]. */
+/* [v3.12] MAPB/MAPPAD/mapScaleFor son GLOBALES: los usan el mapa de la
+   cinta (TERROR) y el mapa en primera persona (ZENT404). */
+const _ms=mapScaleFor(720,460);
+function mapXY(x,z){return [MAPPAD.l+((720-MAPPAD.l-MAPPAD.r)-_ms.cw)/2+(z-MAPB.minZ)*_ms.s,
+MAPPAD.t+((460-MAPPAD.t-MAPPAD.b)-_ms.ch)/2+_ms.ch-(x-MAPB.minX)*_ms.s];}
 function fmtMS(s){const p=function(n){return (n<10?'0':'')+n;};return p(Math.floor(s/60))+':'+p(Math.floor(s)%60);}
 function firstSighting(zk){
 for(const s of sightingLocs)if(s.zone===zk)return s;
@@ -7512,8 +7752,8 @@ if(t>PB.dur)startReveal();
 function drawMap(c,hiZone){
 const W=720;
 const zonesDraw=[
-['PLAZA NE\u00D3N',0,0,95,'spawn'],['SALA EST\u00C1TICA',200,0,0,'room'],['CIUDAD FEBRIL',-200,0,85,'city'],
-['MONOLITOS',0,200,80,'gray'],['VOID ROJO',0,-230,70,'red'],['LAGUNA',0,430,90,'lagoon'],['THE BROKEN',0,-520,85,'broken']
+['PLAZA NE\u00D3N',0,0,95,'spawn'],['SALA EST\u00C1TICA',300,0,0,'room'],['CIUDAD FEBRIL',-300,0,85,'city'],
+['MONOLITOS',0,300,80,'gray'],['VOID ROJO',0,-345,70,'red'],['LAGUNA',0,645,90,'lagoon'],['THE BROKEN',0,-780,85,'broken']
 ];
 c.lineWidth=1;
 for(let i=0;i<zonesDraw.length;i++){
@@ -7521,7 +7761,7 @@ const zd=zonesDraw[i];
 const hi=hiZone&&zd[4]===hiZone.zone;
 const p=mapXY(zd[1],zd[2]);
 if(zd[3]===0){
-const a=mapXY(153,-37),b=mapXY(247,37);
+const a=mapXY(253,-37),b=mapXY(347,37);
 c.strokeStyle=hi?'rgba(190,240,225,0.6)':'rgba(160,200,190,0.28)';
 c.strokeRect(a[0],Math.min(a[1],b[1]),b[0]-a[0],Math.abs(b[1]-a[1]));
 }else{
@@ -7540,7 +7780,7 @@ c.fillText(zd[0],p[0],p[1]);
 c.strokeStyle='rgba(160,200,190,0.18)';
 c.beginPath();
 const seg=function(x1,z1,x2,z2){const a=mapXY(x1,z1),b=mapXY(x2,z2);c.moveTo(a[0],a[1]);c.lineTo(b[0],b[1]);};
-seg(95,0,153,0);seg(-95,0,-116,0);seg(0,95,0,132);seg(0,-95,0,-163);seg(0,262,0,375);
+seg(95,0,253,0);seg(-95,0,-194,0);seg(0,95,0,208);seg(0,-95,0,-257);seg(0,458,0,539);
 c.stroke();
 }
 function drawRoute(c,progT,dot){
@@ -7907,7 +8147,7 @@ return PURS.active?'pursuit-1:collapse@'+Math.round(collapseAt-sagaSeconds()):'o
 pursue2:function(){
 completed=true;brokenEnding=true;solarHold=-1;solar=0;glitchEnv=0;
 collapseT=8;collapseAt=0;
-noclipTo(0,-470,0);
+noclipTo(0,BRK_SPAWN_Z,0);
 if(!PURS.active){PURS.done=false;startPursuit(2);}
 return 'pursuit-2';
 },
@@ -7916,8 +8156,8 @@ lethalCatch:function(){
 /* CAPA 7 · QA: simula que la Entidad te CAZA — fase 1 pre-colapso o
    fase 2 dentro de THE BROKEN (muerte con bucle del sueño robado) */
 if(PURS.active&&!obsJs&&((PURS.phase===1&&collapseT<0&&!completed)||PURS.phase===2)){
-startObsJumpscare(true);
-return 'lethal-jump:on';
+const started=startObsJumpscare(true);
+return started?'lethal-jump:on':'blocked:'+state;
 }
 return 'no-catchable-phase';
 },
@@ -8002,7 +8242,7 @@ dbg:function(){return {girlREC:girlREC,monitors:monitors,renderer:renderer,scene
 state:function(){
 return {
 storyRenders:storySave.renders||0,
-pursuit:{active:PURS.active,done:PURS.done,phase:PURS.phase,escT:Math.round(PURSUIT_ESC_T*10)/10,declGen:declGen,t:Math.round(PURS.t*10)/10,t2:Math.round(PURS.t2*10)/10,dist:Math.round(PURS.dist*10)/10,catches:PURS.catches,appearances:PURS.appearances,e4helps:PURS.e4helps,redOn:redOn,redD:redOn?Math.round(Math.hypot(pos.x-redGroup.position.x,pos.z-redGroup.position.z)*10)/10:null,slowT:Math.round(PURS.obs.slowT*10)/10,obs:[Math.round(PURS.obs.x*10)/10,Math.round(PURS.obs.z*10)/10],collapseAt:Math.round(collapseAt*10)/10,collapseT:Math.round(collapseT*10)/10,fast:collapseFast,guard:Math.round(PURS.guard*10)/10,dreamPending:respawnedDreamPending,dreams:dreamsCollected,entityVisible:obsSprite.visible,entityScale:[Math.round(obsSprite.scale.x*100)/100,Math.round(obsSprite.scale.y*100)/100],zone:curZone,lastSafe:[Math.round(lastSafe.p[0]*10)/10,Math.round(lastSafe.p[1]*10)/10],redHalo:redHaloEl?Math.round((parseFloat(redHaloEl.style.opacity)||0)*1000)/1000:null,stolenDream:(function(){const it=lastDreamItem;if(!it)return null;return {collected:it.collected,respawned:!!it.respawned,stolenBy:it.stolenBy||null,home:[Math.round(it.home[0]*10)/10,Math.round(it.home[2]*10)/10]};})()},
+pursuit:{active:PURS.active,done:PURS.done,phase:PURS.phase,escT:Math.round(PURSUIT_ESC_T*10)/10,declGen:declGen,t:Math.round(PURS.t*10)/10,t2:Math.round(PURS.t2*10)/10,dist:Math.round(PURS.dist*10)/10,catches:PURS.catches,appearances:PURS.appearances,e4helps:PURS.e4helps,redOn:redOn,redD:redOn?Math.round(Math.hypot(pos.x-redGroup.position.x,pos.z-redGroup.position.z)*10)/10:null,slowT:Math.round(PURS.obs.slowT*10)/10,obs:[Math.round(PURS.obs.x*10)/10,Math.round(PURS.obs.z*10)/10],collapseAt:Math.round(collapseAt*10)/10,collapseT:Math.round(collapseT*10)/10,fast:collapseFast,guard:Math.round(PURS.guard*10)/10,dreamPending:respawnedDreamPending,dreams:dreamsCollected,entityVisible:obsSprite.visible,entityScale:[Math.round(obsSprite.scale.x*100)/100,Math.round(obsSprite.scale.y*100)/100],zone:curZone,lastSafe:[Math.round(lastSafe.p[0]*10)/10,Math.round(lastSafe.p[1]*10)/10],redHalo:redHaloEl?Math.round((parseFloat(redHaloEl.style.opacity)||0)*1000)/1000:null,stolenDream:(function(){const it=lastDreamItem;if(!it)return null;return {collected:it.collected,respawned:!!it.respawned,home:[Math.round(it.home[0]*10)/10,Math.round(it.home[2]*10)/10]};})()},
 mem:{t:Math.round(MEM.t),profile:MEM.profile,camTotal:Math.round(MEM.camTotal*10)/10,visits:MEM.camVisitsTotal,revisits:MEM.revisits,avoid:Math.round(MEM.camAvoid),esc:Math.round(MEM.esc*100)/100,inv:Math.round(MEM.inv*100)/100,kp:MEM.kp,missed:MEM.eventsMissed,seen:MEM.eventsSeen,partial:MEM.partial},
 glitchMsg:msgEl?msgEl.textContent:null,
 obsJs:!!obsJs,obsDecl:obsDeclEl?obsDeclEl.classList.contains('on'):false,
@@ -8053,7 +8293,7 @@ if(noiseAcc>0.045){
 noiseAcc=0;
 [noiseTV1,noiseTV2,noiseGray][noiseIdx++%3].refresh();
 }
-if(started&&dyingT<0&&!dead&&state==='play'&&!TERROR.lock)updatePlayer(dt);
+if(started&&dyingT<0&&!dead&&state==='play'&&!TERROR.lock&&!SIGD.active)updatePlayer(dt);
 else if(!started)camera.lookAt(0,26,-55);
 for(const f of anim)f(t,dt);
 if(!Number.isFinite(pos.x)||!Number.isFinite(pos.y)||!Number.isFinite(pos.z))pos.set(0,EYE,60);
@@ -8084,6 +8324,7 @@ updateEnv(dt);
 WR.update(dt,t);
 updateFades(dt);
 updateCollapse(dt);
+sigDeathTick(dt);   /* [v3.12] secuencia de interferencia (muerte) */
 if(dyingT>=0){
 dyingT+=dt;
 const u=compMat.uniforms;
@@ -8097,13 +8338,7 @@ dyingT=-1;
 u.uInvert.value=0;
 if(!devMode){lives--;updateLivesHud();}   /* [v1.7-DEV] inmortal: no gasta vidas */
 if(lives<=0){
-dead=true;
-started=false;
-heart.stop(0.4);
-chaseMusic.stop(0.3);
-AudioFX.duckAmbient(false);
-sfxEntityKill.stop(0);
-showGameOver('ELLA','SUEÑOS · '+dreamsCollected+'/6<br>ELLA TE ALCANZÓ · '+fmtTime(sagaSeconds()));
+sigDeathBegin('ELLA');
 }else{
 girlState.active=false;girlState.mode='watch';
 girl.visible=false;girlAura.visible=false;
@@ -8140,7 +8375,7 @@ J.lunged=true;
 if(!J.sfxLive&&!sfxEntityKill.play(1,1.0))AudioFX.jumpscareSting();
 heart.cut();
 stingerBurst=1.5;
-bloodEl.classList.add('show');camera.fov=78;camera.updateProjectionMatrix();
+/* [v3.12] sin sangre: la interferencia de #sigdeath cubre la muerte */camera.fov=78;camera.updateProjectionMatrix();
 }
 if(J.lunged){
 const lt=J.t-APPROACH,ld=Math.max(.4,1.6-lt/.12*1.2);
@@ -8168,12 +8403,7 @@ heart.setDying(false);
 camera.fov=72;camera.updateProjectionMatrix();
 if(doDeath){
 recordLevelDeath('3', Math.floor(sagaSeconds()), Math.max(0, lives));
-dead=true;started=false;state='dead';
-heart.stop(0.4);
-chaseMusic.stop(0.3);
-AudioFX.duckAmbient(false);
-sfxEntityKill.stop(0);
-showGameOver('ELLA','SUEÑOS · '+dreamsCollected+'/6<br>ELLA TE ALCANZÓ · '+fmtTime(sagaSeconds()));document.body.classList.remove('playing');
+sigDeathBegin('ELLA');
 }else{
 invulnT=2.5;
 pos.set(lastSafe.p[0],EYE,lastSafe.p[1]);
@@ -9004,38 +9234,26 @@ S.whCd=8+Math.random()*8;
 const w=SUSURROS[k];if(w)showWhisper(w[Math.random()*w.length|0]);
 }
 function zoneAllows(){
-return started&&!dead&&state==='play'&&!completed&&collapseT<0&&!TERROR.pursuit&&!TERROR.pocket&&!TERROR.lock;
+return started&&!dead&&state==='play'&&!completed&&collapseT<0&&!TERROR.pursuit&&!TERROR.pocket&&!TERROR.lock&&!SIGD.active;
 }
 /* ---------- robo de sueño (misma regla que la Entidad) ---------- */
-function stealDream(stolenBy){
-if(dreamsCollected<=0)return null;
-let item=lastDreamItem;
-if(!item||item.collected){
-for(let i=dreamItems.length-1;i>=0;i--){if(dreamItems[i].collected){item=dreamItems[i];break}}
-}
-if(!item||!item.collected)return null;
-item.collected=false;item.stolenBy=stolenBy||null;item.respawned=true;
-item.home=[item.data.pos[0],item.data.pos[1],item.data.pos[2]];
-item.grp.position.set(item.home[0],item.home[1],item.home[2]);
-item.glow.position.set(item.home[0],item.home[1],item.home[2]);
-item.beam.position.set(item.home[0],item.home[1]+29,item.home[2]);
-item.grp.visible=true;item.mesh.visible=true;item.glow.visible=true;item.beam.visible=true;
-dreamsCollected--;
-elDreams.textContent='SUEÑOS '+dreamsCollected+'/6';
-if(window.ZENT404&&ZENT404.syncDreamPermissions)ZENT404.syncDreamPermissions();
-return item;
+function stealDream(origin){
+/* [v3.12] puerta única al robo; el cuerpo vive en el ámbito principal para
+   que tanto ELLA/TERROR como el Ladrón/Patrullador usen EXACTAMENTE la misma
+   regla (sin copias ni contadores paralelos). */
+return stealDreamCore(origin);
 }
 /* ---------- muerte por entidad (misma regla que ELLA: -1 vida) ---------- */
-function kill(title,sub,steal,stolenBy){
-if(state!=='play'||dyingT>=0||js||dead||invulnT>0)return false;
+function kill(title,sub,steal,origin){
+if(state!=='play'||dyingT>=0||js||dead||invulnT>0||SIGD.active||S.killAnim>=0)return false;
 S.killAnim=0;S.killWho=title;
 heart.setDying(true);heart.setThreat(1);
 chaseMusic.stop(0.3);
 sfxEntityKill.load();
 if(!sfxEntityKill.play(1))AudioFX.jumpscareSting();
-bloodEl.classList.add('show');
+/* [v3.12] sin sangre: la interferencia de #sigdeath cubre la muerte */
 panicRedEl.style.opacity='1';
-const stolen=steal?stealDream(stolenBy):null;
+const stolen=steal?stealDream(origin):null;
 announce(title,stolen?('se llevó '+stolen.data.name+' · vuelve a su sitio'):sub);
 firePulse(1,1,true);
 return true;
@@ -9096,9 +9314,13 @@ if(PAT.visits<2||Math.random()>0.5){PAT.spawnCd=8;return}
    con margen de reacción justo. */
 const a=yaw+rand(-.45,.45);
 const d=8+Math.random()*5;
-let px=pos.x-Math.sin(a)*d;
-let pz=pos.z-Math.cos(a)*d;
-if(!dreamRetained('patrullador')){px=Math.max(158,Math.min(242,px));pz=Math.max(-50,Math.min(50,pz));}
+/* [v3.12] el recorte a la Sala Estática sólo aplica si el Patrullador está
+   en su isla; liberado, aparece alrededor del jugador en cualquier zona. */
+let px2=pos.x-Math.sin(a)*d,pz2=pos.z-Math.cos(a)*d;
+let px,pz;
+if(S.zone===ZNATIVE.patrullador){
+px=Math.max(258,Math.min(342,px2));pz=Math.max(-50,Math.min(50,pz2));
+}else{px=px2;pz=pz2;}
 pat.g.position.set(px,0,pz);
 pat.g.visible=true;
 PAT.on=true;PAT.grace=1.6;PAT.t=90;
@@ -9169,8 +9391,11 @@ if(LAD.on||state!=='play'||TERROR.pursuit||TERROR.pocket)return;
 const a=yaw+rand(-1.05,1.05);
 const d=20+Math.random()*8;
 let lx=pos.x-Math.sin(a)*d,lz=pos.z-Math.cos(a)*d;
-const gx=lx+200,gz=lz,rr=Math.hypot(gx,gz);
-if(!dreamRetained('ladron')&&rr>92){lx=-200+gx/rr*88;lz=gz/rr*88}
+/* [v3.12] el recorte al círculo de la Ciudad Febril sólo aplica en su isla */
+if(S.zone===ZNATIVE.ladron){
+const gx=lx+300,gz=lz,rr=Math.hypot(gx,gz);
+if(rr>92){lx=-300+gx/rr*88;lz=gz/rr*88}
+}
 ladH.position.set(lx,0,lz);
 lad.g.visible=true;
 LAD.on=true;LAD.state='stalk';LAD.t=2.2;LAD.charges=0;LAD.stun=0;
@@ -9336,7 +9561,7 @@ return false;
    ============================================================ */
 const mer=ENT404.merodeador();
 mer.g.visible=false;mer.g.scale.setScalar(1.6);scene.add(mer.g);
-const MER={on:false,t:5,warn:null,debris:null,slow:0,originX:0,originZ:430};
+const MER={on:false,t:5,warn:null,debris:null,slow:0};
 const warnMat=new THREE.MeshBasicMaterial({color:0xff2020,transparent:true,opacity:.5,fog:false,side:THREE.DoubleSide});
 const warnRing=new THREE.Mesh(new THREE.TorusGeometry(3.2,.16,8,40),warnMat);
 warnRing.rotation.x=Math.PI/2;warnRing.visible=false;scene.add(warnRing);
@@ -9346,7 +9571,6 @@ const debMat=new THREE.MeshBasicMaterial({color:0xff2bd6,fog:false});
 function merSpawn(){
 if(MER.on)return;
 MER.on=true;
-if(dreamRetained('merodeador')){MER.originX=pos.x;MER.originZ=pos.z;}else{MER.originX=0;MER.originZ=430;}
 mer.g.visible=true;
 caption('merodeador');whisper('merodeador');
 }
@@ -9359,7 +9583,9 @@ MER.warn=null;MER.t=5;
 }
 function merTick(dt,t){
 if(!MER.on)return;
-mer.g.position.set(MER.originX+Math.sin(t*.13)*38,26+Math.sin(t*.5)*2,MER.originZ+Math.cos(t*.09)*30);
+/* [v3.12] en su laguna sobrevuela el centro; liberado, sobrevuela al jugador */
+if(S.zone===ZNATIVE.merodeador)mer.g.position.set(Math.sin(t*.13)*38,26+Math.sin(t*.5)*2,645+Math.cos(t*.09)*30);
+else mer.g.position.set(pos.x+Math.sin(t*.13)*38,26+Math.sin(t*.5)*2,pos.z+Math.cos(t*.09)*30);
 mer.u(t,dt);
 if(MER.debris){
 const d=MER.debris;
@@ -9455,9 +9681,10 @@ const a=rand(TAU);
 const dx=Math.cos(a),dz=Math.sin(a);
 const L=58;
 function clampIn(px,pz){
-if(dreamRetained('corredor'))return[px,pz];
-const gx=px,gz=pz+230,r=Math.hypot(gx,gz);
-if(r>80)return[gx/r*80,gz/r*80-230];
+/* [v3.12] la ruta se recorta al Void Rojo sólo si el Corredor está allí */
+if(S.zone!==ZNATIVE.corredor)return[px,pz];
+const gx=px,gz=pz+345,r=Math.hypot(gx,gz);
+if(r>80)return[gx/r*80,gz/r*80-345];
 return[px,pz];
 }
 let c0=clampIn(pos.x-dx*L,pos.z-dz*L);
@@ -9611,7 +9838,7 @@ panicRedEl.style.opacity=Math.min(1,.4+lk*.6).toFixed(2);
 if(c.t>=0.55){
 /* apagón de 2 frames + sangre + muerte (la entidad SE VE, fallo 11) */
 fadeB=1;fadeBt=0;
-bloodEl.classList.add('show');
+/* [v3.12] sin sangre: la interferencia de #sigdeath cubre la muerte */
 const killer='EL CORREDOR DEL VACÍO';
 corCineEnd();
 kill(killer,'no esquivaste la X',false);
@@ -9774,8 +10001,13 @@ const mapOv=document.getElementById('map-overlay');
 const mapCv=document.getElementById('map-canvas');
 const mapCx=mapCv.getContext('2d');
 const MW=720,MH=460;
-const MSC=.358,MOX=(720-675*MSC)/2,MOY=(460-1270*MSC)/2;
-function w2m(x,z){return[(x+345)*MSC+MOX,(z+650)*MSC+MOY]}
+/* [v3.12] MAPA LEGIBLE — encuadre automático del mundo trasladado */
+const MW2=720,MH2=460;
+const MSC=mapScaleFor(MW2,MH2).s;
+const MOX=MAPPAD.l+((MW2-MAPPAD.l-MAPPAD.r)-mapScaleFor(MW2,MH2).cw)/2;
+const MOY=MAPPAD.t+((MH2-MAPPAD.t-MAPPAD.b)-mapScaleFor(MW2,MH2).ch)/2;
+function w2m(x,z){return[MOX+(z-MAPB.minZ)*MSC,MOY+mapScaleFor(MW2,MH2).ch-(x-MAPB.minX)*MSC]}
+
 /* --- objeto recogible: panel holográfico que brilla al inicio --- */
 const MAP_ITEM={taken:false};
 const mapItem=(function(){
@@ -9805,22 +10037,34 @@ const m=new THREE.Mesh(new THREE.OctahedronGeometry(.09),new THREE.MeshBasicMate
 m.userData={a:i/8*Math.PI*2,ph:Math.random()};g.add(m);motes.push(m);
 }
 scene.add(g);
+/* [v3.12] mini-mapa del objeto con la MISMA geografía trasladada */
+function MMX(z){return 8+(z-MAPB.minZ)/(MAPB.maxZ-MAPB.minZ)*240;}
+function MMY(x){return 248-(x-MAPB.minX)/(MAPB.maxX-MAPB.minX)*240;}
 const ZONESD=dreamsData.map(function(d){
-return{mx:128+d.pos[0]/112*92,my:128+d.pos[2]/112*92,c:'#'+('000000'+d.color.toString(16)).slice(-6)};
+return{mx:MMX(d.pos[2]),my:MMY(d.pos[0]),c:'#'+('000000'+d.color.toString(16)).slice(-6)};
 });
 function drawMini(t){
 x.fillStyle='#050a10';x.fillRect(0,0,W,W);
 x.strokeStyle='rgba(0,255,247,.14)';x.lineWidth=1;
 for(let i=0;i<=8;i++){const q=i*32;x.beginPath();x.moveTo(q,0);x.lineTo(q,W);x.moveTo(0,q);x.lineTo(W,q);x.stroke()}
-const Z=[[128,128,34,'#ff2bd6'],[196,128,20,'#8a9097'],[62,128,32,'#00fff7'],[128,70,28,'#9aa0a6'],[128,190,24,'#ff2020'],[128,228,26,'#40ffd0']];
-x.strokeStyle='rgba(0,255,247,.35)';
-x.beginPath();Z.forEach(function(z,i){i?x.lineTo(z[0],z[1]):x.moveTo(z[0],z[1])});x.closePath();x.stroke();
-Z.forEach(function(z){x.fillStyle=z[3];x.globalAlpha=.2;x.beginPath();x.arc(z[0],z[1],z[2],0,7);x.fill();x.globalAlpha=1;x.strokeStyle=z[3];x.stroke()});
+x.strokeStyle='rgba(255,238,0,.45)';x.lineWidth=1.6;
+MAPBRI.forEach(function(b){
+const a=[MMX(b[1]),MMY(b[0])],d2=[MMX(b[3]),MMY(b[2])];
+x.beginPath();x.moveTo(a[0],a[1]);x.lineTo(d2[0],d2[1]);x.stroke();
+});
+MAPZ.forEach(function(zd){
+const px=MMX(zd.z),py=MMY(zd.x);
+x.strokeStyle=zd.c+'aa';
+if(zd.rect){const w0=zd.rect[0]/815*240,h0=zd.rect[1]/1616*240;x.strokeRect(px-w0/2,py-h0/2,w0,h0);}
+else{x.globalAlpha=.22;x.fillStyle=zd.c;x.beginPath();x.arc(px,py,Math.max(3,zd.r/1616*240),0,7);x.fill();x.globalAlpha=1;x.beginPath();x.arc(px,py,Math.max(3,zd.r/1616*240),0,7);x.stroke();}
+});
 ZONESD.forEach(function(d,i){
-const r=5+Math.sin(t*3+i)*2;
+const r=3.4+Math.sin(t*3+i)*1.4;
 x.fillStyle=d.c;
 x.beginPath();x.arc(d.mx,d.my,r,0,7);x.fill();
 });
+const px2=MMX(pos.z),py2=MMY(pos.x);
+x.fillStyle='#fff';x.beginPath();x.arc(px2,py2,2.2,0,7);x.fill();
 tex.needsUpdate=true;
 }
 return{g:g,glow:glow,
@@ -9850,58 +10094,136 @@ g.visible=false;glow.visible=false;
 })();
 function mapDraw(t){
 const c=mapCx;
-c.fillStyle='#05080d';c.fillRect(0,0,MW,MH);
-c.strokeStyle='rgba(175,205,220,.10)';c.lineWidth=1;
+c.fillStyle='#04070c';c.fillRect(0,0,MW,MH);
+/* --- EL VACÍO: el fondo no cartografiado, con trama diagonal --- */
+c.save();
+c.beginPath();c.rect(2,2,MW-4,MH-4);c.clip();
+c.strokeStyle='rgba(70,80,110,.16)';c.lineWidth=1;
+for(let x=-MH;x<MW;x+=14){c.beginPath();c.moveTo(x,0);c.lineTo(x+MH,MH);c.stroke();}
+c.restore();
+c.fillStyle='rgba(90,110,150,.35)';c.font='10px monospace';c.textAlign='left';
+c.fillText('EL VACÍO · SIN CARTografiar',MW-196,MH-12);
+/* --- rejilla de referencia --- */
+c.strokeStyle='rgba(0,255,247,.09)';c.lineWidth=1;
 for(let i=0;i<=18;i++){const q=i*MW/18;c.beginPath();c.moveTo(q,0);c.lineTo(q,MH);c.stroke()}
 for(let i=0;i<=11;i++){const q=i*MH/11;c.beginPath();c.moveTo(0,q);c.lineTo(MW,q);c.stroke()}
-const regions=[
-{key:'spawn',name:'PLAZA NEÓN',x:0,z:0,r:112,col:'#fff8dd',dx:0,dy:26},
-{key:'room',name:'SALA ESTÁTICA',x:200,z:0,rect:[153,-55,247,55],col:'#b7a7dc',dx:0,dy:-66},
-{key:'city',name:'CIUDAD FEBRIL',x:-200,z:0,r:106,col:'#48bce7',dx:0,dy:25},
-{key:'gray',name:'MONOLITOS GRISES',x:0,z:200,r:92,col:'#c5cbd3',dx:0,dy:27},
-{key:'gray',name:'FRAGMENTO GRIS',x:0,z:292,r:66,col:'#929aa5',dx:0,dy:20},
-{key:'red',name:'VOID ROJO',x:0,z:-230,r:88,col:'#e74459',dx:0,dy:-96},
-{key:'lagoon',name:'LAGUNA VAPOR',x:0,z:430,r:106,col:'#f3a98f',dx:0,dy:-112},
-{key:'broken',name:'THE BROKEN',x:0,z:-520,r:85,col:'#71627d',dx:0,dy:62}
-];
-/* Four real boardwalks from buildBridges(); no invented route is drawn. */
-const bridges=[[95,0,155,0],[-116,0,-94,0],[0,95,0,121],[0,-161,0,-95]];
-c.lineCap='round';c.lineWidth=7;c.strokeStyle='rgba(234,227,168,.78)';
-c.setLineDash([5,3]);
-bridges.forEach(function(b){const a=w2m(b[0],b[1]),q=w2m(b[2],b[3]);c.beginPath();c.moveTo(a[0],a[1]);c.lineTo(q[0],q[1]);c.stroke()});
-c.setLineDash([]);c.lineWidth=1;
-regions.forEach(function(r){
-const p=w2m(r.x,r.z),seen=visited.has(r.key),active=curZone===r.key;
-c.fillStyle=r.col+(seen?'26':'12');c.strokeStyle=active?'#ffffff':(seen?r.col+'ee':r.col+'77');c.lineWidth=active?3:(seen?2:1.2);
-if(r.rect){const a=w2m(r.rect[0],r.rect[1]),b=w2m(r.rect[2],r.rect[3]);c.fillRect(a[0],Math.min(a[1],b[1]),b[0]-a[0],Math.abs(b[1]-a[1]));c.strokeRect(a[0],Math.min(a[1],b[1]),b[0]-a[0],Math.abs(b[1]-a[1]));}
-else{c.beginPath();c.arc(p[0],p[1],r.r*MSC,0,Math.PI*2);c.fill();c.stroke();}
-/* Labels are lifted from the dream marker line and backed for contrast. */
-const lx=p[0]+r.dx,ly=p[1]+r.dy;
-c.font=(active?'bold ':'')+'10px monospace';c.textAlign='center';
-const tw=c.measureText(r.name).width+9;c.fillStyle='rgba(3,6,10,.82)';c.fillRect(lx-tw/2,ly-10,tw,13);
-c.fillStyle=active?'#fff':r.col;c.fillText(r.name,lx,ly);
+/* --- puentes / conexiones --- */
+c.lineWidth=4;c.strokeStyle='rgba(255,238,0,.55)';
+for(const b of MAPBRI){
+const a=w2m(b[0],b[1]),d=w2m(b[2],b[3]);
+c.beginPath();c.moveTo(a[0],a[1]);c.lineTo(d[0],d[1]);c.stroke();
+}
+c.lineWidth=1;c.setLineDash([3,4]);c.strokeStyle='rgba(255,255,255,.55)';
+for(const b of MAPBRI){
+const a=w2m(b[0],b[1]),d=w2m(b[2],b[3]);
+c.beginPath();c.moveTo(a[0],a[1]);c.lineTo(d[0],d[1]);c.stroke();
+}
+c.setLineDash([]);
+/* --- sectores: contorno + relleno según VISITADO --- */
+const labelRects=[];
+function freeRect(x,y,w,h){
+for(const r of labelRects){
+if(x<r[0]+r[2]+3&&x+w>r[0]-3&&y<r[1]+r[3]+2&&y+h>r[1]-2)return false;
+}
+return true;
+}
+function label(txt,px,py,color,size){
+c.font=(size||9)+'px monospace';
+const w=c.measureText(txt).width,h=(size||9)+2;
+const cands=[[px-w/2,py-11],[px-w/2,py+3],[px-w-8,py-4],[px+8,py-4],[px-w/2,py-20],[px-w/2,py+12]];
+for(const cd of cands){
+const x=Math.max(4,Math.min(MW-w-4,cd[0])),y=Math.max(12,Math.min(MH-h-6,cd[1]+h/2));
+if(freeRect(x,y,w,h)){labelRects.push([x,y,w,h]);c.fillStyle=color;c.textAlign='left';c.fillText(txt,x,y+h-4);return;}
+}
+const x=Math.max(4,Math.min(MW-w-4,px-w/2)),y=Math.max(12,Math.min(MH-h-6,py-11));
+labelRects.push([x,y,w,h]);c.fillStyle=color;c.textAlign='left';c.fillText(txt,x,y+h-4);
+}
+MAPZ.forEach(function(zd){
+const p=w2m(zd.x,zd.z);
+const seen=zd.k==='grayB'?visited.has('gray'):visited.has(zd.k);
+const cur=(zd.k==='room'&&curZone==='room')||zd.k===curZone;
+if(zd.rect){
+const a=w2m(zd.x-zd.rect[0]/2,zd.z-zd.rect[1]/2),b=w2m(zd.x+zd.rect[0]/2,zd.z+zd.rect[1]/2);
+const x0=Math.min(a[0],b[0]),y0=Math.min(a[1],b[1]),w0=Math.abs(b[0]-a[0]),h0=Math.abs(b[1]-a[1]);
+c.fillStyle=zd.c+(seen?'38':'14');c.fillRect(x0,y0,w0,h0);
+c.lineWidth=cur?2.4:1.6;c.setLineDash(seen?[]:[4,4]);
+c.strokeStyle=zd.c+(seen?'ee':'66');c.strokeRect(x0,y0,w0,h0);c.setLineDash([]);
+label(zd.n,p[0],p[1]-(h0/2+12)*zd.side,seen?zd.c+'ee':zd.c+'77',10);
+}else{
+const rr=zd.r*MSC;
+c.beginPath();c.arc(p[0],p[1],rr,0,7);
+c.fillStyle=zd.c+(seen?'30':'10');c.fill();
+c.lineWidth=cur?2.6:1.6;c.setLineDash(seen?[]:[4,4]);
+c.strokeStyle=zd.c+(seen?'ee':'55');c.stroke();c.setLineDash([]);
+if(cur){c.beginPath();c.arc(p[0],p[1],rr+3.5,0,7);c.strokeStyle='rgba(255,255,255,.55)';c.lineWidth=1;c.stroke();}
+label(zd.n,p[0],p[1]+(rr+13)*zd.side,seen?zd.c+'ee':zd.c+'88',10);
+}
 });
-/* Unexplored connective space is explicitly identified, not mistaken for a region. */
-const vp=w2m(94,124);c.font='bold 9px monospace';c.textAlign='center';c.fillStyle='rgba(155,166,191,.72)';c.fillText('EL VACÍO · TRANSICIÓN',vp[0],vp[1]);
-/* Dream locations: numbered markers distinguish nearby names; gray means held. */
+/* --- los seis sueños: ubicación + estado --- */
 dreamItems.forEach(function(it,i){
-const p=w2m(it.grp.position.x,it.grp.position.z),held=it.collected;
+const isCollected=!!it.collected;
+const p=w2m(it.grp.position.x,it.grp.position.z);
 const col='#'+('000000'+it.data.color.toString(16)).slice(-6);
-c.beginPath();c.arc(p[0],p[1],held?6:7,0,Math.PI*2);c.fillStyle=held?'#86918f':col;c.fill();c.strokeStyle='#fff';c.lineWidth=1.4;c.stroke();
-c.fillStyle='#071016';c.font='bold 8px monospace';c.textAlign='center';c.fillText(String(i+1),p[0],p[1]+3);
-if(!held){c.font='bold 8px monospace';c.textAlign=i%2?'left':'right';c.lineWidth=2.5;c.strokeStyle='rgba(0,0,0,.9)';const tx=p[0]+(i%2?9:-9),ty=p[1]+(i%3===0?-7:12),label=it.data.name.replace(' DE ',' ').replace(' DEL ',' ');c.strokeText(label,tx,ty);c.fillStyle='#f4f4ee';c.fillText(label,tx,ty);}
+const r=isCollected?3.4:4.2+Math.sin(t*3+i)*1.2;
+c.save();c.translate(p[0],p[1]);c.rotate(Math.PI/4);
+c.fillStyle=isCollected?'rgba(150,170,165,.55)':col;
+c.fillRect(-r/1.4,-r/1.4,r*1.4,r*1.4);
+c.strokeStyle=isCollected?'rgba(150,170,165,.5)':'#ffffff';
+c.lineWidth=1;c.strokeRect(-r/1.4,-r/1.4,r*1.4,r*1.4);
+c.restore();
+if(isCollected){
+c.fillStyle='rgba(150,170,165,.6)';c.font='9px monospace';c.textAlign='center';
+c.fillText('\u2713',p[0],p[1]+3.5);
+}else{
+label(it.data.name,p[0],p[1]-3,col,8);
+}
 });
-/* Player marker points along actual yaw; position is always shown above zone fills. */
-const pp=w2m(pos.x,pos.z);c.save();c.translate(pp[0],pp[1]);c.rotate(-yaw);
-c.fillStyle='#fff';c.strokeStyle='#00fff7';c.lineWidth=2;c.beginPath();c.moveTo(0,-10);c.lineTo(-6,7);c.lineTo(0,4);c.lineTo(6,7);c.closePath();c.fill();c.stroke();c.restore();
-/* Compact legend/state panel: pending dreams remain visible in their map positions. */
-c.fillStyle='rgba(2,5,9,.86)';c.fillRect(8,8,166,118);c.strokeStyle='rgba(0,255,247,.7)';c.strokeRect(8,8,166,118);
-c.textAlign='left';c.font='bold 10px monospace';c.fillStyle='#eaf6f3';c.fillText('SUEÑOS '+dreamsCollected+'/6',15,21);
-c.font='8px monospace';
-dreamItems.forEach(function(it,i){const y=35+i*13,held=it.collected,col='#'+('000000'+it.data.color.toString(16)).slice(-6);c.fillStyle=col;c.fillRect(15,y-7,7,7);c.fillStyle=held?'#9ba9a4':'#e9ece7';c.fillText((held?'✓ ':'○ ')+(i+1)+' '+it.data.name,27,y);});
-c.textAlign='left';c.font='bold 9px monospace';c.fillStyle='#00fff7';c.fillText('TÚ  ▲  '+(curZone&&typeof ZONES!=='undefined'&&ZONES[curZone]?ZONES[curZone].name:'EL VACÍO'),12,MH-13);
-if(MAP.watch<4){c.fillStyle='rgba(0,255,247,.36)';c.fillRect(0,MH-5,MW*MAP.watch/4,5)}
-else{c.fillStyle='rgba(255,42,64,'+(0.45+0.35*Math.sin(t*10)).toFixed(2)+')';c.fillRect(0,MH-5,MW*Math.min(1,MAP.watch/8.5),5)}
+/* --- jugador: posición y orientación reales --- */
+const pp=w2m(pos.x,pos.z);
+const fx=-Math.sin(yaw),fz=-Math.cos(yaw);
+const ang=Math.atan2(fz,fx);   /* +Z → derecha, +X → arriba */
+c.save();c.translate(pp[0],pp[1]);c.rotate(ang);
+c.fillStyle='#ffffff';
+c.beginPath();c.moveTo(8,0);c.lineTo(-5,-5);c.lineTo(-3,0);c.lineTo(-5,5);c.closePath();c.fill();
+c.strokeStyle='rgba(0,255,247,.9)';c.lineWidth=1;c.stroke();
+c.restore();
+c.fillStyle='rgba(255,255,255,.75)';c.font='9px monospace';c.textAlign='center';
+c.fillText('TÚ',pp[0],pp[1]-9);
+/* --- leyenda --- */
+c.textAlign='left';c.font='9px monospace';
+c.fillStyle='rgba(255,238,0,.8)';c.fillText('═ PUENTE',8,14);
+c.fillStyle='rgba(220,240,235,.8)';c.fillText('◆ SUEÑO PENDIENTE',8,26);
+c.fillStyle='rgba(150,170,165,.8)';c.fillText('\u2713 SUEÑO RECOGIDO',8,38);
+c.fillStyle='rgba(255,255,255,.8)';c.fillText('▲ JUGADOR (orientación)',8,50);
+/* --- peligro de los Reguladores (mecánica original intacta) --- */
+if(MAP.watch<4){
+c.fillStyle='rgba(0,255,247,.5)';c.fillRect(0,MH-6,MW*MAP.watch/4,6);
+}else{
+c.fillStyle='rgba(255,40,40,'+(0.55+0.45*Math.sin(t*10)).toFixed(2)+')';
+c.fillRect(0,MH-6,MW*Math.min(1,MAP.watch/8.5),6);
+}
+if(MAP.watch>=4){
+const n=Math.min(MAP.eyes.length,(MAP.watch-4)*5|0);
+c.fillStyle='rgba(120,0,0,'+Math.min(.55,(MAP.watch-4)*.16).toFixed(2)+')';
+c.fillRect(0,0,MW,MH);
+for(let i=0;i<n;i++){
+const e=MAP.eyes[i],s=Math.min(1,(MAP.watch-4-i/5)*2.4);
+const ww=e[2]*2.2*s,hh=ww*.55*(Math.sin(t*2+i*3)>.95?.2:1);
+c.fillStyle='#f4eaea';c.beginPath();c.ellipse(e[0],e[1],ww,hh,0,0,7);c.fill();
+c.fillStyle='#e01010';c.beginPath();c.arc(e[0],e[1],hh*.9,0,7);c.fill();
+c.fillStyle='#000';c.beginPath();c.arc(e[0],e[1],hh*.4,0,7);c.fill();
+}
+if(MAP.watch>5.5){
+c.font='bold 26px monospace';c.textAlign='center';
+c.fillStyle='rgba(255,60,60,'+(0.6+0.4*Math.sin(t*8)).toFixed(2)+')';
+c.fillText('¿PORQUÉ SIGUES MIRÁNDOME?',MW/2,40);
+}
+}
+c.fillStyle='rgba(210,235,225,.75)';c.font='12px monospace';c.textAlign='left';
+c.fillText('SUEÑOS '+dreamsCollected+'/6 · MAPA DE ENSUEÑO · SEÑAL ANALÓGICA',10,MH-16);
+c.textAlign='right';
+c.fillText('CASSETTE '+(DREAMRELEASE.isHeld('ella')?'LIBERADA':'—'),MW-10,MH-16);
+if(Math.floor(t*1.6)%2===0){c.fillStyle='#ff453a';c.fillRect(MW-88,8,9,9)}
 }
 let mapAnimT=0,mapVMyaw=0;
 /* ============================================================
@@ -10273,32 +10595,39 @@ e.stopPropagation();e.preventDefault();
 /* ============================================================
    GESTIÓN POR ZONA
    ============================================================ */
-function syncDreamPermissions(){
-const zk=curZone||S.zone;
-if(zk!=='room'&&!dreamRetained('patrullador')&&PAT.on)patDespawn();
-if(zk!=='city'&&!dreamRetained('ladron')&&LAD.on)ladDespawn();
-if(zk!=='gray'&&!dreamRetained('acechador'))aceClear();
-if(zk!=='red'&&!dreamRetained('corredor')&&COR.on)corStop();
-if(zk!=='lagoon'&&!dreamRetained('merodeador')&&MER.on)merDespawn();
-if(zk!=='spawn'&&!dreamRetained('ella')&&girlState.active&&!girlState.vanishing)vanishGirl(false);
-}
 function onZone(zk){
 if(zk===S.zone)return;
 const prev=S.zone;
 S.zone=zk;S.zoneT=0;
-/* la entidad anterior desaparece; la del lugar nuevo toma su sitio */
-if(prev==='room'&&zk!=='room'&&!dreamRetained('patrullador'))patDespawn();
-if(prev==='city'&&zk!=='city'&&!dreamRetained('ladron')&&LAD.on)ladDespawn();
-if(prev==='gray'&&zk!=='gray'&&!dreamRetained('acechador'))aceClear();
-if(prev==='red'&&zk!=='red'&&!dreamRetained('corredor'))corStop();
-if(prev==='lagoon'&&zk!=='lagoon'&&!dreamRetained('merodeador'))merDespawn();
-if(prev==='spawn'&&zk!=='spawn'&&!dreamRetained('ella')&&girlState.active&&!girlState.vanishing)vanishGirl(false);
+/* [v3.12] la entidad anterior desaparece SALVO que su sueño siga
+   contigo: entonces puede seguir activa en cualquier zona. */
+const keep=function(ent){return DREAMRELEASE.isHeld(ent)};
+if(prev===ZNATIVE.patrullador&&zk!=='room'&&!keep('patrullador'))patDespawn();
+if(prev===ZNATIVE.ladron&&zk!=='city'&&LAD.on&&!keep('ladron'))ladDespawn();
+if(prev===ZNATIVE.acechador&&zk!=='gray'&&!keep('acechador'))aceClear();
+if(prev===ZNATIVE.corredor&&zk!=='red'&&!keep('corredor'))corStop();
+if(prev===ZNATIVE.merodeador&&zk!=='lagoon'&&!keep('merodeador'))merDespawn();
+if(prev===ZNATIVE.ella&&zk!=='spawn'&&girlState.active&&!girlState.vanishing&&!keep('ella'))vanishGirl(false);
 S.lastDreams=dreamsCollected;
 }
+/* [v3.12] al perder un sueño, las entidades que sólo estaban fuera de su
+   isla por ese sueño vuelven a su restricción (inmediato e idempotente) */
+function refreshRelease(){
+const zk=S.zone;
+if(PAT.on&&zk!=='room'&&!DREAMRELEASE.isHeld('patrullador'))patDespawn();
+if(LAD.on&&zk!=='city'&&!DREAMRELEASE.isHeld('ladron'))ladDespawn();
+if(zk!=='gray'&&!DREAMRELEASE.isHeld('acechador')){
+let alive=false;for(const p of parasites)if(p.alive)alive=true;
+if(alive)aceClear();
+}
+if(COR.on&&zk!=='red'&&!DREAMRELEASE.isHeld('corredor'))corStop();
+if(MER.on&&zk!=='lagoon'&&!DREAMRELEASE.isHeld('merodeador'))merDespawn();
+if(girlState.active&&zk!=='spawn'&&!DREAMRELEASE.isHeld('ella'))vanishGirl(false);
+}
+DREAMRELEASE._onChange=refreshRelease;
 function tick(dt,t){
 S.whCd-=dt;
 S.zoneT+=dt;
-syncDreamPermissions();
 /* ---------- muerte por entidad (animación corta + reglas de vida) ---------- */
 if(S.killAnim>=0){
 S.killAnim+=dt;
@@ -10325,12 +10654,9 @@ if(MAP.open)mapClose(true);
 if(REG.on)regEnd();
 if(lint.taken)lint.m.u(t,dt,-1,-1);
 if(lives<=0){
-dead=true;started=false;state='dead';
-heart.stop(.4);chaseMusic.stop(.3);
-AudioFX.duckAmbient(false);
-sfxEntityKill.stop(0);
-showGameOver(S.killWho,'SUEÑOS · '+dreamsCollected+'/6<br>'+S.killWho+' · '+fmtTime(sagaSeconds()));
-heart.setDying(false);
+/* [v3.12] una sola ruta de Game Over (interferencia -> perdida -> fade-in) */
+panicRedEl.style.opacity='0';
+sigDeathBegin(S.killWho);
 }else{
 invulnT=3;
 pos.set(lastSafe.p[0],EYE+.3,lastSafe.p[1]);
@@ -10372,6 +10698,8 @@ return;
 }
 const zk=S.zone||curZone;
 const ok=zoneAllows();
+/* [v3.12] elegibilidad por IDENTIDAD del sueño, no por el contador */
+const entOK=function(ent){return ok&&DREAMRELEASE.allowedHere(ent,zk)};
 /* si la historia se apodera del nivel (persecución, bolsillo, colapso),
    las entidades locales se retiran */
 if(!ok){
@@ -10397,46 +10725,45 @@ if(!MAP_ITEM.taken)mapItem.anim(t);
 if(dreamsCollected!==S.lastDreams){
 const grabbed=S.lastDreams<dreamsCollected;
 S.lastDreams=dreamsCollected;
-if(grabbed&&zk==='room'&&ok&&!PAT.on)S.dreamGrabCd=1.2;
+if(grabbed&&zk===ZNATIVE.patrullador&&entOK('patrullador')&&!PAT.on)S.dreamGrabCd=1.2;
 }
 if(S.dreamGrabCd>0){
 S.dreamGrabCd-=dt;
-if(S.dreamGrabCd<=0&&zk==='room'&&ok&&!PAT.on){
+if(S.dreamGrabCd<=0&&entOK('patrullador')&&!PAT.on){
 patSpawn(true);
 if(!PAT.on)PAT.spawnCd=4;
 }
 }
 /* sistemas por zona */
-if(ok&&entityEligible('patrullador','room')){
+if(entOK('patrullador')){
 if(!PAT.on&&PAT.spawnCd<=0&&S.zoneT>5){
 patSpawn(false);
 if(!PAT.on)PAT.spawnCd=8;
 }
 }
 patTick(dt,t);
-if(ok&&entityEligible('ladron','city')){
+if(entOK('ladron')){
 if(!LAD.on&&LAD.cd<=0&&S.zoneT>4)ladSpawn();
 }
 ladTick(dt,t);
-if(ok&&entityEligible('acechador','gray')){
+if(entOK('acechador')){
 ACD.dwell+=dt;
 /* [v3.10] tasa de aparición 0.16→0.09/s (≈1 cada 11 s tras los primeros
    5 s): cruzar los Monolitos sigue siendo tenso pero sin condena (fallo 8) */
 if(ACD.dwell>5&&Math.random()<dt*.09)aceSpawn();
 }
 aceTick(dt,t);
-if(ok&&entityEligible('corredor','red')){
+if(entOK('corredor')){
 /* [v3.10] encuentro más pronto en la zona (fallo 12): 2.5 s de zona en
    vez de 4, junto con el CD de 6-12 s tras cada pasada */
 if(!COR.on&&COR.cd<=0&&S.zoneT>2.5)corStart();
 }
 corTick(dt,t);
-if(ok&&entityEligible('merodeador','lagoon'))merSpawn();
+if(entOK('merodeador'))merSpawn();
 merTick(dt,t);
-if(zk==='spawn'||dreamRetained('ella'))ellaTick(dt,t);
+if(entOK('ella'))ellaTick(dt,t);
 /* susurros de la entidad local */
-const whisperEntity=zk&&ZKEY[zk]?ZKEY[zk]:Object.keys(DREAM_ENTITY_LABEL).find(function(k){return dreamRetained(k);});
-if(ok&&whisperEntity&&Math.random()<dt*.02)whisper(whisperEntity);
+if(ok&&zk&&ZKEY[zk]&&Math.random()<dt*.02)whisper(ZKEY[zk]);
 mapTick(dt,t);
 flashTick(dt,t);
 regTick(dt,t);
@@ -10452,19 +10779,7 @@ if(COR.cine)corCineCam();
 if(REG.on){panicRedEl.style.opacity=REG.red;blkEl.style.opacity=REG.blk;regFillEl.style.opacity=REG.fill||'0'}
 }
 return{
-dreamAudit:function(){return dreamItems.map(function(item){const key=DREAM_ENTITY[item.data.id];const home={ella:'spawn',patrullador:'room',ladron:'city',acechador:'gray',corredor:'red',merodeador:'lagoon'}[key];return{id:item.data.id,dream:item.data.name,zone:item.data.zone,entity:key,retained:!!item.collected,stolenBy:item.stolenBy||null,eligibleHere:entityEligible(key,home)};});},
-reset:function(){
-if(PAT.on)patDespawn();PAT.spawnCd=3;PAT.visits=0;PAT.grace=0;PAT.t=90;
-if(LAD.on)ladDespawn();LAD.on=false;lad.g.visible=false;LAD.cd=7;LAD.state='stalk';LAD.t=0;LAD.charges=0;LAD.stun=0;
-aceClear();if(COR.cine)corCineEnd();else if(COR.on)corStop();COR.on=false;COR.cd=7;
-merDespawn();MER.on=false;MER.t=5;MER.warn=null;MER.debris=null;MER.slow=0;
-if(REG.on)regEnd();
-S.killAnim=-1;S.killWho='';S.shake=0;freezeEl.style.display='none';
-MAP.open=false;MAP.watch=0;MAPVM.phase='off';MAPVM.k=0;mapVM.visible=false;
-FLSH.charging=false;FLSH.charge=0;FLSH.ready=false;FLSH.anim=null;
-if(FLSH.chargeSnd){FLSH.chargeSnd.stop(true);FLSH.chargeSnd=null}
-},
-tick:tick,onZone:onZone,syncVisuals:syncVisuals,syncDreamPermissions:syncDreamPermissions,
+tick:tick,onZone:onZone,syncVisuals:syncVisuals,
 /* [v3.10] true mientras dura la cinemática del Corredor: el jugador no
    se mueve (updatePlayer consulta esta función) */
 blockMove:function(){return !!COR.cine},
@@ -10481,11 +10796,66 @@ if(acePtr({clientX:x,clientY:y}))n++;
 return n;
 },
 FICHAS:FICHAS,SUSURROS:SUSURROS,
+/* [v3.12] QA: liberación por sueño, robo con origen y mapa */
+releaseState:function(){return DREAMRELEASE.state();},
+isHeld:function(ent){return DREAMRELEASE.isHeld(ent);},
+qaDreams:function(){return dreamItems.map(function(it){return{id:it.data.id,name:it.data.name,ent:it.data.ent,collected:!!it.collected,stolenBy:it.stolenBy||null,respawned:!!it.respawned,pos:[+it.grp.position.x.toFixed(1),+it.grp.position.z.toFixed(1)]};});},
+qaSteal:function(origin){
+const it=stealDream(origin);
+return it?{id:it.data.id,name:it.data.name,stolenBy:it.stolenBy,collected:it.collected,respawned:!!it.respawned}:null;
+},
+qaRespawnLast:function(){const ok=respawnLastDream();const it=lastStolenItem||lastDreamItem;return{ok:ok,id:it?it.data.id:null,stolenBy:it?(it.stolenBy||null):null};},
+qaSetDreamHeld:function(id,held){
+const it=dreamItems[clamp((id|0)-1,0,5)];
+if(!it)return false;
+it.collected=!!held;
+it.stolenBy=null;
+it.grp.visible=!held;it.mesh.visible=!held;it.glow.visible=!held;it.beam.visible=!held;
+dreamsCollected=dreamItems.filter(function(d){return d.collected}).length;
+elDreams.textContent='SUE\u00D1OS '+dreamsCollected+'/6';
+DREAMRELEASE.refresh();
+return true;
+},
+mapZones:function(){return MAPZ;},
+mapBridges:function(){return MAPBRI;},
+mapPoint:function(x,z){const p=w2m(x,z);return[+p[0].toFixed(1),+p[1].toFixed(1)];},
+mapDrawTexts:function(){
+const prev=window.__QATEXT;window.__QATEXT=[];
+mapDraw(mapAnimT);
+const out=window.__QATEXT;window.__QATEXT=prev;
+return out;
+},
+announceText:function(){return{main:elAnnMain.textContent,sub:elAnnSub.textContent};},
+/* [v3.12] QA de las rutas reales (no sólo de los helpers) */
+qaKill:function(who){return kill(who||'QA','prueba',false);},
+qaSetLives:function(n){lives=n|0;updateLivesHud();return lives;},
+qaZoneSet:function(zk){if(ZONES[zk]){S.zone=zk;S.zoneT=99;}return S.zone;},
+qaGating:function(zk){const out={};for(const e in ZNATIVE)out[e]=!!DREAMRELEASE.allowedHere(e,zk);out.ok=zoneAllows();return out;},
 ellaDizzy:function(){return ellaDizzy>0},
 map:function(){return{has:MAP.has,open:MAP.open,cd:MAP.cd,watch:MAP.watch,taken:MAP_ITEM.taken}},
 mapOpen:mapOpen,mapClose:function(){mapClose(false)},
 qaWatch:function(v){if(MAP.open&&typeof v==='number')MAP.watch=v;return MAP.watch},
-qaCd:function(kind,v){if(kind==='map')MAP.cd=v;if(kind==='flash')FLSH.cd=v;return true;},
+qaCd:function(kind,v){
+if(kind==='map')MAP.cd=v;
+if(kind==='flash')FLSH.cd=v;
+/* [v3.12] QA: adelanta los enfriamientos de las entidades locales */
+if(kind==='lad')LAD.cd=v;
+if(kind==='pat')PAT.spawnCd=v;
+if(kind==='cor')COR.cd=v;
+if(kind==='mer')MER.t=v;
+if(kind==='reg')REG.cd=v===undefined?20:v;
+return true;
+},
+/* [v3.12] QA: estado de las cinco entidades locales + ELLA (sin render) */
+qaEntState:function(){
+return{zone:S.zone,ok:zoneAllows(),
+pat:{on:PAT.on,t:Math.round(PAT.t)},lad:{on:LAD.on,state:LAD.state,cd:Math.round(LAD.cd)},
+par:parasites.filter(function(p){return p.alive}).length,
+cor:{on:COR.on,cd:Math.round(COR.cd)},mer:{on:MER.on},
+acd:{dwell:+ACD.dwell.toFixed(1),dmg:+ACD.dmg.toFixed(2)},
+ella:{active:girlState.active,mode:girlState.mode},
+release:DREAMRELEASE.state()};
+},
 entityPos:function(){
 const out={};
 if(PAT.on)out.pat=[+pat.g.position.x.toFixed(1),+pat.g.position.z.toFixed(1)];
@@ -10585,7 +10955,7 @@ const d=dreamsData[clamp(i-1,0,5)];
 pos.set(d.pos[0],Math.max(EYE,d.pos[1]+0.6),d.pos[2]+2.4);
 vel.set(0,0,0);respawnState='none';fadeBt=0;
 },
-broken:function(){noclipTo(0,-470,0);},
+broken:function(){noclipTo(0,BRK_SPAWN_Z,0);},
 collapse:function(){if(started)collapseAt=sagaSeconds()+0.5;},
 e404:function(){startErr404();},
 girl:function(){spawnGirl();},
@@ -10597,6 +10967,24 @@ solarHold:function(v){solarHold=v;},
 noComplete:function(){collapseAt=0;collapseT=-1;completed=false;overlayShown=false;entering4=false;},
 pulse:function(){firePulse(0.5,0.9,true);},
 post:function(n,v){if(compMat.uniforms[n])compMat.uniforms[n].value=v;},
+sky:function(){return{SKY:SKY,cur:skyCur,tgt:skyTgt};},
+pursuit:function(){return{active:!!TERROR.pursuit,done:!!TERROR.pursuitDone,phase:TERROR.pursuitPhase,obsJumping:!!TERROR.obsJumping};},
+fx:function(){const u=compMat.uniforms;return{noise:u.uNoise.value,aberr:u.uAberr.value,glitch:u.uGlitch.value,scan:u.uScan.value,vig:u.uVig.value,ghost:u.uGhost.value,dof:u.uDof.value,bloom:u.uBloom.value};},
+/* [v3.12] QA determinista: avanza el tick de entidades y la recogida sin
+   depender del render (mismo código de juego, mismo estado) */
+qaSteps:function(n,dt){
+n=n|0;dt=dt||0.05;
+for(let i=0;i<n;i++){
+simT+=dt;
+TRY:{
+checkZone();                       /* igual que updatePlayer: sincroniza S.zone */
+if(invulnT>0)invulnT-=dt;          /* igual que el bucle principal */
+if(window.ZENT404)window.ZENT404.tick(dt,simT);
+checkDreamPickups();
+}
+}
+return{zone:curZone,dreams:dreamsCollected,pos:[+pos.x.toFixed(1),+pos.z.toFixed(1)]};
+},
 dreams:function(){return dreamsCollected;},
 playerZ:function(){return pos.z;},
 playerY:function(){return pos.y;},
@@ -10604,6 +10992,28 @@ lives:function(){return lives;},
 perf:function(){return {fps:Math.round(fpsAvg),degraded:degraded};},
 entering:function(){return entering4;},
 testJumpscare:function(){spawnGirl();girlState.mode='hunt';girlState.x=pos.x-Math.sin(yaw)*8;girlState.z=pos.z-Math.cos(yaw)*8;startGirlDeath();},
+/* [v3.12] QA de la secuencia de muerte por interferencia */
+sigDeath:function(who){return sigDeathBegin(who||'QA');},
+sigState:function(){
+return{active:SIGD.active,phase:SIGD.phase,who:SIGD.who,
+overlay:!deathOverlay.classList.contains('hidden'),
+overlayOpacity:+(deathOverlay.style.opacity||''),
+blood:bloodEl.classList.contains('show'),
+staticOpacity:+(sigDeathEl&&sigDeathEl.style.opacity||0),
+noise:+compMat.uniforms.uNoise.value.toFixed(3),
+glitch:+compMat.uniforms.uGlitch.value.toFixed(3),
+scan:+compMat.uniforms.uScan.value.toFixed(3),
+fadeB:+fadeB.toFixed(2),fadeBt:+fadeBt.toFixed(2),
+lives:lives,dead:dead,started:started,state:state};
+},
+sigTick:function(dt){sigDeathTick(dt);return this.sigState();},
+worldInfo:function(){
+return{zones:MAPZ.length,bridges:MAPBRI.length,colliders:{cyl:colliders.cyl.length,box:colliders.box.length},
+islands:islands.length,ramps:ramps.length,dreams:dreamItems.length,
+zoneAtSpawn:zoneAt(0,60),zoneAtRoom:zoneAt(300,0),zoneAtCity:zoneAt(-300,0),
+zoneAtGray:zoneAt(0,300),zoneAtRed:zoneAt(0,-345),zoneAtLagoon:zoneAt(0,645),zoneAtBroken:zoneAt(0,-780),
+bridgeGround:[groundAt(176,0,5),groundAt(-149,0,5),groundAt(0,159,5),groundAt(0,-183,5),groundAt(0,492,5)]};
+},
 obsScare:function(){return TERROR.obsScare()?'obsjump-on':'obsjump-blocked';},
 lethalCatch:function(){return TERROR.qa.lethalCatch();},
 requeue:function(){return TERROR.requeuePursuit();},
@@ -10620,7 +11030,10 @@ terror:TERROR.qa,
 /* ===== [v3.9] hooks QA del rework ===== */
 v39:{
 map:function(){return window.ZENT404?ZENT404.map():null;},
-dreamAudit:function(){return window.ZENT404?ZENT404.dreamAudit():[];},
+release:function(){return window.ZENT404?ZENT404.releaseState():null;},
+steal:function(o){return window.ZENT404?ZENT404.qaSteal(o):null;},
+respawnLast:function(){return window.ZENT404?ZENT404.qaRespawnLast():null;},
+setDreamHeld:function(i,h){return window.ZENT404?ZENT404.qaSetDreamHeld(i,h):false;},
 mapTake:function(){return ZENT404.mapTake();},
 mapOpen:function(){return ZENT404.mapOpen();},
 mapClose:function(){ZENT404.mapClose();return true;},
@@ -10680,11 +11093,9 @@ qaPos:function(){return[+pos.x.toFixed(1),+pos.y.toFixed(1),+pos.z.toFixed(1)];}
 qaGeo:function(){
 const bridges=[];
 scene.traverse(function(o){
-if(o.isMesh&&o.geometry&&o.geometry.type==='BoxGeometry'){
+if(o.isMesh&&o.userData&&o.userData.bridge){
 const p=o.position,g=o.geometry.parameters;
-if(g&&((g.width===60&&g.depth===10)||(g.width===22&&g.depth===10)||(g.width===10&&g.depth===26)||(g.width===10&&g.depth===66))&&Math.abs(g.height-1)<0.01){
-bridges.push({x:+p.x.toFixed(0),z:+p.z.toFixed(0),top:+(p.y+g.height/2).toFixed(3)});
-}
+bridges.push({x:+p.x.toFixed(0),z:+p.z.toFixed(0),top:+(p.y+g.height/2).toFixed(3),w:g.width,d:g.depth});
 }
 });
 return{bridges:bridges,
@@ -10692,6 +11103,26 @@ ground:function(x,z){return groundAt(x,z,5);},
 push:function(x,z){const c=collide(x,z,0);return[+c[0].toFixed(2),+c[1].toFixed(2)];},
 cylNear:function(x,z,r){let hit=null;for(const c of colliders.cyl){if(Math.hypot(c.x-x,c.z-z)<c.r+r){hit=[+c.x.toFixed(0),+c.z.toFixed(0),+c.r.toFixed(1)];break}}return hit;}
 };
+},
+qaStrays:function(margin){
+/* auditoría de geometría huérfana: objetos lejos de toda isla */
+const m=margin==null?30:margin, out=[], v=new THREE.Vector3();
+scene.traverse(function(o){
+if(!(o.isMesh||o.isSprite||o.isPoints))return;
+if(o.userData&&o.userData.wrSkip)return;
+o.getWorldPosition(v);
+if(v.y>95)return;
+let d=1e9;
+for(const is of islands){
+ let dd;
+ if(is.type==='r')dd=Math.max(Math.abs(v.x-(is.minX+is.maxX)/2)-(is.maxX-is.minX)/2,Math.abs(v.z-(is.minZ+is.maxZ)/2)-(is.maxZ-is.minZ)/2);
+ else dd=Math.hypot(v.x-is.x,v.z-is.z)-is.r;
+ if(dd<d)d=dd;
+}
+if(d>m)out.push({y:+v.y.toFixed(0),x:+v.x.toFixed(0),z:+v.z.toFixed(0),d:+d.toFixed(0)});
+});
+out.sort(function(a,b){return b.d-a.d;});
+return out.slice(0,40);
 }
 }
 };
