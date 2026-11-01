@@ -15,40 +15,66 @@ body{ margin:0; padding:0; overflow:hidden; background:#000; font-family:"VT323"
 #canvas-container{ position:absolute; inset:0; z-index:1; }
 #canvas-container canvas{ display:block; }
 #panic-red{position:absolute;inset:0;pointer-events:none;z-index:4;opacity:0;background:radial-gradient(ellipse var(--pr,78%) 68% at center,transparent 36%,rgba(150,8,8,.55) 76%,rgba(110,0,0,.95) 100%);}
-/* [v3.12] sangre suprimida: la muerte usa interferencia y pérdida de señal analógica, sin salpicaduras ni gotas */
-#blood,#blood .splats,#blood .drips,#blood .wash{display:none !important;opacity:0 !important;background:none !important;animation:none !important;}
-#signal-death{
-position:fixed;inset:0;z-index:59;pointer-events:none;opacity:0;
-background:
-radial-gradient(ellipse at 50% 50%,rgba(6,8,16,.55) 0%,rgba(2,3,8,.94) 100%),
-repeating-linear-gradient(0deg,rgba(220,245,255,.11) 0 1px,rgba(0,0,0,.22) 1px 2px,transparent 2px 4px),
-repeating-linear-gradient(90deg,rgba(0,255,247,.06) 0 1px,rgba(255,43,214,.05) 1px 2px,transparent 2px 5px);
-}
-#signal-death.jitter{animation:sigDeathJit .11s steps(3,end) infinite;}
-@keyframes sigDeathJit{
-0%{background-position:0 0,0 0,0 0;}
-33%{background-position:0 0,0 2px,-3px 0;}
-66%{background-position:0 0,0 -1px,2px 0;}
-100%{background-position:0 0,0 1px,0 0;}
-}
-#scanlines{ position:fixed; inset:0; z-index:12; pointer-events:none; background:repeating-linear-gradient(0deg, rgba(0,0,0,.07) 0 1px, transparent 1px 3px); mix-blend-mode:multiply; }
+#blood{position:absolute;inset:0;pointer-events:none;z-index:6;overflow:hidden;opacity:0;}
+#blood.show{opacity:1;}
+#blood .splats{position:absolute;inset:-4%;transform:scale(.55);opacity:0;background:
+radial-gradient(circle at 22% 38%,rgba(130,4,4,.92) 0 4%,rgba(90,0,0,.55) 6%,transparent 9%),
+radial-gradient(circle at 68% 26%,rgba(140,8,4,.9) 0 5%,rgba(90,0,0,.5) 8%,transparent 12%),
+radial-gradient(circle at 45% 62%,rgba(120,2,2,.95) 0 6%,rgba(80,0,0,.6) 9%,transparent 14%),
+radial-gradient(circle at 78% 70%,rgba(130,6,2,.88) 0 4%,transparent 8%),
+radial-gradient(circle at 12% 74%,rgba(110,2,2,.85) 0 3.5%,transparent 7%),
+radial-gradient(circle at 55% 12%,rgba(125,4,4,.8) 0 3%,transparent 6%),
+radial-gradient(circle at 88% 48%,rgba(120,3,3,.8) 0 2.5%,transparent 5%),
+radial-gradient(circle at 33% 88%,rgba(115,2,2,.8) 0 3%,transparent 6.5%);}
+#blood.show .splats{animation:splat .22s cubic-bezier(.1,1.6,.3,1) forwards;}
+@keyframes splat{from{transform:scale(.55);opacity:0;}to{transform:scale(1);opacity:1;}}
+#blood .drips{position:absolute;inset:0;opacity:0;background-image:
+linear-gradient(to bottom,rgba(110,0,0,.85),rgba(110,0,0,0)),
+linear-gradient(to bottom,rgba(100,0,0,.8),rgba(100,0,0,0)),
+linear-gradient(to bottom,rgba(120,0,0,.8),rgba(120,0,0,0)),
+linear-gradient(to bottom,rgba(105,0,0,.75),rgba(105,0,0,0)),
+linear-gradient(to bottom,rgba(115,0,0,.8),rgba(115,0,0,0)),
+linear-gradient(to bottom,rgba(95,0,0,.7),rgba(95,0,0,0));
+background-size:5px 34%,4px 22%,6px 45%,3px 18%,5px 30%,4px 26%;
+background-position:24% 30%,66% 24%,46% 52%,80% 48%,12% 64%,58% 10%;background-repeat:no-repeat;}
+#blood.show .drips{opacity:1;animation:dripRun 2.4s ease-in forwards;}
+@keyframes dripRun{from{background-position:24% 30%,66% 24%,46% 52%,80% 48%,12% 64%,58% 10%;}
+to{background-position:24% 54%,66% 50%,46% 80%,80% 74%,12% 90%,58% 38%;}}
+#blood .wash{position:absolute;inset:0;opacity:0;background:radial-gradient(ellipse at 50% 50%,rgba(90,0,0,.5),rgba(25,0,0,.92) 100%);transition:opacity 1.3s ease-out;}
+#blood.show .wash{opacity:1;}
+#scanlines{ position:fixed; inset:0; z-index:12; pointer-events:none; background:repeating-linear-gradient(0deg, rgba(0,0,0,.065) 0 1px, transparent 1px 4px); mix-blend-mode:multiply; }
 #signal-film{
 position:fixed; inset:-5%; z-index:13; pointer-events:none; opacity:.13;
 background:
-radial-gradient(ellipse at 50% 44%, transparent 34%, rgba(0,0,0,.05) 62%, rgba(0,0,0,.42) 100%),
-repeating-linear-gradient(0deg, rgba(255,255,255,.014) 0 1px, transparent 1px 5px),
-repeating-linear-gradient(90deg, rgba(255,0,180,.010) 0 1px, transparent 1px 7px);
+radial-gradient(ellipse at 50% 44%, transparent 28%, rgba(0,0,0,.08) 58%, rgba(0,0,0,.68) 100%),
+repeating-linear-gradient(0deg, rgba(255,255,255,.025) 0 1px, transparent 1px 5px),
+repeating-linear-gradient(90deg, rgba(255,0,180,.018) 0 1px, transparent 1px 7px);
 mix-blend-mode:screen;
 transform:translate3d(0,0,0);
 }
 body.playing #signal-film{ animation:signalDrift 8s steps(7,end) infinite; }
 @keyframes signalDrift{
-0%,100%{ transform:translate3d(0,0,0) scale(1.01); }
-14%{ transform:translate3d(-.22%,.1%,0) scale(1.01); }
-31%{ transform:translate3d(.18%,-.08%,0) scale(1.012); }
-63%{ transform:translate3d(-.1%,.14%,0) scale(1.01); }
-81%{ transform:translate3d(.2%,0,0) scale(1.013); }
+0%,100%{ transform:translate3d(0,0,0) scale(1.02); }
+14%{ transform:translate3d(-.5%,.2%,0) scale(1.018); }
+31%{ transform:translate3d(.35%,-.15%,0) scale(1.024); }
+63%{ transform:translate3d(-.2%,.3%,0) scale(1.02); }
+81%{ transform:translate3d(.45%,0,0) scale(1.026); }
 }
+/* [v3.12] CAPA DE INTERFERENCIA (muerte sin sangre): estática de señal ligera */
+#sigdeath{ position:fixed; inset:0; z-index:15; pointer-events:none; opacity:0; transition:opacity .35s linear;
+background:
+repeating-linear-gradient(0deg, rgba(255,255,255,.09) 0 1px, transparent 1px 3px),
+repeating-linear-gradient(90deg, rgba(255,255,255,.04) 0 2px, transparent 2px 7px),
+radial-gradient(ellipse at 50% 40%, rgba(0,0,0,0) 20%, rgba(0,0,0,.55) 100%);
+mix-blend-mode:screen; }
+#sigdeath.on{ animation:sigJitter .16s steps(2,end) infinite; }
+@keyframes sigJitter{ 0%{ transform:translate3d(0,0,0) } 50%{ transform:translate3d(-.4%,.35%,0) } 100%{ transform:translate3d(.35%,-.3%,0) } }
+#sigdeath.loss{ mix-blend-mode:normal; background:
+repeating-linear-gradient(0deg, rgba(255,255,255,.16) 0 1px, transparent 1px 2px),
+repeating-linear-gradient(90deg, rgba(255,255,255,.07) 0 2px, transparent 2px 5px),
+radial-gradient(ellipse at 50% 50%, rgba(0,0,0,.25) 0%, rgba(0,0,0,.92) 100%); }
+#death-overlay{ opacity:1; transition:opacity .9s ease-out; }
+#death-overlay.fading{ opacity:0; }
 #ui-layer{ position:absolute; inset:0; z-index:10; pointer-events:none; }
 #crosshair{ position:absolute; top:50%; left:50%; width:8px; height:8px; background:rgba(0,255,247,.85); transform:translate(-50%,-50%); border-radius:50%; box-shadow:0 0 8px #ff2bd6, 0 0 2px #fff; opacity:.85; }
 #touch-left,#touch-right{ position:absolute; top:0; height:100%; width:50%; pointer-events:auto; }
@@ -102,10 +128,7 @@ pointer-events:none; opacity:0; font-style:italic; z-index:15;
 .ov-title{ font-size:clamp(26px,6vw,48px); font-weight:bold; letter-spacing:10px; text-shadow:3px 0 var(--magenta), -3px 0 var(--cyan); filter:url(#dream-warp); }
 .ov-sub{ margin-top:16px; letter-spacing:4px; color:#9fe8dd; font-size:13px; }
 .ov-big{ font-size:clamp(40px,10vw,100px); font-weight:bold; letter-spacing:14px; position:relative; color:#fff; filter:url(#dream-warp); }
-#comp-stats,#death-stats{ margin:26px 0 30px; letter-spacing:3px; color:#cfe8e2; font-size:14px; line-height:2; }
-#death-overlay{ background:rgba(3,4,10,.88); opacity:0; }
-#death-overlay .ov-big,#death-overlay #death-sub,#death-overlay #death-stats,#death-overlay #btn-retry{ transition:opacity .45s ease, transform .45s ease; }
-#death-overlay.fading-out{ pointer-events:none !important; }
+#comp-stats{ margin:26px 0 30px; letter-spacing:3px; color:#cfe8e2; font-size:14px; line-height:2; }
 /* ===== Pantalla de inicio estilo index (sueños de fondo) ===== */
 #start-screen{
 position:fixed; inset:0; z-index:70;
@@ -273,10 +296,10 @@ background:#0a0a12;border:1px solid var(--cyan);color:#fff}
 </svg>
 <div id="canvas-container"></div>
 <div id="panic-red"></div>
-<div id="blood"></div>
-<div id="signal-death"></div>
+<div id="blood"><div class="wash"></div><div class="splats"></div><div class="drips"></div></div>
 <div id="scanlines"></div>
 <div id="signal-film"></div>
+<div id="sigdeath"></div>
 <div id="ui-layer">
 <div id="crosshair"></div>
 <div id="touch-left"></div>
@@ -1035,11 +1058,11 @@ const cvSignBeacon=genSign('EL FARO','la señal llama desde aquí',512,256);
 const cvSignBroken=genSign('THE BROKEN','esto no es un nivel',512,256);
 const cvSign404=genSign('404','REALIDAD NO ENCONTRADA',512,256);
 /* ========== 02 · PIPELINE ========== */
-const scene=new THREE.Scene();
-const bgCol=new THREE.Color(0xcfd6ec);
+let scene=new THREE.Scene();
+const bgCol=new THREE.Color(0x150c26);
 scene.background=bgCol;
-scene.fog=new THREE.FogExp2(0xcfd6ec,0.0048);
-const camera=new THREE.PerspectiveCamera(76,innerWidth/innerHeight,0.1,2200);
+scene.fog=new THREE.FogExp2(0x150c26,0.0060);
+const camera=new THREE.PerspectiveCamera(76,innerWidth/innerHeight,0.1,1400);
 camera.rotation.order='YXZ';
 const renderer=new THREE.WebGLRenderer({antialias:false,powerPreference:'high-performance'});
 renderer.setPixelRatio(Math.min(devicePixelRatio,2));
@@ -1089,11 +1112,11 @@ depthTest:false,depthWrite:false,
 uniforms:{
 tScene:{value:null},tBloom:{value:null},
 uTime:{value:0},uRes:{value:new THREE.Vector2(640,480)},
-uNoise:{value:0.085},uAberr:{value:0.0018},uGlitch:{value:0.024},
+uNoise:{value:0.09},uAberr:{value:0.0018},uGlitch:{value:0.025},
 uInvert:{value:0},uFadeB:{value:0},uFadeW:{value:0},
-uScan:{value:0.022},uVig:{value:0.66},
-uSolar:{value:0},uTape:{value:0.16},uSolarPal:{value:0},
-uBloom:{value:0.30},uGhost:{value:0.032},uDof:{value:0.13},uWarm:{value:0.45},uWash:{value:0}
+uScan:{value:0.022},uVig:{value:0.27},
+uSolar:{value:0},uTape:{value:0.5},uSolarPal:{value:0},
+uBloom:{value:0.30},uGhost:{value:0.035},uDof:{value:0.14},uWarm:{value:0.45},uWash:{value:0}
 },
 vertexShader:QUAD_VERT,
 fragmentShader:`
@@ -1108,12 +1131,12 @@ void main(){
 vec2 uv=vUv;
 vec2 cc=uv-0.5;
 float r2=dot(cc,cc);
-uv+=cc*r2*(0.048+0.010*(0.5+0.5*sin(uTime*0.6)));
-uv.x+=sin(uv.y*9.0+uTime*2.1)*0.00055*(1.0+uGlitch*10.0);
-uv.y+=sin(uTime*1.7+uv.x*13.0)*0.00026*(0.6+uGlitch*3.2);
+uv+=cc*r2*(0.10+0.02*(0.5+0.5*sin(uTime*0.6)));
+uv.x+=sin(uv.y*9.0+uTime*2.1)*0.0012*(1.0+uGlitch*6.0);
+uv.y+=sin(uTime*1.7+uv.x*13.0)*0.00055*(0.6+uGlitch*2.0);
 float tapeZone=1.0-smoothstep(0.0,0.09,uv.y);
 float rowT=floor(uv.y*uRes.y*0.5);
-uv.x+=(hash(vec2(rowT,floor(mod(uTime,64.0)*30.0)))-0.5)*0.09*uTape*tapeZone;
+uv.x+=(hash(vec2(rowT,floor(mod(uTime,64.0)*30.0)))-0.5)*0.12*uTape*tapeZone;
 float row=floor(uv.y*28.0);
 float rr=hash(vec2(row,floor(mod(uTime,64.0)*22.0)));
 float gate=step(0.82,hash(vec2(row*1.91,floor(mod(uTime,64.0)*22.0)+7.0)));
@@ -1122,11 +1145,11 @@ vec2 blk=floor(uv*vec2(14.0,10.0));
 float bh=hash(blk+floor(mod(uTime,64.0)*9.0));
 float bgate=step(1.0-0.10*uGlitch,bh);
 uv.x+=bgate*(bh-0.5)*0.35;
-float ab=uAberr+uGlitch*0.012+r2*0.003;
+float ab=uAberr+uGlitch*0.012+r2*0.006;
 vec2 off=cc*ab;
 vec3 col=vec3(sampleScene(uv+off).r, sampleScene(uv).g, sampleScene(uv-off).b);
-float bleed=0.0008+uGlitch*0.0022;
-col.r=mix(col.r,(sampleScene(uv+vec2(bleed,0.0)).r+sampleScene(uv+vec2(bleed*2.0,0.0)).r)*0.5,0.30);
+float bleed=0.0016+uGlitch*0.002;
+col.r=mix(col.r,(sampleScene(uv+vec2(bleed,0.0)).r+sampleScene(uv+vec2(bleed*2.0,0.0)).r)*0.5,0.55);
 float dofAmt=uDof*smoothstep(0.16,0.60,r2);
 if(dofAmt>0.004){
 vec3 rb=col*0.4;
@@ -1179,12 +1202,12 @@ float inter=step(0.5,fract(uv.y*uRes.y*0.5+floor(uTime*12.0)*0.5))*0.04*uGlitch;
 col-=inter;
 float bp=fract(uTime*0.045);
 float band=exp(-pow((uv.y-bp)*60.0,2.0));
-col+=band*0.024;
-col=mix(col,col.bgr*vec3(1.03,0.97,1.06),band*0.17);
+col+=band*0.05;
+col=mix(col,col.bgr*vec3(1.05,0.95,1.10),band*0.35);
 col=mix(col,vec3(1.0)-col,clamp(uInvert,0.0,1.0));
 float vig=smoothstep(0.85,0.25,length(cc));
 col*=mix(uVig,1.0,vig);
-col*=1.0+0.008*sin(uTime*13.7)+0.009*(hash(vec2(floor(uTime*8.0),3.7))-0.5);
+col*=1.0+0.018*sin(uTime*13.7)+0.02*(hash(vec2(floor(uTime*8.0),3.7))-0.5);
 col=mix(col,vec3(0.0),clamp(uFadeB,0.0,1.0));
 col=mix(col,vec3(1.0),clamp(uFadeW,0.0,1.0));
 gl_FragColor=vec4(max(col,vec3(0.0)),1.0);
@@ -1215,9 +1238,9 @@ compMat.uniforms.uRes.value.set(w,h);
 makeRT();
 /* ========== 02B · CIELO ========== */
 const skyUni={
-uTop:{value:new THREE.Color(0xdce4f7)},uHor:{value:new THREE.Color(0xf5f2ff)},
-uCl:{value:new THREE.Color(0xffffff)},uHi:{value:new THREE.Color(0xffeef8)},
-uCover:{value:0.36},uStretch:{value:1.0},uTime:{value:0},uSimple:{value:0}};
+uTop:{value:new THREE.Color(0x070312)},uHor:{value:new THREE.Color(0x1b1030)},
+uCl:{value:new THREE.Color(0x0d0618)},uHi:{value:new THREE.Color(0x2e1b4a)},
+uCover:{value:0.55},uStretch:{value:1.0},uTime:{value:0},uSimple:{value:0}};
 const skyMat=new THREE.ShaderMaterial({
 side:THREE.BackSide,depthWrite:false,depthTest:false,fog:false,uniforms:skyUni,
 vertexShader:`
@@ -1253,7 +1276,7 @@ col=mix(col,ccol,clamp(cl,0.0,1.0)*0.9);
 col=mix(col,uHor,exp(-max(d.y,0.0)*7.0)*0.55);
 gl_FragColor=vec4(col,1.0);
 }`});
-const skyDome=new THREE.Mesh(new THREE.SphereGeometry(1650,32,16),skyMat);
+const skyDome=new THREE.Mesh(new THREE.SphereGeometry(1100,32,16),skyMat);
 skyDome.renderOrder=-1000;skyDome.frustumCulled=false;
 scene.add(skyDome);
 /* ========== 03 · MATERIALES ========== */
@@ -1645,14 +1668,14 @@ const e=new THREE.LineSegments(new THREE.EdgesGeometry(m.geometry),new THREE.Lin
 m.add(e);
 }
 if(opts.solid){
-colliders.box.push({minX:x-w/2,maxX:x+w/2,minZ:z-d/2,maxZ:z+d/2,top:y+h/2,bottom:y-h/2});
+colliders.box.push({minX:x-w/2+COFF.x,maxX:x+w/2+COFF.x,minZ:z-d/2+COFF.z,maxZ:z+d/2+COFF.z,top:y+h/2,bottom:y-h/2});
 }
 if(opts.platform){
-platforms.push({minX:x-w/2,maxX:x+w/2,minZ:z-d/2,maxZ:z+d/2,top:y+h/2});
+platforms.push({minX:x-w/2+COFF.x,maxX:x+w/2+COFF.x,minZ:z-d/2+COFF.z,maxZ:z+d/2+COFF.z,top:y+h/2});
 }
 return m;
 }
-function cylCol(x,z,r){colliders.cyl.push({x:x,z:z,r:r});}
+function cylCol(x,z,r){colliders.cyl.push({x:x+COFF.x,z:z+COFF.z,r:r});}
 function pyramid(r,h,x,z,mat,edgeCol){
 const g=new THREE.ConeGeometry(r,h,4);
 const m=new THREE.Mesh(g,mat);
@@ -1663,9 +1686,36 @@ if(edgeCol)m.add(new THREE.LineSegments(new THREE.EdgesGeometry(g,10),new THREE.
 cylCol(x,z,r*0.92);
 return m;
 }
+/* ============================================================
+   [v3.12] SEPARACIÓN FÍSICA ENTRE SECTORES (+50% de recorrido)
+   ------------------------------------------------------------
+   Medición v3.11 (centros): plaza(0,0) · sala(200,0) · ciudad(-200,0)
+   · monolitos(0,200)+(0,292) · void(0,-230) · laguna(0,430) · broken(0,-520).
+   v3.12 traslada cada sector en bloque (interiores intactos, sin reescalar
+   arquitectura) hasta estas distancias (+50%): sala(300,0), ciudad(-300,0),
+   monolitos(0,300)+(0,392), void(0,-345), laguna(0,645), broken(0,-780).
+   El offset se aplica UNA vez: la geometría entra en un grupo trasladado
+   (buildInZone) y los DATOS de colisión/suelo/islas/rampas lo reciben aquí.
+   ============================================================ */
+const ZOFF={spawn:[0,0],room:[100,0],city:[-100,0],gray:[0,100],red:[0,-115],lagoon:[0,215],broken:[0,-260]};
+let COFF={x:0,z:0};
+/* constantes finales del sector THE BROKEN (antes -470/-520/-545/-562) */
+const BRK_Z=-780,BRK_SPAWN_Z=-730,BRK_BEACON_X=-40,BRK_BEACON_Z=-805,BRK_EXIT_Z=-822,BRK_ZONE_Z=-680;
+function buildInZone(k,fn){
+const off=ZOFF[k]||[0,0];
+const g=new THREE.Group();
+g.name='sector-'+k;
+g.position.set(off[0],0,off[1]);
+scene.add(g);
+const prev=scene;
+COFF={x:off[0],z:off[1]};
+scene=g;
+try{fn();}finally{scene=prev;COFF={x:0,z:0};}
+return g;
+}
 function addRamp(minX,maxX,minZ,maxZ,axis,h0,h1,mat,thick){
 thick=thick||0.9;
-ramps.push({minX:minX,maxX:maxX,minZ:minZ,maxZ:maxZ,axis:axis,h0:h0,h1:h1});
+ramps.push({minX:minX+COFF.x,maxX:maxX+COFF.x,minZ:minZ+COFF.z,maxZ:maxZ+COFF.z,axis:axis,h0:h0,h1:h1});
 const cx=(minX+maxX)/2,cz=(minZ+maxZ)/2;
 const len=axis==='x'?(maxX-minX):(maxZ-minZ);
 const wid=axis==='x'?(maxZ-minZ):(maxX-minX);
@@ -1851,85 +1901,85 @@ makeCloud(55,58,40,80);
 function buildRoom(){
 islands.push({type:'r',minX:253,maxX:347,minZ:-55,maxZ:55});
 const floor=new THREE.Mesh(new THREE.PlaneGeometry(94,110),M.roomFloor);
-floor.rotation.x=-Math.PI/2;floor.position.set(300,0.02,0);scene.add(floor);
+floor.rotation.x=-Math.PI/2;floor.position.set(200,0.02,0);scene.add(floor);
 register404(floor);
-box(92,16,2,M.vhs,300,8,-54,{solid:true,edges:0xff6600});
-box(92,16,2,M.vhs,300,8,54,{solid:true,edges:0xffee00});
-box(2,16,46,M.vhs,254,8,-32,{solid:true,edges:0xff6600});
-box(2,16,46,M.vhs,254,8,32,{solid:true,edges:0xffee00});
-box(2,16,110,M.vhs,346,8,0,{solid:true,edges:0xff6600});
-box(2,4,18,M.vhs,254,14,0,{solid:true,edges:0xffee00});
-box(24,6,24,M.platTop,326,3,2,{solid:true,platform:true,edges:0xff6600});
-addRamp(296,314,-4,10,'x',0,6,M.vhsRamp);
-box(10,3,14,M.platTop,309,1.5,3,{solid:true,platform:true});
-box(24,10,10,M.platTop,326,5,29,{solid:true,platform:true,edges:0xffee00});
-addRamp(320,332,14,24,'z',6,10,M.vhsRamp);
-box(12,6,10,M.platTop,326,3,19,{solid:true,platform:true});
+box(92,16,2,M.vhs,200,8,-54,{solid:true,edges:0xff6600});
+box(92,16,2,M.vhs,200,8,54,{solid:true,edges:0xffee00});
+box(2,16,46,M.vhs,154,8,-32,{solid:true,edges:0xff6600});
+box(2,16,46,M.vhs,154,8,32,{solid:true,edges:0xffee00});
+box(2,16,110,M.vhs,246,8,0,{solid:true,edges:0xff6600});
+box(2,4,18,M.vhs,154,14,0,{solid:true,edges:0xffee00});
+box(24,6,24,M.platTop,226,3,2,{solid:true,platform:true,edges:0xff6600});
+addRamp(196,214,-4,10,'x',0,6,M.vhsRamp);
+box(10,3,14,M.platTop,209,1.5,3,{solid:true,platform:true});
+box(24,10,10,M.platTop,226,5,29,{solid:true,platform:true,edges:0xffee00});
+addRamp(220,232,14,24,'z',6,10,M.vhsRamp);
+box(12,6,10,M.platTop,226,3,19,{solid:true,platform:true});
 const spike=new THREE.Mesh(new THREE.ConeGeometry(0.9,2.4,4),M.platTop);
-spike.position.set(326,11.2,29);scene.add(spike);
-const b1=new THREE.Mesh(new THREE.IcosahedronGeometry(6,2),M.blob);b1.position.set(320,15,29);scene.add(b1);
-const b2=new THREE.Mesh(new THREE.IcosahedronGeometry(5,2),M.blob);b2.position.set(330,14.5,27);scene.add(b2);
-const b3=new THREE.Mesh(new THREE.IcosahedronGeometry(4,2),M.blob);b3.position.set(325,13.5,32);scene.add(b3);
+spike.position.set(226,11.2,29);scene.add(spike);
+const b1=new THREE.Mesh(new THREE.IcosahedronGeometry(6,2),M.blob);b1.position.set(220,15,29);scene.add(b1);
+const b2=new THREE.Mesh(new THREE.IcosahedronGeometry(5,2),M.blob);b2.position.set(230,14.5,27);scene.add(b2);
+const b3=new THREE.Mesh(new THREE.IcosahedronGeometry(4,2),M.blob);b3.position.set(225,13.5,32);scene.add(b3);
 blobMorph(b1,0.5,1.2);blobMorph(b2,0.4,0.9);blobMorph(b3,0.35,1.5);
-cylCol(320,29,5.5);cylCol(330,27,4.5);cylCol(325,32,3.5);
+cylCol(220,29,5.5);cylCol(230,27,4.5);cylCol(225,32,3.5);
 const t1=new THREE.Mesh(new THREE.TorusGeometry(4,1.4,14,40),M.torus);
-t1.position.set(272,4.6,-14);scene.add(t1);
-const s1=new THREE.Mesh(new THREE.SphereGeometry(1.6,18,14),M.marbleCube);s1.position.set(272,4.6,-14);scene.add(s1);
+t1.position.set(172,4.6,-14);scene.add(t1);
+const s1=new THREE.Mesh(new THREE.SphereGeometry(1.6,18,14),M.marbleCube);s1.position.set(172,4.6,-14);scene.add(s1);
 addAnim(function(t,dt){t1.rotation.y+=0.4*dt;t1.rotation.z+=0.15*dt;});
-cylCol(272,-14,4.6);
+cylCol(172,-14,4.6);
 const t2=new THREE.Mesh(new THREE.TorusGeometry(3,1.0,12,36),M.torus);
-t2.position.set(280,3.4,14);scene.add(t2);
+t2.position.set(180,3.4,14);scene.add(t2);
 addAnim(function(t,dt){t2.rotation.x+=0.5*dt;});
-cylCol(280,14,3.4);
-const cc=box(7,7,7,M.platTop,268,11,-24);floaty(cc,0.4,1.0,0.8);
-box(7,2,7,M.dark,266,1,4,{solid:true});
-box(5,2,5,M.dark,286,1,-22,{solid:true});
-const sl1=box(20,1.4,9,M.platTop,296,21,-10,{rz:0.06});floaty(sl1,0.08,0.5,0.3);
-const sl2=box(16,1.2,7,M.platTop,314,24,12,{rz:-0.05,ry:0.4});floaty(sl2,0.06,0.6,0.25);
-const sl3=box(12,1.0,6,M.platTop,280,26,18,{ry:0.8});floaty(sl3,0.1,0.7,0.35);
-const gp=box(16,6,0.6,M.green,282,9,-34.4,{edges:0xbfffd0});
+cylCol(180,14,3.4);
+const cc=box(7,7,7,M.platTop,168,11,-24);floaty(cc,0.4,1.0,0.8);
+box(7,2,7,M.dark,166,1,4,{solid:true});
+box(5,2,5,M.dark,186,1,-22,{solid:true});
+const sl1=box(20,1.4,9,M.platTop,196,21,-10,{rz:0.06});floaty(sl1,0.08,0.5,0.3);
+const sl2=box(16,1.2,7,M.platTop,214,24,12,{rz:-0.05,ry:0.4});floaty(sl2,0.06,0.6,0.25);
+const sl3=box(12,1.0,6,M.platTop,180,26,18,{ry:0.8});floaty(sl3,0.1,0.7,0.35);
+const gp=box(16,6,0.6,M.green,182,9,-34.4,{edges:0xbfffd0});
 addAnim(function(t){
 const k=0.7+0.3*Math.sin(t*2.2);
 M.green.color.setRGB(0.12+0.1*k,0.95*k,0.28*k);
 });
 void gp;
 /* [v3.9] alas nuevas de la sala (z ±55): plataformas y trastos de archivo */
-box(20,4,14,M.platTop,278,2,45,{solid:true,platform:true,edges:0xff6600});
-box(12,2.5,10,M.platTop,314,1.25,48,{solid:true,platform:true,edges:0xffee00});
-addRamp(300,314,38,48,'z',0,2,M.vhsRamp);
-const mcA=box(10,10,10,M.marbleCube,326,5,-46);floaty(mcA,0.35,1.3,0.5);
-const mcB=box(8,8,8,M.marbleCube,282,4,-48);floaty(mcB,0.45,1.6,0.4);
-const arch2=box(34,9,2.2,M.vhs,306,4.5,-49,{edges:0xffffff});
+box(20,4,14,M.platTop,178,2,45,{solid:true,platform:true,edges:0xff6600});
+box(12,2.5,10,M.platTop,214,1.25,48,{solid:true,platform:true,edges:0xffee00});
+addRamp(200,214,38,48,'z',0,2,M.vhsRamp);
+const mcA=box(10,10,10,M.marbleCube,226,5,-46);floaty(mcA,0.35,1.3,0.5);
+const mcB=box(8,8,8,M.marbleCube,182,4,-48);floaty(mcB,0.45,1.6,0.4);
+const arch2=box(34,9,2.2,M.vhs,206,4.5,-49,{edges:0xffffff});
 void arch2;
-const sl4=box(18,1.3,8,M.platTop,290,18,44,{rz:-0.05});floaty(sl4,0.09,0.55,0.3);
+const sl4=box(18,1.3,8,M.platTop,190,18,44,{rz:-0.05});floaty(sl4,0.09,0.55,0.3);
 for(let i=0;i<5;i++){
-const ccx=260+Math.random()*80,ccz=-34+Math.random()*14;
+const ccx=160+Math.random()*80,ccz=-34+Math.random()*14;
 const ccb=box(4+Math.random()*3,4+Math.random()*3,4+Math.random()*3,M.confetti,ccx,2.2+Math.random()*3,ccz,{ry:rand(TAU)});
 floaty(ccb,0.3,1.1,0.5);
 }
-/* [v3.10] el cartel YA NO está encima del sueño ESFERA DE ESTÁTICA:
-   se cuelga en la pared este, mirando a la sala. */
-flickerSign(cvSignSpawn,7,2.4,344.2,4.2,44,-Math.PI/2);
+/* [v3.10] el cartel YA NO está encima del sueño ESFERA DE ESTÁTICA
+   (228,3.4,47): se cuelga en la pared este, mirando a la sala. */
+flickerSign(cvSignSpawn,7,2.4,244.2,4.2,44,-Math.PI/2);
 }
 function buildCity(){
 islands.push({type:'c',x:-300,z:0,r:106});
 const ground=new THREE.Mesh(new THREE.CircleGeometry(106,56),M.cityGround);
-ground.rotation.x=-Math.PI/2;ground.position.set(-300,0.01,0);scene.add(ground);
+ground.rotation.x=-Math.PI/2;ground.position.set(-200,0.01,0);scene.add(ground);
 register404(ground);
 const p=new THREE.Mesh(new THREE.ConeGeometry(16,30,4),M.whitePyr);
-p.position.set(-300,15,-18);p.rotation.y=Math.PI/4;
+p.position.set(-200,15,-18);p.rotation.y=Math.PI/4;
 p.add(new THREE.LineSegments(new THREE.EdgesGeometry(p.geometry,10),new THREE.LineBasicMaterial({color:0xffee00})));
 scene.add(p);
-cylCol(-300,-18,14.5);
+cylCol(-200,-18,14.5);
 const colors=['#ff2bd6','#ff2bd6','#3dff3d','#3dff3d','#ffee00','#ffee00','#4d4dff','#4d4dff','#f0f0f0','#f0f0f0','#00fff7'];
-const dreamSpot={x:-338,z:-62};
+const dreamSpot={x:-238,z:-62};
 for(let i=0;i<36;i++){
 const a=rand(TAU),r=rand(16,98);
-const x=-300+Math.cos(a)*r,z=Math.sin(a)*r;
-if(Math.hypot(x+300,z+18)<27)continue;
-if(x>-220&&x<-184&&Math.abs(z)<14)continue;
+const x=-200+Math.cos(a)*r,z=Math.sin(a)*r;
+if(Math.hypot(x+200,z+18)<27)continue;
+if(x>-120&&x<-84&&Math.abs(z)<14)continue;
 if(Math.hypot(x-dreamSpot.x,z-dreamSpot.z)<16)continue;
-if(Math.hypot(x+252,z-26)<16)continue;
+if(Math.hypot(x+152,z-26)<16)continue;
 const w=rand(7,18),d=rand(7,18),h=rand(9,42);
 const mat=Math.random()<0.14?M.redWall:grainMat(pick(colors));
 const b=box(w,h,d,mat,x,h/2,z,{ry:rand(0.2),rz:Math.random()<0.2?rand(-0.05,0.05):0});
@@ -1938,44 +1988,44 @@ b.add(new THREE.LineSegments(new THREE.EdgesGeometry(b.geometry),new THREE.LineB
 }
 cylCol(x,z,Math.max(w,d)*0.62);
 }
-const tw=box(12,50,12,M.redWall,-272,25,26,{solid:true,edges:0xff2200});
+const tw=box(12,50,12,M.redWall,-172,25,26,{solid:true,edges:0xff2200});
 void tw;
-flickerSign(cvSignCity,12,6,-224,5.6,14,Math.PI/2);
-box(0.6,7,0.6,M.dark,-224,3.5,9);
-box(0.6,7,0.6,M.dark,-224,3.5,19);
+flickerSign(cvSignCity,12,6,-124,5.6,14,Math.PI/2);
+box(0.6,7,0.6,M.dark,-124,3.5,9);
+box(0.6,7,0.6,M.dark,-124,3.5,19);
 /* [v3.9] edificio señalado junto a la entrada: la LINTERNA ESPEJISMO brilla a su lado */
-const lgB=box(16,30,16,M.vhs,-246,15,34,{solid:true,edges:0xffee00,ry:0.35});
-cylCol(-246,34,10.5);
+const lgB=box(16,30,16,M.vhs,-146,15,34,{solid:true,edges:0xffee00,ry:0.35});
+cylCol(-146,34,10.5);
 void lgB;
 }
 function buildGray(){
 islands.push({type:'c',x:0,z:300,r:92});
 const ground=new THREE.Mesh(new THREE.CircleGeometry(92,56),M.zig);
-ground.rotation.x=-Math.PI/2;ground.position.set(0,0.01,300);scene.add(ground);
+ground.rotation.x=-Math.PI/2;ground.position.set(0,0.01,200);scene.add(ground);
 register404(ground);
-box(60,5,10,M.panel,0,2.5,281,{solid:true,platform:true,edges:0x2fe86b});
-addRamp(-6,6,286,298,'z',5,0,M.vhsRamp);
-box(12,2.5,6,M.platTop,0,1.25,289,{solid:true,platform:true});
-box(24,18,24,M.platTop,0,9,324,{solid:true,edges:0xffffff});
-box(14,6,14,M.platTop,6,21,330,{solid:true});
-const slab=box(16,2,24,M.platTop,-20,8,320,{rz:0.5});
-void slab;cylCol(-20,320,9);
-const finSpots=[[20,312],[24,332],[-24,338],[-18,306]];
+box(60,5,10,M.panel,0,2.5,181,{solid:true,platform:true,edges:0x2fe86b});
+addRamp(-6,6,186,198,'z',5,0,M.vhsRamp);
+box(12,2.5,6,M.platTop,0,1.25,189,{solid:true,platform:true});
+box(24,18,24,M.platTop,0,9,224,{solid:true,edges:0xffffff});
+box(14,6,14,M.platTop,6,21,230,{solid:true});
+const slab=box(16,2,24,M.platTop,-20,8,220,{rz:0.5});
+void slab;cylCol(-20,220,9);
+const finSpots=[[20,212],[24,232],[-24,238],[-18,206]];
 for(const fs of finSpots){
 const f=box(2,16,12,M.platTop,fs[0],8,fs[1],{ry:rand(0.8)});
 f.add(new THREE.LineSegments(new THREE.EdgesGeometry(f.geometry),new THREE.LineBasicMaterial({color:0x888888})));
 cylCol(fs[0],fs[1],2);
 }
-const shard=box(6,10,2,M.platTop,26,16,314,{rz:0.4});floaty(shard,0.3,0.8,0.6);
+const shard=box(6,10,2,M.platTop,26,16,214,{rz:0.4});floaty(shard,0.3,0.8,0.6);
 for(let i=0;i<6;i++){
 const o=new THREE.Mesh(new THREE.SphereGeometry(0.9,14,10),M.orb);
 const r=rand(10,22),a=rand(TAU),sp=rand(0.2,0.6),ph=rand(TAU),y0=rand(4,14);
 scene.add(o);
 addAnim(function(t){
-o.position.set(Math.cos(t*sp+ph)*r,y0+Math.sin(t*0.8+ph)*1.5,300+Math.sin(t*sp+ph)*r);
+o.position.set(Math.cos(t*sp+ph)*r,y0+Math.sin(t*0.8+ph)*1.5,200+Math.sin(t*sp+ph)*r);
 });
 }
-const zebSpots=[[-46,278,26,20],[44,332,30,24],[-40,336,22,16],[52,282,18,14]];
+const zebSpots=[[-46,178,26,20],[44,232,30,24],[-40,236,22,16],[52,182,18,14]];
 for(const zs of zebSpots){
 const h=zs[3];
 const m=new THREE.Mesh(new THREE.ConeGeometry(zs[2],h,7),M.zebra);
@@ -1984,62 +2034,64 @@ m.position.set(zs[0],h/2-1,zs[1]);m.rotation.y=rand(TAU);scene.add(m);
 for(let i=0;i<6;i++){
 const o=new THREE.Mesh(new THREE.SphereGeometry(rand(1,2.2),18,14),M.irid);
 const a=rand(TAU),r=rand(8,30);
-o.position.set(Math.cos(a)*r,rand(2,10),300+Math.sin(a)*r);
+o.position.set(Math.cos(a)*r,rand(2,10),200+Math.sin(a)*r);
 scene.add(o);floaty(o,0.4,0.8,0.7);
 }
 const rc=new THREE.Mesh(new THREE.CylinderGeometry(1.1,1.1,7,12),M.irid);
-rc.position.set(8,3.5,312);scene.add(rc);cylCol(8,312,1.4);
+rc.position.set(8,3.5,212);scene.add(rc);cylCol(8,212,1.4);
 for(let i=0;i<5;i++){
-const q=box(rand(4,8),rand(3,6),0.3,M.confetti2,rand(-30,30),rand(8,20),300+rand(-30,30),{ry:rand(TAU),rx:rand(-0.6,0.6)});
+const q=box(rand(4,8),rand(3,6),0.3,M.confetti2,rand(-30,30),rand(8,20),200+rand(-30,30),{ry:rand(TAU),rx:rand(-0.6,0.6)});
 floaty(q,0.5,1.2,0.5);
 }
 [[7,5,7,2.5,0,0],[5,6,5,8,0.15,0.3],[3.4,4,3.4,13,-0.2,-0.4],[2.2,3,2.2,16.5,0.5,0.25]].forEach(function(sc){
-box(sc[0],sc[1],sc[2],M.platTop,10,sc[3],296,{rx:sc[4],rz:sc[5]});});
-const so1=new THREE.Mesh(new THREE.SphereGeometry(1.1,16,12),M.irid);so1.position.set(12.6,7.5,294.4);scene.add(so1);
-const so2=new THREE.Mesh(new THREE.SphereGeometry(0.8,16,12),M.irid);so2.position.set(8.6,11.4,297.6);scene.add(so2);
+box(sc[0],sc[1],sc[2],M.platTop,10,sc[3],196,{rx:sc[4],rz:sc[5]});});
+const so1=new THREE.Mesh(new THREE.SphereGeometry(1.1,16,12),M.irid);so1.position.set(12.6,7.5,194.4);scene.add(so1);
+const so2=new THREE.Mesh(new THREE.SphereGeometry(0.8,16,12),M.irid);so2.position.set(8.6,11.4,197.6);scene.add(so2);
 const gpm=[M.pastelCyan,M.pastelMag,M.pastelGreen,M.check];
 for(let i=0;i<8;i++){const s2=rand(2.5,7);const cb2=new THREE.Mesh(new THREE.BoxGeometry(s2,s2,s2),pick(gpm));
-const a2=rand(TAU),r2=rand(20,70);cb2.position.set(Math.cos(a2)*r2,rand(26,54),300+Math.sin(a2)*r2);
+const a2=rand(TAU),r2=rand(20,70);cb2.position.set(Math.cos(a2)*r2,rand(26,54),200+Math.sin(a2)*r2);
 cb2.rotation.set(rand(TAU),rand(TAU),rand(TAU));scene.add(cb2);floaty(cb2,rand(0.15,0.4),rand(0.6,1.6),rand(0.25,0.6));}
-addLake(0,316,150,40,0.028);
+addLake(0,216,150,40,0.028);
 for(let i=0;i<9;i++){
 const orbMat=new THREE.MeshBasicMaterial({color:pick([0xff2bd6,0x00fff7,0xffee00,0xffffff]),fog:false});
 const o=new THREE.Mesh(new THREE.SphereGeometry(rand(0.9,2.3),14,10),orbMat);
 const a=rand(TAU),r=rand(16,44),y0=rand(6,22),ph=rand(TAU),sp=rand(0.08,0.22);
 scene.add(o);
 addAnim(function(t){
-o.position.set(Math.cos(a+t*sp)*r,y0+Math.sin(t*(0.55+sp)+ph)*1.8,305+Math.sin(a+t*sp)*r*0.65);
+o.position.set(Math.cos(a+t*sp)*r,y0+Math.sin(t*(0.55+sp)+ph)*1.8,205+Math.sin(a+t*sp)*r*0.65);
 o.rotation.y=t*0.4+ph;
 });
 }
-flickerSign(cvSignGray,8,4,14,3,306,0);
-makeCloud(-14,13,290,46,0.5);
-makeCloud(20,17,324,52,0.4);
+flickerSign(cvSignGray,8,4,14,3,206,0);
+makeCloud(-14,13,190,46,0.5);
+makeCloud(20,17,224,52,0.4);
 /* [v3.9] anillo exterior de monolitos (r92) para invitar a rodear la isla */
 const mMatOut=new THREE.MeshBasicMaterial({color:0x101015,fog:true});
 for(let i=0;i<10;i++){
 const a3=(i/10)*TAU+0.31;
-if(Math.abs(Math.cos(a3))<0.22)continue;
 const r3=86;
 const h3=rand(12,30),w3=rand(5,11);
 const m3=new THREE.Mesh(new THREE.ConeGeometry(w3,h3,4),mMatOut);
-m3.position.set(Math.cos(a3)*r3,h3/2-0.3,300+Math.sin(a3)*r3);
+m3.position.set(Math.cos(a3)*r3,h3/2-0.3,200+Math.sin(a3)*r3);
 m3.rotation.y=Math.PI/4+rand(-0.2,0.2);
 scene.add(m3);
 cylCol(m3.position.x,m3.position.z,w3*0.72);
 }
 islands.push({type:'c',x:0,z:392,r:66});
 const backGround=new THREE.Mesh(new THREE.CircleGeometry(69,56),M.zig);
-backGround.rotation.x=-Math.PI/2;backGround.position.set(0,0.012,392);scene.add(backGround);
+backGround.rotation.x=-Math.PI/2;backGround.position.set(0,0.012,292);scene.add(backGround);
 register404(backGround);
 const causeway=new THREE.Mesh(new THREE.PlaneGeometry(18,70),M.zig);
-causeway.rotation.x=-Math.PI/2;causeway.position.set(0,0.011,362);scene.add(causeway);
-addDreamSun(0,30,392,5.5);
+causeway.rotation.x=-Math.PI/2;causeway.position.set(0,0.011,262);scene.add(causeway);
+addDreamSun(0,30,292,5.5);
 const mMat=new THREE.MeshBasicMaterial({color:0x101015,fog:true});
-const mGroup=new THREE.Group();mGroup.position.set(0,0,392);scene.add(mGroup);
+const mGroup=new THREE.Group();mGroup.position.set(0,0,292);scene.add(mGroup);
 for(let i=0;i<16;i++){
 const a=i/16*TAU+rand(-0.1,0.1);
-if(Math.abs(Math.sin(a))<0.24||Math.abs(Math.cos(a))<0.24)continue;
+/* [v3.10] PUERTAS NORTE y SUR en el anillo de monolitos de la isla trasera:
+   sin conos cerca del eje ±Z, para que la ruta causeway → sueño → LAGUNA
+   quede SIEMPRE transitable (fallo 8: la laguna era inaccesible). */
+if(Math.abs(Math.sin(a))<0.24)continue;
 const r=rand(48,64);
 const h=rand(10,26);
 const w=rand(6,13);
@@ -2048,63 +2100,81 @@ m.position.set(Math.cos(a)*r,h/2-0.3,Math.sin(a)*r);
 m.rotation.y=Math.PI/4+rand(-0.2,0.2);
 mGroup.add(m);
 }
-crystalCluster(10,406,1.0);
-crystalCluster(-12,382,0.8);
+crystalCluster(10,306,1.0);
+crystalCluster(-12,282,0.8);
 const beaconOrb=new THREE.Mesh(new THREE.SphereGeometry(1.4,18,14),M.irid);
-beaconOrb.position.set(6,4,396);scene.add(beaconOrb);
+beaconOrb.position.set(6,4,296);scene.add(beaconOrb);
 floaty(beaconOrb,0.5,0.9,0.7);
-flickerSign(cvSignBeacon,8,4,-12,3,400,0.5);
+flickerSign(cvSignBeacon,8,4,-12,3,300,0.5);
 }
 function buildRed(){
 islands.push({type:'c',x:0,z:-345,r:88});
 const ground=new THREE.Mesh(new THREE.CircleGeometry(88,56),M.spot);
-ground.rotation.x=-Math.PI/2;ground.position.set(0,0.01,-345);scene.add(ground);
+ground.rotation.x=-Math.PI/2;ground.position.set(0,0.01,-230);scene.add(ground);
 register404(ground);
-const rw1=box(44,12,2,M.redWall,-30,6,-284,{solid:true});register404(rw1);
-const rw2=box(44,12,2,M.redWall,30,6,-284,{solid:true});register404(rw2);
-const rw3=box(90,12,2,M.redWall,0,6,-406,{solid:true});register404(rw3);
-const rw4=box(2,12,100,M.redWall,61,6,-345,{solid:true});register404(rw4);
-const rw5=box(2,12,100,M.redWall,-61,6,-345,{solid:true});register404(rw5);
-const k1=box(5,5,5,M.confetti2,-16,7,-341);floaty(k1,0.4,0.9,0.6);
-const k2=box(4,4,4,M.redSmall,18,6.5,-359);floaty(k2,0.55,0.8,0.8);
-const k3=box(6,6,6,M.dark,26,8,-333);floaty(k3,0.3,1.1,0.5);
-const k4=box(4.5,4.5,4.5,M.photo,-30,6.5,-355);floaty(k4,0.5,0.9,0.7);
-const k5=box(3,3,3,M.redSmall,2,5.5,-367);floaty(k5,0.7,0.7,1.0);
+/* [v3.9] puertas más cortas: deja huecos en las esquinas para rodear el
+   recinto por FUERA y llegar al borde sur (donde vive ahora el NÚCLEO) */
+const rw1=box(44,12,2,M.redWall,-30,6,-169,{solid:true});register404(rw1);
+const rw2=box(44,12,2,M.redWall,30,6,-169,{solid:true});register404(rw2);
+/* [v3.10] rw3 acortado (122→90): el paso de la esquina SE/SW quedaba en
+   1.6 m (fin del muro 61.7 vs borde de isla 63.3) — técnicamente pasable
+   pero un cuello de botella injusto. Con ±45 el cruce a la zona sur queda
+   en ~17 m, en línea con los «huecos en las esquinas» del diseño v3.9.
+   El interior sigue siendo un recinto; el muro sur bloquea el paso directo
+   por el centro. */
+const rw3=box(90,12,2,M.redWall,0,6,-291,{solid:true});register404(rw3);
+/* [v3.10] FALLO BLOQUEANTE (G3.7): el corredor exterior quedaba pinzado a
+   0.4-1.4 m entre los muros laterales (x 60..62, z -292..-168) y el borde de
+   la isla (r88 ⇒ ~63 m en z=-291): con PR=0.7 el jugador necesita 1.4 m y el
+   NÚCLEO DEL VOID (0,-305) era inalcanzable andando. Se acortan rw4/rw5 a
+   100 (z -280..-180): se abren ~12 m en ambas bocas del pasillo exterior,
+   como documenta el comentario v3.9 («huecos en las esquinas para rodear
+   el recinto por FUERA y llegar al borde sur»). El interior sigue siendo un
+   recinto con 3 huecos al norte; el muro sur rw3 se mantiene sólido. */
+const rw4=box(2,12,100,M.redWall,61,6,-230,{solid:true});register404(rw4);
+const rw5=box(2,12,100,M.redWall,-61,6,-230,{solid:true});register404(rw5);
+const k1=box(5,5,5,M.confetti2,-16,7,-226);floaty(k1,0.4,0.9,0.6);
+const k2=box(4,4,4,M.redSmall,18,6.5,-244);floaty(k2,0.55,0.8,0.8);
+const k3=box(6,6,6,M.dark,26,8,-218);floaty(k3,0.3,1.1,0.5);
+const k4=box(4.5,4.5,4.5,M.photo,-30,6.5,-240);floaty(k4,0.5,0.9,0.7);
+const k5=box(3,3,3,M.redSmall,2,5.5,-252);floaty(k5,0.7,0.7,1.0);
 const sph=new THREE.Mesh(new THREE.SphereGeometry(3.2,28,20),M.teal);
-sph.position.set(-14,5.4,-351);scene.add(sph);
+sph.position.set(-14,5.4,-236);scene.add(sph);
 addAnim(function(t){sph.position.y=5.4+Math.sin(t*0.9)*0.7;sph.rotation.y+=0.2*0.016;});
-cylCol(-14,-351,3.6);
+cylCol(-14,-236,3.6);
 const knot=new THREE.Mesh(new THREE.TorusKnotGeometry(2.2,0.65,120,16),M.knot);
-knot.position.set(14,4.8,-353);scene.add(knot);
+knot.position.set(14,4.8,-238);scene.add(knot);
 addAnim(function(t,dt){knot.rotation.x+=0.35*dt;knot.rotation.y+=0.5*dt;});
-cylCol(14,-353,3.4);
+cylCol(14,-238,3.4);
 for(let i=0;i<4;i++){
 const s=new THREE.Mesh(new THREE.ConeGeometry(rand(0.8,1.6),rand(8,13),6),M.dark);
-s.position.set(rand(-38,-26),3,rand(-359,-345));
+s.position.set(rand(-38,-26),3,rand(-244,-230));
 s.rotation.set(rand(-0.5,0.5),0,rand(-0.5,0.5));
 scene.add(s);
 cylCol(s.position.x,s.position.z,1.6);
 }
-box(34,20,1,M.redWall,0,7,-391,{rx:-0.15});
-flickerSign(cvSignRed,9,4.5,26,4,-311,Math.PI/4);
+box(34,20,1,M.redWall,0,7,-276,{rx:-0.15});
+flickerSign(cvSignRed,9,4.5,26,4,-196,Math.PI/4);
+/* [v3.9] borde exterior del VOID: cubos a la deriva + cristales en el
+   pasillo que rodea el recinto — el NÚCLEO DEL VOID vive al sur, tras el muro */
 for(let i=0;i<10;i++){
 const a4=rand(TAU),r4=rand(64,84);
-const x4=Math.cos(a4)*r4,z4=-345+Math.sin(a4)*r4;
-if(Math.abs(z4+345)>86)continue;
+const x4=Math.cos(a4)*r4,z4=-230+Math.sin(a4)*r4;
+if(Math.abs(z4+230)>86)continue;
 const s4=rand(2,5.5);
 const k6=new THREE.Mesh(new THREE.BoxGeometry(s4,s4,s4),Math.random()<0.5?M.redSmall:M.dark);
 k6.position.set(x4,rand(3,16),z4);k6.rotation.set(rand(-0.4,0.4),rand(TAU),rand(-0.4,0.4));
 scene.add(k6);floaty(k6,rand(0.2,0.5),rand(0.7,1.5),rand(0.3,0.7));
 }
 for(let i=0;i<4;i++){
-const sx=[-70,70,-76,76][i],sz=[-311,-311,-377,-377][i];
+const sx=[-70,70,-76,76][i],sz=[-196,-196,-262,-262][i];
 const cM=new THREE.Mesh(new THREE.ConeGeometry(rand(1.4,2.6),rand(7,13),5),M.photo);
 cM.position.set(sx,3.5,sz);cM.rotation.z=rand(-0.3,0.3);scene.add(cM);
 cylCol(sx,sz,1.8);
 }
 }
 function buildLagoon(){
-islands.push({type:'c',x:0,z:660,r:106});
+islands.push({type:'c',x:0,z:645,r:106});
 const waterMat=new THREE.ShaderMaterial({
 uniforms:{uTime:{value:0}},
 vertexShader:'varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }',
@@ -2131,57 +2201,57 @@ gl_FragColor=vec4(base,1.0);
 }`
 });
 const water=new THREE.Mesh(new THREE.CircleGeometry(106,56),waterMat);
-water.rotation.x=-Math.PI/2;water.position.set(0,0.12,660);scene.add(water);
+water.rotation.x=-Math.PI/2;water.position.set(0,0.12,430);scene.add(water);
 addAnim(function(t){waterMat.uniforms.uTime.value=t;});
 const shoreMat=new THREE.MeshBasicMaterial({map:ctex(cvDarkGrass,14,14)});
 const shore=new THREE.Mesh(new THREE.RingGeometry(56,106.5,80),shoreMat);
-shore.rotation.x=-Math.PI/2;shore.position.set(0,0.16,660);scene.add(shore);
+shore.rotation.x=-Math.PI/2;shore.position.set(0,0.16,430);scene.add(shore);
 const isle=new THREE.Mesh(new THREE.CircleGeometry(16,32),shoreMat);
-isle.rotation.x=-Math.PI/2;isle.position.set(0,0.18,675);scene.add(isle);
+isle.rotation.x=-Math.PI/2;isle.position.set(0,0.18,445);scene.add(isle);
 const isth=new THREE.Mesh(new THREE.PlaneGeometry(2.6,56),shoreMat);
-isth.rotation.x=-Math.PI/2;isth.position.set(0,0.17,631);scene.add(isth);
+isth.rotation.x=-Math.PI/2;isth.position.set(0,0.17,401);scene.add(isth);
 const grassMat=new THREE.MeshBasicMaterial({map:ctex(cvGrass,40,1),transparent:true,alphaTest:0.35,side:THREE.DoubleSide});
-[[106.6,660],[56.2,660],[16.2,675]].forEach(function(rr){
+[[106.6,430],[56.2,430],[16.2,445]].forEach(function(rr){
 const ring=new THREE.Mesh(new THREE.CylinderGeometry(rr[0],rr[0],0.9,88,1,true),grassMat);
 ring.position.set(0,0.75,rr[1]);scene.add(ring);});
 const oband=new THREE.Mesh(new THREE.PlaneGeometry(64,2.2),new THREE.MeshBasicMaterial({color:0xd97a1e}));
-oband.rotation.x=-Math.PI/2;oband.position.set(6,0.19,571.5);scene.add(oband);
+oband.rotation.x=-Math.PI/2;oband.position.set(6,0.19,341.5);scene.add(oband);
 const fg=new THREE.Mesh(new THREE.PlaneGeometry(26,11),new THREE.MeshBasicMaterial({map:ctex(cvColorStatic,4,2)}));
-fg.rotation.x=-Math.PI/2;fg.position.set(26,0.22,579);fg.rotation.z=0.06;scene.add(fg);
-box(26,0.5,20,M.magenta,-22,0.25,582,{platform:true,edges:0xffee00});
+fg.rotation.x=-Math.PI/2;fg.position.set(26,0.22,349);fg.rotation.z=0.06;scene.add(fg);
+box(26,0.5,20,M.magenta,-22,0.25,352,{platform:true,edges:0xffee00});
 const mound=new THREE.Mesh(new THREE.ConeGeometry(16,6,20),M.zebraFine);
-mound.position.set(0,2.6,675);scene.add(mound);cylCol(0,675,13);
+mound.position.set(0,2.6,445);scene.add(mound);cylCol(0,445,13);
 const pillar=new THREE.Mesh(new THREE.CylinderGeometry(1.6,2.4,26,10),M.pillar);
-pillar.position.set(0,15,675);scene.add(pillar);cylCol(0,675,2.6);
+pillar.position.set(0,15,445);scene.add(pillar);cylCol(0,445,2.6);
 const pyr=new THREE.Mesh(new THREE.ConeGeometry(7,9,4),M.magenta);
-pyr.position.set(0,6.5,675);pyr.rotation.y=Math.PI/4;scene.add(pyr);
+pyr.position.set(0,6.5,445);pyr.rotation.y=Math.PI/4;scene.add(pyr);
 pyr.add(new THREE.LineSegments(new THREE.EdgesGeometry(pyr.geometry,10),new THREE.LineBasicMaterial({color:0xff9df2})));
-const moundGlow=addSprite(cvGlow,0,6.5,675,26,14,0.5);
+const moundGlow=addSprite(cvGlow,0,6.5,445,26,14,0.5);
 moundGlow.material.color.set(0xff4ae2);
-makePine(-13,668,6.5,M.frost);makePine(11,671,7.6,M.frost);makePine(-5,685,5.4,M.frost);makePine(19,682,4.6,M.dark);
-makePine(-24,662,5.8,M.frost);makePine(26,666,6.2,M.dark);
-crystalCluster(-52,622,1.1);crystalCluster(62,634,1.3);crystalCluster(-66,682,0.9);crystalCluster(44,708,1.2);
-crystalCluster(-24,716,0.8);crystalCluster(-76,660,1.4);crystalCluster(72,672,1.0);
+makePine(-13,438,6.5,M.frost);makePine(11,441,7.6,M.frost);makePine(-5,455,5.4,M.frost);makePine(19,452,4.6,M.dark);
+makePine(-24,432,5.8,M.frost);makePine(26,436,6.2,M.dark);
+crystalCluster(-52,392,1.1);crystalCluster(62,404,1.3);crystalCluster(-66,452,0.9);crystalCluster(44,478,1.2);
+crystalCluster(-24,486,0.8);crystalCluster(-76,430,1.4);crystalCluster(72,442,1.0);
 for(let i=0;i<7;i++){
 const s=rand(1.6,3.4);
 const cb=new THREE.Mesh(new THREE.BoxGeometry(s,s,s),i%2?grainMat('#d6d7dc'):grainMat('#eceef2'));
 const orbR=rand(3.5,9),orbS=rand(0.10,0.30)*(Math.random()<0.5?-1:1),orbP=rand(TAU),orbY=rand(8,26);
 scene.add(cb);
-addAnim(function(t,dt){cb.position.set(Math.cos(t*orbS+orbP)*orbR,orbY+Math.sin(t*0.5+orbP)*1.2,675+Math.sin(t*orbS+orbP)*orbR);cb.rotation.x+=0.25*dt;cb.rotation.y+=0.35*dt;});}
+addAnim(function(t,dt){cb.position.set(Math.cos(t*orbS+orbP)*orbR,orbY+Math.sin(t*0.5+orbP)*1.2,445+Math.sin(t*orbS+orbP)*orbR);cb.rotation.x+=0.25*dt;cb.rotation.y+=0.35*dt;});}
 for(let i=0;i<3;i++){
 const o2=new THREE.Mesh(new THREE.SphereGeometry(rand(0.5,0.9),12,10),M.irid);
 const oR=rand(4,10),oS=rand(0.15,0.4),oP=rand(TAU),oY=rand(10,22);
 scene.add(o2);
-addAnim(function(t){o2.position.set(Math.cos(t*oS+oP)*oR,oY+Math.sin(t*0.7+oP)*0.9,675+Math.sin(t*oS+oP)*oR);});}
+addAnim(function(t){o2.position.set(Math.cos(t*oS+oP)*oR,oY+Math.sin(t*0.7+oP)*0.9,445+Math.sin(t*oS+oP)*oR);});}
 const sun=new THREE.Mesh(new THREE.BoxGeometry(9,9,9),new THREE.MeshBasicMaterial({color:0xc4ccd6,fog:false}));
-sun.position.set(0,56,702);scene.add(sun);
+sun.position.set(0,56,472);scene.add(sun);
 sun.userData.wrSkip=true; /* sol de la laguna: elemento celeste */
 addAnim(function(t,dt){sun.rotation.y+=0.12*dt;});
-const rays=addSprite(cvRays,0,56,701,170,170,0.10);
+const rays=addSprite(cvRays,0,56,471,170,170,0.10);
 addAnim(function(t){rays.material.rotation=t*0.04;});
-const glowS=addSprite(cvGlow,0,56,701,90,90,0.14);
-const streakS=addSprite(cvStreakH,0,56,701,230,26,0.12);
-const halo2=addSprite(cvSunHalo,0,56,701,300,300,0.16);
+const glowS=addSprite(cvGlow,0,56,471,90,90,0.14);
+const streakS=addSprite(cvStreakH,0,56,471,230,26,0.12);
+const halo2=addSprite(cvSunHalo,0,56,471,300,300,0.16);
 addAnim(function(){
 rays.material.opacity=0.10+solar*0.80;
 glowS.material.opacity=0.14+solar*0.66;
@@ -2190,55 +2260,55 @@ halo2.material.opacity=0.16+solar*0.55;});
 for(let i=0;i<12;i++){
 const a=i/12*TAU+rand(0.3);
 const r=rand(112,142);
-const x=Math.cos(a)*r,z=660+Math.sin(a)*r;
-if(Math.hypot(x,z-660)<107)continue;
+const x=Math.cos(a)*r,z=430+Math.sin(a)*r;
+if(Math.hypot(x,z-430)<107)continue;
 const h=rand(18,40),rr=rand(14,28);
 const m=new THREE.Mesh(new THREE.ConeGeometry(rr,h,6),Math.random()<0.3?M.frost:M.zebra);
 m.position.set(x,h/2-2,z);m.rotation.y=rand(TAU);scene.add(m);
 if(Math.random()<0.7){
 const pn=new THREE.Mesh(new THREE.ConeGeometry(rand(1.2,2.2),rand(4,8),6),Math.random()<0.5?M.frost:M.dark);
-pn.position.set(x*0.82,2,660+(z-660)*0.82);scene.add(pn);
+pn.position.set(x*0.82,2,430+(z-430)*0.82);scene.add(pn);
 }
 }
-makePalm(-32,628,7);makePalm(30,630,6.2);makePalm(-16,620,5.2);makePalm(44,642,7.4);
+makePalm(-32,398,7);makePalm(30,400,6.2);makePalm(-16,390,5.2);makePalm(44,412,7.4);
 const mats=[grainMat('#d6d7dc'),grainMat('#eceef2'),grainMat('#c4c6cc'),M.check,M.pastelCyan,M.pastelMag];
 for(let i=0;i<16;i++){
 const s=rand(2,6.5);
 const m=new THREE.Mesh(new THREE.BoxGeometry(s,s,s),pick(mats));
 const a=rand(TAU),r=rand(14,64);
-m.position.set(Math.cos(a)*r,rand(16,48),660+Math.sin(a)*r*0.8);
+m.position.set(Math.cos(a)*r,rand(16,48),430+Math.sin(a)*r*0.8);
 m.rotation.set(rand(TAU),rand(TAU),rand(TAU));
 scene.add(m);floaty(m,rand(0.2,0.6),rand(0.8,2),rand(0.3,0.7));
 }
 for(let i=0;i<7;i++){
 const o=new THREE.Mesh(new THREE.SphereGeometry(rand(1,2.6),18,14),M.irid);
 const a=rand(TAU),r=rand(10,50);
-o.position.set(Math.cos(a)*r,rand(10,34),660+Math.sin(a)*r);
+o.position.set(Math.cos(a)*r,rand(10,34),430+Math.sin(a)*r);
 scene.add(o);floaty(o,0.4,1,0.6);
 }
 for(let i=0;i<6;i++){
 const c=new THREE.Mesh(new THREE.ConeGeometry(0.5,1.7,5),M.magenta);
-c.position.set(rand(-40,40),0.8,rand(602,622));scene.add(c);
+c.position.set(rand(-40,40),0.8,rand(372,392));scene.add(c);
 }
-flickerSign(cvSignLagoon,10,5,16,4,596,-0.4);
+flickerSign(cvSignLagoon,10,5,16,4,366,-0.4);
 /* [v3.9] orilla sur lejana: palmeras y cristales alrededor del SOL VAPOR */
-makePalm(14,730,7.2);makePalm(34,742,6);makePine(-4,746,5.5,M.frost);
-crystalCluster(36,730,1.2);crystalCluster(8,747,1.0);crystalCluster(-18,736,1.1);
+makePalm(14,500,7.2);makePalm(34,512,6);makePine(-4,516,5.5,M.frost);
+crystalCluster(36,500,1.2);crystalCluster(8,517,1.0);crystalCluster(-18,506,1.1);
 const farIsle=new THREE.Mesh(new THREE.CircleGeometry(13,28),shoreMat);
-farIsle.rotation.x=-Math.PI/2;farIsle.position.set(24,0.2,738);scene.add(farIsle);
+farIsle.rotation.x=-Math.PI/2;farIsle.position.set(24,0.2,508);scene.add(farIsle);
 const farRing=new THREE.Mesh(new THREE.TorusGeometry(13,.4,8,40),new THREE.MeshBasicMaterial({color:0xff8af0}));
-farRing.rotation.x=-Math.PI/2;farRing.position.set(24,0.5,738);scene.add(farRing);
+farRing.rotation.x=-Math.PI/2;farRing.position.set(24,0.5,508);scene.add(farRing);
 }
 function buildBroken(){
-islands.push({type:'c',x:0,z:-780,r:85});
+islands.push({type:'c',x:0,z:BRK_Z,r:85});
 const ground=new THREE.Mesh(new THREE.CircleGeometry(85,48),new THREE.MeshBasicMaterial({map:ctex(cvAcid,5,5)}));
-ground.rotation.x=-Math.PI/2;ground.position.set(0,0.01,-780);scene.add(ground);
+ground.rotation.x=-Math.PI/2;ground.position.set(0,0.01,-520);scene.add(ground);
 const rbMat=new THREE.MeshBasicMaterial({map:rbSmooth});
 for(let i=0;i<14;i++){
 const a=rand(TAU),r=rand(18,80);
 const h=rand(14,44),w=rand(6,16);
 const m=new THREE.Mesh(new THREE.ConeGeometry(w,h,4),rbMat);
-m.position.set(Math.cos(a)*r,h/2-1,-780+Math.sin(a)*r);
+m.position.set(Math.cos(a)*r,h/2-1,-520+Math.sin(a)*r);
 m.rotation.y=rand(TAU);
 scene.add(m);
 }
@@ -2246,7 +2316,7 @@ for(let i=0;i<22;i++){
 const s=rand(2,7);
 const m=new THREE.Mesh(new THREE.BoxGeometry(s,s*rand(0.3,1.6),s*rand(0.3,1.2)),rbMat);
 const a=rand(TAU),r=rand(4,70);
-m.position.set(Math.cos(a)*r,rand(1,26),-780+Math.sin(a)*r);
+m.position.set(Math.cos(a)*r,rand(1,26),-520+Math.sin(a)*r);
 m.rotation.set(rand(TAU),rand(TAU),rand(TAU));
 scene.add(m);
 const ph=rand(TAU),sp=rand(0.2,0.9);
@@ -2256,73 +2326,95 @@ snapTargets.push(m);
 for(let i=0;i<3;i++){
 const e=new THREE.Mesh(new THREE.IcosahedronGeometry(rand(3,5),1),rbMat);
 const a=rand(TAU),r=rand(12,50);
-e.position.set(Math.cos(a)*r,rand(4,12),-780+Math.sin(a)*r);
+e.position.set(Math.cos(a)*r,rand(4,12),-520+Math.sin(a)*r);
 scene.add(e);blobMorph(e,0.5,rand(0.8,1.6));
 }
 for(let i=0;i<6;i++){
 const o=new THREE.Mesh(new THREE.OctahedronGeometry(rand(1,2.4),0),new THREE.MeshBasicMaterial({map:rbSmooth,wireframe:true,fog:false}));
 const a=rand(TAU),r=rand(10,70);
-o.position.set(Math.cos(a)*r,rand(3,22),-780+Math.sin(a)*r);
+o.position.set(Math.cos(a)*r,rand(3,22),-520+Math.sin(a)*r);
 scene.add(o);floaty(o,rand(0.4,1.2),rand(0.8,2),rand(0.4,1));
 }
 const knotB=new THREE.Mesh(new THREE.TorusKnotGeometry(14,3,80,10),new THREE.MeshBasicMaterial({map:rbSmooth,wireframe:true,fog:false}));
-knotB.position.set(0,55,-780);scene.add(knotB);
+knotB.position.set(0,55,-520);scene.add(knotB);
 addAnim(function(t,dt){knotB.rotation.y+=0.05*dt;knotB.rotation.x+=0.03*dt;});
 for(let i=0;i<10;i++){
-const sp=addSprite(cvGlow,rand(-75,75),rand(2,40),-780+rand(-75,75),rand(6,16),rand(6,16),0.5);
+const sp=addSprite(cvGlow,rand(-75,75),rand(2,40),-520+rand(-75,75),rand(6,16),rand(6,16),0.5);
 sp.material.color.set(pick([0xffee00,0xff2bd6,0x00fff7,0xff3300]));
 }
-flickerSign(cvSignBroken,12,6,0,7,-715,0);
+flickerSign(cvSignBroken,12,6,0,7,-455,0);
 const ex=new THREE.Mesh(new THREE.OctahedronGeometry(2.4,0),new THREE.MeshBasicMaterial({color:0xffffff,wireframe:true,fog:false}));
-ex.position.set(0,3,-822);scene.add(ex);
+ex.position.set(0,3,-562);scene.add(ex);
 ex.userData.wrSkip=true; /* portal de salida: crítico para gameplay */
 addAnim(function(t,dt){ex.rotation.y+=1.1*dt;ex.rotation.x+=0.5*dt;ex.position.y=3+Math.sin(t*1.4)*0.5;});
-const exG=addSprite(cvGlow,0,3,-822,12,12,0.9);
+const exG=addSprite(cvGlow,0,3,-562,12,12,0.9);
 exG.material.color.set(0xffffff);
 }
 const portals=[];
 function buildPortals(){
-portals.push({x:0,z:-822,to:'exit'});
+portals.push({x:0,z:BRK_EXIT_Z,to:'exit'});
 }
 function buildBridges(){
-const segs=[
-[180,0,152,10],
-[-151,0,94,10],
-[0,160.5,10,111],
-[0,-184,10,158],
-[0,506,10,112]
+/* [v3.12] puentes RE-AUTORIZADOS para la nueva separación. Cada vano une el
+   borde real de una isla con el de la siguiente; el tablero sigue a top
+   +0.06 sobre los discos de suelo (0.009-0.02), así que se ve entero.
+   MEDIDAS (centro → centro): plaza 112 | sala 253 | ciudad -194 | gray 208
+   | red -257 | laguna 539 | broken -695. */
+const decks=[
+/* x0,x1,z,w  (vanos horizontales) */
+[-190,-108,0,10],     /* plaza ↔ ciudad   (82 m) */
+[95,258,0,10],        /* plaza ↔ sala     (163 m) */
+/* z0,z1,x,w  (vanos verticales) */
+[106,212,0,10],       /* plaza ↔ monolitos (106 m) */
+[-260,-106,0,10],     /* plaza ↔ void rojo (154 m) */
+[440,545,0,10]        /* monolitos ↔ laguna (105 m) */
 ];
-/* [v3.12] 5 puentes con separación física ~50% mayor entre sectores
-   (incluyendo el puente norte entre la isla trasera de Monolitos Grises y Laguna Vapor). */
-for(const s of segs){
-const b=box(s[2],1,s[3],M.hazard,s[0],-0.44,s[1]);
-b.userData.isBridge=true;
+for(let i=0;i<decks.length;i++){
+const s=decks[i];
+let b,cx,cz,len;
+if(i<2){cx=(s[0]+s[1])/2;cz=s[2];len=s[1]-s[0];b=box(len,1,s[3],M.hazard,cx,-0.44,cz);}
+else{cx=s[2];cz=(s[0]+s[1])/2;len=s[1]-s[0];b=box(s[3],1,len,M.hazard,cx,-0.44,cz);}
+b.userData.bridge=true;
 b.add(new THREE.LineSegments(new THREE.EdgesGeometry(b.geometry),new THREE.LineBasicMaterial({color:0xffee00})));
+/* hitos de transición: postes neón cada ~34 m a ambos lados del tablero */
+const n=Math.max(2,Math.round(len/34));
+for(let k=1;k<n;k++){
+const t=k/n;
+if(i<2){
+const px=s[0]+(s[1]-s[0])*t;
+box(0.5,7,0.5,M.hazard,px,3.5,cz-5.2);
+box(0.5,7,0.5,M.hazard,px,3.5,cz+5.2);
+}else{
+const pz=s[0]+(s[1]-s[0])*t;
+box(0.5,7,0.5,M.hazard,cx-5.2,3.5,pz);
+box(0.5,7,0.5,M.hazard,cx+5.2,3.5,pz);
+}
+}
 }
 islands.push(
-{type:'r',minX:104,maxX:256,minZ:-5,maxZ:5,isBridge:true},
-{type:'r',minX:-198,maxX:-104,minZ:-5,maxZ:5,isBridge:true},
-{type:'r',minX:-5,maxX:5,minZ:105,maxZ:216,isBridge:true},
-{type:'r',minX:-5,maxX:5,minZ:-263,maxZ:-105,isBridge:true},
-{type:'r',minX:-5,maxX:5,minZ:450,maxZ:562,isBridge:true}
+{type:'r',minX:-190,maxX:-108,minZ:-5,maxZ:5},
+{type:'r',minX:95,maxX:258,minZ:-5,maxZ:5},
+{type:'r',minX:-5,maxX:5,minZ:106,maxZ:212},
+{type:'r',minX:-5,maxX:5,minZ:-260,maxZ:-106},
+{type:'r',minX:-5,maxX:5,minZ:440,maxZ:545}
 );
 }
 function buildVoidDebris(){
 const neons=[0x00fff7,0xff2bd6,0xffee00,0xffffff];
 function blocked(x,z){
-const C=[[0,0,140],[-300,0,126],[300,0,96],[0,300,112],[0,392,84],[0,-345,106],[0,660,128],[0,-780,120]];
+const C=[[0,0,140],[-300,0,124],[0,300,110],[0,-345,102],[0,645,126],[0,BRK_Z,120]];
 for(const c of C)if(Math.hypot(x-c[0],z-c[1])<c[2])return true;
-if(Math.abs(x-180)<84&&Math.abs(z)<16)return true;
-if(Math.abs(x+151)<56&&Math.abs(z)<16)return true;
-if(Math.abs(x)<16&&Math.abs(z-160.5)<64)return true;
-if(Math.abs(x)<16&&Math.abs(z+184)<88)return true;
-if(Math.abs(x)<16&&Math.abs(z-506)<64)return true;
+if(Math.abs(x-176)<95&&Math.abs(z)<16)return true;
+if(Math.abs(x+149)<55&&Math.abs(z)<16)return true;
+if(Math.abs(x)<16&&Math.abs(z-159)<70)return true;
+if(Math.abs(x)<16&&Math.abs(z+183)<90)return true;
+if(Math.abs(x)<16&&Math.abs(z-492)<70)return true;
 return false;
 }
 let tries=0;
-for(let i=0;i<24&&tries<450;){
+for(let i=0;i<22&&tries<400;){
 tries++;
-const a=rand(TAU),r=rand(155,540);
+const a=rand(TAU),r=rand(150,330);
 const x=Math.cos(a)*r,z=Math.sin(a)*r;
 if(blocked(x,z))continue;
 const s=rand(4,9);
@@ -2332,23 +2424,23 @@ scene.add(m);
 floaty(m,rand(0.2,0.6),rand(1,3),rand(0.3,0.8));
 i++;
 }
-for(let i=0;i<6;i++){
-const a=rand(TAU),r=rand(320,500);
-const dx=Math.cos(a)*r,dz=Math.sin(a)*r;
-if(blocked(dx,dz))continue;
+for(let i=0;i<5;i++){
+const a=rand(TAU),r=rand(240,300);
 const m=new THREE.Mesh(new THREE.TetrahedronGeometry(rand(14,22)),new THREE.MeshBasicMaterial({color:pick(neons),fog:false}));
-m.position.set(dx,rand(30,70),dz);
+m.position.set(Math.cos(a)*r,rand(30,70),Math.sin(a)*r);
 scene.add(m);
 floaty(m,0.1,2,0.25);
 }
 }
+/* [v3.12] posiciones ya trasladadas por ZOFF (+50% de separación) y
+   `ent` = entidad local que el sueño LIBERA (identidad explícita). */
 const dreamsData=[
-{id:1,name:'CASSETTE DORADO',   zone:'Plaza Neón',      zoneKey:'spawn', entityKey:'ella',       entityAnn:'LIBERASTE A ELLA',                     pos:[-58,3.4,-78],  color:0xffee00},
-{id:2,name:'ESFERA DE ESTÁTICA',zone:'Sala Estática',   zoneKey:'room',  entityKey:'patrullador',entityAnn:'LIBERASTE AL PATRULLADOR ESTÁTICO',    pos:[328,3.4,47],   color:0x00fff7},
-{id:3,name:'PRISMA DE NEÓN',    zone:'Ciudad Febril',   zoneKey:'city',  entityKey:'ladron',     entityAnn:'LIBERASTE AL LADRÓN OLVIDADO',         pos:[-338,3.4,-62], color:0xff2bd6},
-{id:4,name:'MONOLITO RAINBOW',  zone:'Monolitos Grises',zoneKey:'gray',  entityKey:'acechador',  entityAnn:'LIBERASTE AL ACECHADOR',               pos:[24,3.2,430],   color:0x39ff6a},
-{id:5,name:'NÚCLEO DEL VOID',   zone:'Void Rojo',       zoneKey:'red',   entityKey:'corredor',   entityAnn:'LIBERASTE AL CORREDOR DEL VACÍO',      pos:[0,2.6,-420],   color:0xff2200},
-{id:6,name:'SOL VAPOR',         zone:'Laguna Vapor',    zoneKey:'lagoon',entityKey:'merodeador', entityAnn:'LIBERASTE AL MERODEADOR DE LOS CIELOS',pos:[24,3.0,738],   color:0xff8af0}
+{id:1,name:'CASSETTE DORADO',  zone:'Plaza Neón',      pos:[-58,3.4,-78],  color:0xffee00,ent:'ella',      zk:'spawn'},
+{id:2,name:'ESFERA DE ESTÁTICA',zone:'Sala Estática',  pos:[328,3.4,47],   color:0x00fff7,ent:'patrullador',zk:'room'},
+{id:3,name:'PRISMA DE NEÓN',   zone:'Ciudad Febril',   pos:[-338,3.4,-62], color:0xff2bd6,ent:'ladron',    zk:'city'},
+{id:4,name:'MONOLITO RAINBOW', zone:'Monolitos Grises',pos:[24,3.2,430],   color:0x39ff6a,ent:'acechador', zk:'gray'},
+{id:5,name:'NÚCLEO DEL VOID',  zone:'Void Rojo',       pos:[0,2.6,-420],   color:0xff2200,ent:'corredor',  zk:'red'},
+{id:6,name:'SOL VAPOR',        zone:'Laguna Vapor',    pos:[24,3.0,723],   color:0xff8af0,ent:'merodeador',zk:'lagoon'}
 ];
 const dreamItems=[];
 let dreamsCollected=0;
@@ -2409,13 +2501,13 @@ glowSp.scale.set(dreamsBeaconOn?14:10,dreamsBeaconOn?14:10,1);
 });
 }
 }
-buildSpawn();
-buildRoom();
-buildCity();
-buildGray();
-buildRed();
-buildLagoon();
-buildBroken();
+buildInZone('spawn',buildSpawn);
+buildInZone('room',buildRoom);
+buildInZone('city',buildCity);
+buildInZone('gray',buildGray);
+buildInZone('red',buildRed);
+buildInZone('lagoon',buildLagoon);
+buildInZone('broken',buildBroken);
 buildBridges();
 buildPortals();
 buildVoidDebris();
@@ -3427,79 +3519,70 @@ panicPulse=Math.max(0,panicPulse-dt*5.5);
 }
 /* ========== 08 · ZONAS ========== */
 const ZONES={
-spawn:{name:'PLAZA NEÓN',sub:'todo respira aquí',fog:0xcfd6ec,bg:0xdce4f7,density:0.0048,noise:0.055,aberr:0.0017,respawn:[0,60],yaw:0,bloom:0.28,ghost:0.024,dof:0.12,warm:0.42},
-room:{name:'SALA ESTÁTICA',sub:'transmisión sin emisor',fog:0x2a2438,bg:0x3a324d,density:0.0110,noise:0.055,aberr:0.0022,respawn:[268,0],yaw:-Math.PI/2,bloom:0.22,ghost:0.038,dof:0.14,warm:0.30},
-city:{name:'CIUDAD FEBRIL',sub:'¿alguna vez existió?',fog:0x3b6e9c,bg:0x5ca8e6,density:0.0085,noise:0.078,aberr:0.0024,respawn:[-218,0],yaw:Math.PI/2,bloom:0.32,ghost:0.028,dof:0.13,warm:0.48},
-gray:{name:'MONOLITOS GRISES',sub:'silencio en blanco',fog:0xb4bcc8,bg:0xc2cad6,density:0.0085,noise:0.068,aberr:0.0013,respawn:[0,232],yaw:Math.PI,bloom:0.36,ghost:0.020,dof:0.20,warm:0.35},
-red:{name:'VOID ROJO',sub:'no mires atrás',fog:0x260408,bg:0x3b060d,density:0.0110,noise:0.065,aberr:0.0028,respawn:[0,-287],yaw:0,bloom:0.25,ghost:0.045,dof:0.11,warm:0.18},
-lagoon:{name:'LAGUNA VAPOR',sub:'el sol nunca se pone',fog:0xd48c8e,bg:0xe69f95,density:0.0052,noise:0.060,aberr:0.0019,respawn:[0,596],yaw:Math.PI,bloom:0.48,ghost:0.024,dof:0.24,warm:0.82},
-broken:{name:'THE BROKEN',sub:'el vertedero de los mundos',fog:0x020204,bg:0x020204,density:0.0095,noise:0.20,aberr:0.0040,respawn:null,bloom:0.46,ghost:0.07,dof:0.22,warm:0.15,wash:0.35},
-void:{name:'EL VACÍO',sub:'no deberías estar aquí',fog:0x0b1030,bg:0x0d143d,density:0.0095,noise:0.070,aberr:0.0022,respawn:null,bloom:0.20,ghost:0.038,dof:0.14,warm:0.25}
+spawn:{name:'PLAZA NEÓN',sub:'todo respira aquí',fog:0x150c26,density:0.0060,noise:0.058,aberr:0.0018,respawn:[0,60],yaw:0,bloom:0.30,ghost:0.025,dof:0.13,warm:0.45},
+room:{name:'SALA ESTÁTICA',sub:'transmisión sin emisor',fog:0x000000,density:0.016,noise:0.055,aberr:0.0022,respawn:[268,0],yaw:-Math.PI/2,bloom:0.22,ghost:0.040,dof:0.15,warm:0.30},
+city:{name:'CIUDAD FEBRIL',sub:'¿alguna vez existió?',fog:0x2a0524,density:0.012,noise:0.083,aberr:0.0024,respawn:[-218,0],yaw:Math.PI/2,bloom:0.36,ghost:0.030,dof:0.14,warm:0.55},
+gray:{name:'MONOLITOS GRISES',sub:'silencio en blanco',fog:0xe9e9e9,density:0.011,noise:0.075,aberr:0.0013,respawn:[0,232],yaw:Math.PI,bg:0xf4f4f4,bloom:0.42,ghost:0.020,dof:0.21,warm:0.35},
+red:{name:'VOID ROJO',sub:'no mires atrás',fog:0x1a0303,density:0.014,noise:0.070,aberr:0.0028,respawn:[0,-287],yaw:0,bloom:0.26,ghost:0.050,dof:0.11,warm:0.18},
+lagoon:{name:'LAGUNA VAPOR',sub:'el sol nunca se pone',fog:0x87919e,density:0.0060,noise:0.065,aberr:0.0020,respawn:[0,581],yaw:Math.PI,bg:0x87919e,bloom:0.58,ghost:0.025,dof:0.26,warm:0.85},
+broken:{name:'THE BROKEN',sub:'el vertedero de los mundos',fog:0x000000,density:0.010,noise:0.200,aberr:0.0035,respawn:null,bg:0x000000,bloom:0.50,ghost:0.070,dof:0.22,warm:0.15,wash:0.55},
+void:{name:'EL VACÍO',sub:'no deberías estar aquí',fog:0x010101,density:0.013,noise:0.075,aberr:0.0022,respawn:null,bloom:0.20,ghost:0.040,dof:0.15,warm:0.25}
 };
 const SKY={
-spawn:{top:0xdce4f7,hor:0xf5f2ff,cl:0xffffff,hi:0xffeef8,cover:0.42,stretch:0.95},
-room:{top:0x3a324d,hor:0x6c6182,cl:0x4d4363,hi:0x978bad,cover:0.50,stretch:1.0},
-city:{top:0x2484e0,hor:0x8fdcff,cl:0x63b9f5,hi:0xdbf4ff,cover:0.52,stretch:0.95},
-gray:{top:0x7d8694,hor:0xc2cad6,cl:0x9aa3b0,hi:0xeef2f7,cover:0.78,stretch:0.45},
-red:{top:0x2b0309,hor:0x6e0c1a,cl:0x42060f,hi:0xa3192b,cover:0.58,stretch:1.0},
-lagoon:{top:0xc9687e,hor:0xffb598,cl:0xe38896,hi:0xffe1cf,cover:0.68,stretch:0.75},
-broken:{top:0x020204,hor:0x08060d,cl:0x040307,hi:0x130f1c,cover:0.18,stretch:1.0},
-void:{top:0x090e2e,hor:0x1b2560,cl:0x101742,hi:0x2f3e8c,cover:0.48,stretch:1.0}};
-const skyTgt={top:new THREE.Color(0xdce4f7),hor:new THREE.Color(0xf5f2ff),cl:new THREE.Color(0xffffff),hi:new THREE.Color(0xffeef8),cover:0.42,stretch:0.95};
-const skyCur={top:skyTgt.top.clone(),hor:skyTgt.hor.clone(),cl:skyTgt.cl.clone(),hi:skyTgt.hi.clone(),cover:0.42,stretch:0.95};
-const EXPLORABLE_ZONES={spawn:1,room:1,city:1,gray:1,red:1,lagoon:1};
-function isExplorableZone(zk){return !!EXPLORABLE_ZONES[zk];}
-function isEntityLiberated(entityKey){
-for(let i=0;i<dreamItems.length;i++){
-const it=dreamItems[i];
-if(it.data.entityKey===entityKey)return !!(it.collected&&!it.stolenBy);
-}
-return false;
-}
-function liberatedMap(){
-return{
-ella:isEntityLiberated('ella'),
-patrullador:isEntityLiberated('patrullador'),
-ladron:isEntityLiberated('ladron'),
-acechador:isEntityLiberated('acechador'),
-corredor:isEntityLiberated('corredor'),
-merodeador:isEntityLiberated('merodeador')
-};
-}
-function zoneCenter(zk){
-if(zk==='room')return[300,0];
-if(zk==='city')return[-300,0];
-if(zk==='gray')return[0,300];
-if(zk==='red')return[0,-345];
-if(zk==='lagoon')return[0,660];
-if(zk==='broken')return[0,-780];
-return[0,0];
-}
-function clampToZone(zk,px,pz){
-if(zk==='room')return[clamp(px,258,342),clamp(pz,-50,50)];
-let cx=0,cz=0,mr=102;
-if(zk==='city'){cx=-300;cz=0;mr=96;}
-else if(zk==='gray'){if(pz>350){cx=0;cz=392;mr=58;}else{cx=0;cz=300;mr=84;}}
-else if(zk==='red'){cx=0;cz=-345;mr=80;}
-else if(zk==='lagoon'){cx=0;cz=660;mr=96;}
-const dx=px-cx,dz=pz-cz,r=Math.hypot(dx,dz);
-if(r>mr&&r>0.001)return[cx+dx/r*mr,cz+dz/r*mr];
-return[px,pz];
-}
+/* [v3.12] Cielo 3D con identidad por sector (mismos uniformes que v3.11:
+   uTop/uHor/uCl/uHi/uCover/uStretch). Transiciones suaves vía skyCur.lerp */
+spawn:{top:0xd9e6ff,hor:0xfff4ea,cl:0xf2e8ff,hi:0xffffff,cover:0.72,stretch:1.0},   /* blanco luminoso, irreal */
+room:{top:0x2c2434,hor:0x7a6d88,cl:0x1d1724,hi:0x9d90ab,cover:0.62,stretch:1.0},   /* violeta grisáceo */
+city:{top:0x2f74b8,hor:0xa8d8f2,cl:0x5a97c8,hi:0xe4f6ff,cover:0.66,stretch:1.0},   /* celeste */
+gray:{top:0xb4bbc6,hor:0xeff2f6,cl:0xa2aab5,hi:0xffffff,cover:0.88,stretch:0.4},   /* plateado */
+red:{top:0x1c0004,hor:0x5e0c14,cl:0x2a0207,hi:0x8e1824,cover:0.58,stretch:1.0},   /* carmesí oscuro */
+lagoon:{top:0x6d3a52,hor:0xffb98d,cl:0x8b4d63,hi:0xffdcbe,cover:0.80,stretch:0.75},   /* melocotón/rosado cálido */
+broken:{top:0x020203,hor:0x0b0b0e,cl:0x000000,hi:0x17171c,cover:0.14,stretch:1.0},   /* casi negro */
+void:{top:0x080b26,hor:0x1e2a63,cl:0x04060f,hi:0x30407f,cover:0.44,stretch:1.0}};   /* índigo oscuro */
+const skyTgt={top:new THREE.Color(0xd9e6ff),hor:new THREE.Color(0xfff4ea),cl:new THREE.Color(0xf2e8ff),hi:new THREE.Color(0xffffff),cover:0.72,stretch:1.0};
+const skyCur={top:skyTgt.top.clone(),hor:skyTgt.hor.clone(),cl:skyTgt.cl.clone(),hi:skyTgt.hi.clone(),cover:0.55,stretch:1.0};
 function zoneAt(x,z){
-/* [v3.12] coordenadas actualizadas con separación ~50% mayor entre sectores */
+/* [v3.12] Las zonas exteriores se comprueban ANTES que la plaza: donde los
+   círculos ampliados se solapan (lente entre islas), manda la zona
+   propietaria del terreno, no la plaza central.
+   Coordenadas ya TRASLADADAS por ZOFF (separación +50% entre sectores). */
 if(x>253&&x<347&&z>-55&&z<55)return 'room';
 if(x>=362&&x<=390&&z>=-13&&z<=13)return 'room';
 if(Math.hypot(x+300,z)<106)return 'city';
 if(Math.hypot(x,z-300)<92||Math.hypot(x,z-392)<66)return 'gray';
 if(Math.hypot(x,z+345)<88)return 'red';
-if(Math.hypot(x,z-660)<106)return 'lagoon';
+if(Math.hypot(x,z-645)<106)return 'lagoon';
 if(Math.hypot(x,z+780)<85)return 'broken';
 if(Math.hypot(x,z)<112)return 'spawn';
 return 'void';
 }
-const envTgt={fog:new THREE.Color(0xcfd6ec),bg:new THREE.Color(0xdce4f7),density:0.0048,noise:0.055,aberr:0.0017,bloom:0.28,ghost:0.024,dof:0.12,warm:0.42,wash:0};
-const envCur={fog:new THREE.Color(0xcfd6ec),bg:new THREE.Color(0xdce4f7),density:0.0048,noise:0.055,aberr:0.0017,bloom:0.28,ghost:0.024,dof:0.12,warm:0.42,wash:0};
+
+/* ============================================================
+   [v3.12] TRANSFORMACIÓN CARTOGRÁFICA ÚNICA (mundo → mapa)
+   El eje Z (el largo del nivel) va en horizontal y +X sube en pantalla.
+   Los límites encuadran TODO el mundo trasladado: x ∈ [-412,398],
+   z ∈ [-872,762]. Ningún sector queda recortado en el panel.
+   ============================================================ */
+const MAPB={minX:-412,maxX:398,minZ:-872,maxZ:762};
+const MAPPAD={l:26,r:26,t:34,b:40};
+function mapScaleFor(W,H){
+const s=Math.min((W-MAPPAD.l-MAPPAD.r)/(MAPB.maxZ-MAPB.minZ),(H-MAPPAD.t-MAPPAD.b)/(MAPB.maxX-MAPB.minX));
+return {s:s,cw:(MAPB.maxZ-MAPB.minZ)*s,ch:(MAPB.maxX-MAPB.minX)*s};
+}
+/* Sectores y puentes tal como se dibujan en el mapa (coordenadas de mundo). */
+const MAPZ=[
+{k:'spawn', n:'PLAZA NEÓN',      x:0,   z:0,    r:112,c:'#ff2bd6',side:1},
+{k:'room',  n:'SALA ESTÁTICA',   x:300, z:0,    r:0,  c:'#a2a7ae',side:1,rect:[94,110]},
+{k:'city',  n:'CIUDAD FEBRIL',   x:-300,z:0,    r:106,c:'#4fc8ff',side:-1},
+{k:'gray',  n:'MONOLITOS GRISES',x:0,   z:300,  r:92, c:'#cfd4da',side:1},
+{k:'grayB', n:'ISLA TRASERA',    x:0,   z:392,  r:66, c:'#9aa3ad',side:-1},
+{k:'red',   n:'VOID ROJO',       x:0,   z:-345, r:88, c:'#ff4040',side:1},
+{k:'lagoon',n:'LAGUNA VAPOR',    x:0,   z:645,  r:106,c:'#ffb073',side:-1},
+{k:'broken',n:'THE BROKEN',      x:0,   z:-780, r:85, c:'#a45cff',side:1}
+];
+const MAPBRI=[[-190,0,-108,0],[95,0,258,0],[0,106,0,212],[0,-260,0,-106],[0,440,0,545]];
+const envTgt={fog:new THREE.Color(0x150c26),bg:new THREE.Color(0x150c26),density:0.0060,noise:0.09,aberr:0.0018,bloom:0.30,ghost:0.03,dof:0.13,warm:0.45,wash:0};
+const envCur={fog:new THREE.Color(0x150c26),bg:new THREE.Color(0x150c26),density:0.0060,noise:0.09,aberr:0.0018,bloom:0.30,ghost:0.03,dof:0.13,warm:0.45,wash:0};
 /* ========== [PROGRESO / LOCALSTORAGE — BACKROOMS_SAVE_V1] ========== */
 const SAVE_KEY='BACKROOMS_SAVE_V1';
 function defaultSave(){
@@ -3765,107 +3848,8 @@ const deathOverlay=document.getElementById('death-overlay');
 const deathStats=document.getElementById('death-stats');
 const btnRetry=document.getElementById('btn-retry');
 const bloodEl=document.getElementById('blood');
-const sigDeathEl=document.getElementById('signal-death');
 const panicRedEl=document.getElementById('panic-red');
 const post={uniforms:compMat.uniforms};
-function syncDreamsCount(){
-let c=0;
-for(let i=0;i<dreamItems.length;i++)if(dreamItems[i].collected)c++;
-dreamsCollected=c;
-if(elDreams)elDreams.textContent='SUEÑOS '+dreamsCollected+'/6';
-return c;
-}
-/* [v3.12] Máquina de estados unificada de Game Over por interferencia (cero sangre):
-   corrupt (degradación) → loss (pérdida de señal) → gameover (fade-in suave) → retrying (fade-out y retorno gradual) */
-const DEATH_SEQ={phase:'none',t:0,who:'ELLA',sub:'ELLA TE ALCANZÓ · SEÑAL INTERRUMPIDA',timeSnap:0,dreamsSnap:0,fromOp:0,sigOp:0};
-function beginGameOver(who,sub){
-if(DEATH_SEQ.phase==='corrupt'||DEATH_SEQ.phase==='loss'||DEATH_SEQ.phase==='gameover')return false;
-dead=true;dyingT=-1;js=null;state='dying_seq';
-DEATH_SEQ.phase='corrupt';DEATH_SEQ.t=0;
-DEATH_SEQ.who=who||'ELLA';
-DEATH_SEQ.sub=sub||(DEATH_SEQ.who+' TE ALCANZÓ · SEÑAL INTERRUMPIDA');
-DEATH_SEQ.timeSnap=sagaSeconds();
-DEATH_SEQ.dreamsSnap=dreamsCollected;
-recordLevelDeath('3',Math.floor(DEATH_SEQ.timeSnap),0);
-girl.visible=false;girlAura.visible=false;
-girlState.active=false;girlState.vanishing=false;girlState.mode='watch';
-bloodEl.classList.remove('show');
-panicRedEl.style.opacity='0';
-heart.setDying(false);
-heart.stop(0.45);
-chaseMusic.stop(0.35);
-sfxEntityKill.stop(0.15);
-AudioFX.duckAmbient(true);
-AudioFX.burst(0.42,0.15);
-AudioFX.blip(96,0.55,'sawtooth',0.08,28);
-if(sigDeathEl){sigDeathEl.classList.add('jitter');sigDeathEl.style.opacity='0.18';}
-try{if(locked&&document.exitPointerLock)document.exitPointerLock();}catch(_){}
-pauseEl.classList.add('hidden');
-return true;
-}
-function updateDeathSeq(dt){
-if(DEATH_SEQ.phase==='none')return;
-DEATH_SEQ.t+=dt;
-const u=compMat.uniforms;
-if(DEATH_SEQ.phase==='corrupt'){
-const p=clamp(DEATH_SEQ.t/0.75,0,1);
-u.uNoise.value=0.18+0.52*p;
-u.uGlitch.value=0.16+0.58*p;
-u.uAberr.value=0.0035+0.013*p;
-u.uScan.value=0.026+0.065*p;
-u.uTape.value=0.28+0.52*p;
-u.uInvert.value=0;
-fadeB=0.45*p;fadeBt=fadeB;u.uFadeB.value=fadeB;
-if(sigDeathEl)sigDeathEl.style.opacity=(0.16+0.44*p).toFixed(3);
-camera.position.x=pos.x+(Math.random()-0.5)*0.07*p;
-camera.position.y=pos.y+(Math.random()-0.5)*0.04*p;
-if(DEATH_SEQ.t>=0.75){
-DEATH_SEQ.phase='loss';DEATH_SEQ.t=0;
-AudioFX.burst(0.35,0.13);
-}
-}else if(DEATH_SEQ.phase==='loss'){
-const p=clamp(DEATH_SEQ.t/0.65,0,1);
-u.uNoise.value=0.70+0.15*Math.sin(p*Math.PI);
-u.uGlitch.value=0.74*(1-0.48*p);
-u.uAberr.value=0.016*(1-0.4*p);
-u.uScan.value=0.09*(1-0.5*p)+0.022;
-u.uInvert.value=0;
-fadeB=0.45+0.55*p;fadeBt=fadeB;u.uFadeB.value=fadeB;
-if(sigDeathEl)sigDeathEl.style.opacity=(0.60+0.32*p).toFixed(3);
-if(DEATH_SEQ.t>=0.65){
-DEATH_SEQ.phase='gameover';DEATH_SEQ.t=0;
-started=false;state='dead';
-document.body.classList.remove('playing');
-const dsub=document.getElementById('death-sub');
-if(dsub)dsub.textContent=DEATH_SEQ.sub;
-deathStats.innerHTML='SUEÑOS · '+DEATH_SEQ.dreamsSnap+'/6<br>ATACANTE · '+DEATH_SEQ.who+'<br>TIEMPO · '+fmtTime(DEATH_SEQ.timeSnap);
-deathOverlay.classList.remove('hidden','fading-out');
-deathOverlay.style.opacity='0';
-}
-}else if(DEATH_SEQ.phase==='gameover'){
-const p=clamp(DEATH_SEQ.t/0.55,0,1);
-const ease=p*p*(3-2*p);
-deathOverlay.style.opacity=ease.toFixed(3);
-if(sigDeathEl){
-sigDeathEl.style.opacity=(0.92-0.54*ease).toFixed(3);
-if(p>=1)sigDeathEl.classList.remove('jitter');
-}
-fadeB=1;fadeBt=1;u.uFadeB.value=1;
-u.uGlitch.value=0.03;u.uNoise.value=0.10;u.uScan.value=0.022;u.uTape.value=0.16;u.uInvert.value=0;
-}else if(DEATH_SEQ.phase==='retrying'){
-const p=clamp(DEATH_SEQ.t/0.45,0,1);
-const inv=1-p*p*(3-2*p);
-deathOverlay.style.opacity=(DEATH_SEQ.fromOp*inv).toFixed(3);
-if(sigDeathEl)sigDeathEl.style.opacity=(DEATH_SEQ.sigOp*inv).toFixed(3);
-if(p>=1){
-DEATH_SEQ.phase='none';DEATH_SEQ.t=0;
-deathOverlay.classList.add('hidden');
-deathOverlay.classList.remove('fading-out');
-deathOverlay.style.opacity='0';
-if(sigDeathEl){sigDeathEl.style.opacity='0';sigDeathEl.classList.remove('jitter');}
-}
-}
-}
 function updateLivesHud(){
 elLives.textContent='⚡ ×'+lives;
 elShards.textContent='◆ +'+extraShards;
@@ -3890,72 +3874,129 @@ btnSound.textContent='SONIDO: '+(m?'NO':'SÍ');
 }
 btnSound.addEventListener('click',function(e){e.stopPropagation();toggleSound();});
 btnRetry.addEventListener('click',function(){retryLevel();});
+/* ============================================================
+   [v3.12] SECUENCIA DE MUERTE POR INTERFERENCIA (sin sangre)
+   1) corrupción de señal  2) pérdida de señal  3) Game Over con fade-in
+   4) REINTENTAR: fade-out de UI/estática y vuelta progresiva del mundo.
+   Un único estado (SIGD) → ni temporizadores duplicados ni doble ejecución.
+   ============================================================ */
+const sigDeathEl=document.getElementById('sigdeath');
+const SIGD={active:false,phase:'off',t:0,who:'',revealed:false};
+function sigDeathBegin(who){
+if(SIGD.active)return false;              /* idempotente: una sola secuencia */
+SIGD.active=true;SIGD.phase='corrupt';SIGD.t=0;SIGD.who=who||'ELLA';SIGD.revealed=false;
+bloodEl.classList.remove('show');
+deathOverlay.classList.add('fading');
+if(sigDeathEl){sigDeathEl.classList.add('on');sigDeathEl.classList.remove('loss');sigDeathEl.style.opacity='0.10';}
+heart.setDying(true);heart.setThreat(1);
+chaseMusic.stop(0.3);
+AudioFX.duckAmbient(false);
+sfxEntityKill.stop(0);
+AudioFX.burst(0.5,0.2);
+AudioFX.blip(60,1.2,'sawtooth',0.09,24);
+firePulse(1,1,true);
+return true;
+}
+function sigDeathEnd(){
+SIGD.phase='gameover';SIGD.t=0;SIGD.revealed=true;
+dead=true;started=false;state='dead';
+document.body.classList.remove('playing');
+deathStats.innerHTML='SUEÑOS · '+dreamsCollected+'/6<br>'+SIGD.who+' · '+fmtTime(sagaSeconds());
+const dsub=document.getElementById('death-sub');
+if(dsub)dsub.textContent=SIGD.who+' TE INTERRUMPIÓ · LA SEÑAL NO TE SUELTA';
+deathOverlay.classList.remove('hidden');
+deathOverlay.classList.add('fading');
+/* fade-in suave real: dos frames para que el navegador aplique opacity 0 */
+requestAnimationFrame(function(){requestAnimationFrame(function(){deathOverlay.classList.remove('fading');});});
+if(sigDeathEl){sigDeathEl.classList.remove('loss');sigDeathEl.classList.add('on');sigDeathEl.style.opacity='0.16';}
+heart.setDying(false);
+}
+function sigDeathTick(dt){
+if(!SIGD.active)return;
+SIGD.t+=dt;
+const u=compMat.uniforms;
+if(SIGD.phase==='corrupt'){
+/* 1 · corrupción: la estática sube y la imagen pierde claridad */
+const k=clamp(SIGD.t/1.5,0,1);
+u.uNoise.value=Math.max(u.uNoise.value,0.10+0.75*k);
+u.uGlitch.value=Math.max(u.uGlitch.value,0.05+0.85*k);
+u.uScan.value=0.022+0.11*k;
+u.uVig.value=0.27+0.35*k;
+u.uAberr.value=0.0018+0.010*k;
+fadeBt=0.10+0.36*k;              /* la pantalla se oscurece poco a poco */
+if(sigDeathEl)sigDeathEl.style.opacity=(0.10+0.60*k).toFixed(3);
+camera.position.x=pos.x+(Math.random()-0.5)*0.06;
+camera.position.z=pos.z+(Math.random()-0.5)*0.06;
+if(k>=1){
+SIGD.phase='loss';SIGD.t=0;
+if(sigDeathEl){sigDeathEl.classList.add('loss');sigDeathEl.style.opacity='1';}
+AudioFX.burst(0.7,0.3);
+}
+}else if(SIGD.phase==='loss'){
+/* 2 · pérdida de señal: estática máxima y el mundo se apaga */
+fadeBt=1;
+u.uNoise.value=0.62;u.uGlitch.value=0.60;u.uScan.value=0.12;u.uVig.value=0.60;
+if(sigDeathEl)sigDeathEl.style.opacity='1';
+if(SIGD.t>0.85)sigDeathEnd();
+}else{
+/* 3 · Game Over: la estática baja y la UI ya está en fade-in */
+const k=Math.min(1,dt*3);
+u.uScan.value+=(0.022-u.uScan.value)*k;
+u.uVig.value+=(0.27-u.uVig.value)*k;
+u.uGlitch.value+=(0.025-u.uGlitch.value)*k;
+u.uNoise.value+=(0.09-u.uNoise.value)*k;
+u.uAberr.value+=(0.0018-u.uAberr.value)*k;
+if(sigDeathEl)sigDeathEl.style.opacity=Math.max(0,0.16-SIGD.t*0.2).toFixed(3);
+}
+}
+function sigDeathReset(){
+SIGD.active=false;SIGD.phase='off';SIGD.t=0;SIGD.revealed=false;
+if(sigDeathEl){sigDeathEl.classList.remove('on','loss');sigDeathEl.style.opacity='0';}
+deathOverlay.classList.add('fading');
+deathOverlay.classList.add('hidden');
+deathOverlay.style.opacity='';
+fadeBt=0;
+const u=compMat.uniforms;
+u.uNoise.value=0.09;u.uGlitch.value=0.025;u.uScan.value=0.022;u.uVig.value=0.27;u.uAberr.value=0.0018;
+heart.setDying(false);
+}
 function retryLevel(){
-if(DEATH_SEQ.phase==='retrying')return;
-const hadOverlay=!deathOverlay.classList.contains('hidden');
-const curOvOp=parseFloat(deathOverlay.style.opacity)||1;
-const curSigOp=sigDeathEl?(parseFloat(sigDeathEl.style.opacity)||0):0;
+sigDeathReset();
 lives=initialLives;dead=false;dyingT=-1;js=null;started=true;state='play';
-startTime=performance.now();
-keys.clear();joyX=0;joyY=0;joySprint=false;jumpQueued=0;
 girlState.active=false;girlState.vanishing=false;girlState.mode='watch';
 girl.visible=false;girlAura.visible=false;
 girlState.sightings=0;girlState.secretSpawned=false;girlState.cd=5;
 if(secretItem){secretItem.taken=false;secretItem.mesh.visible=true;secretItem.glow.visible=true;}
 for(const item of dreamItems){
 item.collected=false;
-item.stolenBy=null;
-item.respawned=false;
-item.home=[item.data.pos[0],item.data.pos[1],item.data.pos[2]];
-item.grp.position.set(item.home[0],item.home[1],item.home[2]);
-item.glow.position.set(item.home[0],item.home[1],item.home[2]);
-item.beam.position.set(item.home[0],item.home[1]+29,item.home[2]);
 item.grp.visible=true;
 item.mesh.visible=true;
 item.glow.visible=true;
 item.beam.visible=true;
+item.home=[item.data.pos[0],item.data.pos[1],item.data.pos[2]];
+item.grp.position.set(item.home[0],item.home[1],item.home[2]);
+item.respawned=false;item.stolenBy=null;
 }
-lastDreamItem=null;
-respawnedDreamPending=false;
-syncDreamsCount();
-elSecret.style.display='none';
-visited.clear();
-curZone=null;
-collapseAt=0;collapseT=-1;completed=false;brokenEnding=false;collapseFast=false;
-overlayShown=false;overlayTimer=0;
+DREAMRELEASE.refresh();
+/* [v3.12] los punteros al sueño robado/último también se reinician: una
+   partida nueva no puede heredar el objetivo de la anterior */
+lastStolenItem=null;lastDreamItem=null;respawnedDreamPending=false;
+syncDreamCount();elSecret.style.display='none';
+collapseAt=0;collapseT=-1;completed=false;overlayShown=false;overlayTimer=0;
 entering4=false;
 pos.set(0,EYE,60);vel.set(0,0,0);yaw=0;pitch=0;lastSafe={p:[0,60],yaw:0};invulnT=2;
-respawnState='none';
-fadeB=1;fadeBt=0;fadeW=0;fadeWt=0;
-compMat.uniforms.uFadeB.value=1;
-compMat.uniforms.uFadeW.value=0;
-compMat.uniforms.uInvert.value=0;
-compMat.uniforms.uScan.value=0.022;
 WR.reset();
 WR.warmup(0,60,55);
 TERROR.reset();
-if(window.ZENT404&&window.ZENT404.reset)window.ZENT404.reset();
-completeEl.classList.add('hidden');
+deathOverlay.classList.add('hidden');completeEl.classList.add('hidden');
 bloodEl.classList.remove('show');panicRedEl.style.opacity='0';
-if(hadOverlay){
-DEATH_SEQ.phase='retrying';DEATH_SEQ.t=0;
-DEATH_SEQ.fromOp=curOvOp;DEATH_SEQ.sigOp=curSigOp;
-deathOverlay.classList.add('fading-out');
-if(sigDeathEl)sigDeathEl.classList.remove('jitter');
-}else{
-DEATH_SEQ.phase='none';DEATH_SEQ.t=0;
-deathOverlay.classList.add('hidden');deathOverlay.style.opacity='0';
-if(sigDeathEl){sigDeathEl.style.opacity='0';sigDeathEl.classList.remove('jitter');}
-}
 document.body.classList.add('playing');
-AudioFX.duckAmbient(false);
 sfxEntityKill.load();
 chaseMusic.stop(0);
 heart.stop(0);
 heart.start();
 heart.setDying(false);
 updateLivesHud();
-checkZone();
 }
 document.getElementById('btn-start').addEventListener('click',function(){
 if(started)return;
@@ -4110,7 +4151,7 @@ feverPal=(zk==='city'||zk==='lagoon'||zk==='red'||zk==='broken')?0:1;
 elZlName.textContent=Z.name;
 elZlSub.textContent=Z.sub;
 if(Z.respawn)lastSafe={p:Z.respawn,yaw:Z.yaw};
-if(brokenEnding&&zk==='broken')lastSafe={p:[0,-730],yaw:0}; /* CAPA 5+: mirando al centro, al haz rojo y a la salida */
+if(brokenEnding&&zk==='broken')lastSafe={p:[0,BRK_SPAWN_Z],yaw:0}; /* CAPA 5+: mirando al centro, al haz rojo y a la salida */
 if(!visited.has(zk)){
 visited.add(zk);
 if(zk==='void'){
@@ -4209,8 +4250,8 @@ function updatePulse(dt){
 if(started&&collapseT<0){
 pulseCd-=dt;
 if(pulseCd<=0){
-firePulse(0.24+Math.random()*0.30,0.22+Math.random()*0.26,false);
-pulseCd=(fever?6.5:11)+Math.random()*(fever?5:14);
+firePulse(0.35+Math.random()*0.6,0.75+Math.random()*0.5,Math.random()<0.35);
+pulseCd=(fever?3.5:5.5)+Math.random()*(fever?3:9);
 }
 }
 pulseT+=dt;
@@ -4257,18 +4298,18 @@ scene.fog.color.copy(envCur.fog);
 scene.fog.density=envCur.density;
 bgCol.copy(envCur.bg);
 const u=compMat.uniforms;
-u.uNoise.value=clamp(envCur.noise+glitchEnv*0.26+(fever?0.03:0)+WR.getSG()*0.035,0,0.88);
-u.uAberr.value=envCur.aberr+glitchEnv*0.009+WR.getSG()*0.0025;
-u.uGlitch.value=0.018+glitchEnv+WR.getSG()*0.06;
+u.uNoise.value=clamp(envCur.noise+glitchEnv*0.30+(fever?0.05:0)+WR.getSG()*0.05,0,0.88);
+u.uAberr.value=envCur.aberr+glitchEnv*0.010+WR.getSG()*0.0035;
+u.uGlitch.value=0.04+glitchEnv+WR.getSG()*0.08;
 u.uInvert.value=(invertFlash&&glitchEnv>0.45)?(Math.random()<0.5?0.85:0):0;
 u.uFadeB.value=fadeB;
 u.uFadeW.value=fadeW;
 u.uSolar.value=solar;
-u.uTape.value=0.14+glitchEnv*0.85+(fever?0.08:0);
+u.uTape.value=0.32+glitchEnv*0.9+(fever?0.15:0);
 u.uSolarPal.value=feverPal;
 u.uBloom.value=envCur.bloom+glitchEnv*0.10+(fever?0.04:0);
-u.uGhost.value=envCur.ghost+(fever?0.03:0)+glitchEnv*0.06;
-u.uDof.value=envCur.dof+solar*0.12;
+u.uGhost.value=envCur.ghost+(fever?0.05:0)+glitchEnv*0.06;
+u.uDof.value=envCur.dof+solar*0.15;
 u.uWarm.value=envCur.warm+solar*0.10;
 u.uWash.value=envCur.wash;
 }
@@ -4314,9 +4355,10 @@ completed=true;
 brokenEnding=true;
 collapseFast=false;
 solarHold=-1;solar=0;glitchEnv=0;
-noclipTo(0,-730,0); /* CAPA 5+: miras hacia el centro de THE BROKEN (-780): el haz rojo del PUNTO ROJO (-40,-805)
-   se ve desde el primer instante, a la izquierda, y la salida (-822) al fondo */
-lastSafe={p:[0,-730],yaw:0};
+noclipTo(0,BRK_SPAWN_Z,0); /* CAPA 5+: arreglado — antes miraba al vacío (Math.PI);
+   ahora miras hacia el centro de THE BROKEN: el haz rojo del PUNTO ROJO
+   se ve desde el primer instante, a la izquierda, y la salida al fondo */
+lastSafe={p:[0,BRK_SPAWN_Z],yaw:0};
 curZone=null;
 announce('THE BROKEN','el sueño se rompió');
 showWhisper("I'm talking to YOU, THE PLAYER");
@@ -4362,32 +4404,24 @@ const META=[
 '¿por qué sigues aquí?','el sueño ya no te quiere'
 ];
 let whisperCd=18;
-function liberationTitle(ek){
-if(ek==='ella')return 'LIBERASTE A ELLA';
-if(ek==='patrullador')return 'LIBERASTE AL PATRULLADOR ESTÁTICO';
-if(ek==='ladron')return 'LIBERASTE AL LADRÓN OLVIDADO';
-if(ek==='acechador')return 'LIBERASTE AL ACECHADOR';
-if(ek==='corredor')return 'LIBERASTE AL CORREDOR DEL VACÍO';
-if(ek==='merodeador')return 'LIBERASTE AL MERODEADOR DE LOS CIELOS';
-return 'ENTIDAD LIBERADA';
-}
 function spawnGirl(){
-if(!started||state!=='play'||dead||dyingT>=0){girlState.cd=6;return;}
-if(!isExplorableZone(curZone)){girlState.cd=10;return;}
-/* [v3.12] ELLA nace en Plaza Neón por defecto; si el jugador posee el
-   Cassette Dorado en su inventario actual, puede aparecer en cualquier zona explorable. */
-if(curZone!=='spawn'&&!isEntityLiberated('ella')){girlState.cd=6;return;}
+if(curZone==='broken'){girlState.cd=12;return;}
+/* [v3.9] ELLA SOLO en su isla: LA PLAZA NEÓN. En las demás zonas la
+   amenaza la pone la entidad local (ver ZENT404). La persecución de la
+   Entidad (TERROR) y THE BROKEN quedan intactas. */
+/* [v3.12] ELLA sale de su Plaza si conservas el CASSETTE DORADO */
+if(curZone!=='spawn'&&!DREAMRELEASE.isHeld('ella')){girlState.cd=6;return;}
 if(TERROR.pocket||TERROR.lock){girlState.cd=8;return;}
 /* CAPA 5: durante la persecución del Observador, Ella no interviene */
 if(TERROR.pursuit){girlState.cd=8;return;}
-if(window.ZENT404&&window.ZENT404.anyBusy&&window.ZENT404.anyBusy()){girlState.cd=6;return;}
 girlState.passive=Math.random()<TERROR.passiveChance();
+/* [v3.10] SIEMPRE dentro del cono de visión del jugador (la ficha la define:
+   «ELLA aparece donde puedes verla»): antes el spawn activo podía caer a
+   tu espalda y el avistamiento se perdía → parecía que nunca aparecía. */
 const dirA=yaw+rand(-0.95,0.95);
-const d=girlState.passive?rand(13,26):rand(16,38);
-const cl=clampToZone(curZone,pos.x+(-Math.sin(dirA))*d,pos.z+(-Math.cos(dirA))*d);
-if(Math.hypot(cl[0]-pos.x,cl[1]-pos.z)<11){girlState.cd=5;return;}
-girlState.x=cl[0];
-girlState.z=cl[1];
+const d=girlState.passive?rand(13,26):rand(16,42);
+girlState.x=pos.x+(-Math.sin(dirA))*d;
+girlState.z=pos.z+(-Math.cos(dirA))*d;
 girl.position.set(girlState.x,EYE+2.2,girlState.z);
 girl.scale.set(4.6,9.2,1);
 girl.visible=true;
@@ -4503,9 +4537,6 @@ announce('ELLA TE RECUERDA','algo floreció donde estuvo');
 }
 return;
 }
-if(!isExplorableZone(curZone)||(curZone!=='spawn'&&!isEntityLiberated('ella'))){
-if(!girlState.vanishing)vanishGirl(false);
-}
 const dx=pos.x-girlState.x,dz=pos.z-girlState.z;
 const dist=Math.hypot(dx,dz);
 girlDist=dist;
@@ -4578,36 +4609,95 @@ extraShards+=1;
 updateLivesHud();
 }
 }
+/* ============================================================
+   [v3.12] LIBERACIÓN DE ENTIDADES SEGÚN EL SUEÑO CONSERVADO
+   ------------------------------------------------------------
+   El permiso se deriva del ESTADO REAL del sueño en el inventario
+   (item.collected && !item.stolenBy), nunca de dreamsCollected ni de
+   curZone. ZNATIVE sigue siendo la restricción de origen antes de
+   recoger el sueño.
+   ============================================================ */
+const ZNATIVE={ella:'spawn',patrullador:'room',ladron:'city',acechador:'gray',corredor:'red',merodeador:'lagoon'};
+const ENT_LABEL={ella:'A ELLA',patrullador:'AL PATRULLADOR ESTÁTICO',ladron:'AL LADRÓN OLVIDADO',
+acechador:'AL ACECHADOR',corredor:'AL CORREDOR DEL VACÍO',merodeador:'AL MERODEADOR DE LOS CIELOS'};
+const DREAMRELEASE={
+_onChange:null,
+itemFor:function(ent){
+for(const it of dreamItems)if(it.data&&it.data.ent===ent)return it;
+return null;
+},
+/* ¿el jugador CONSERVA ese sueño? (recogido y no robado) */
+isHeld:function(ent){
+const it=this.itemFor(ent);
+return !!(it&&it.collected&&!it.stolenBy);
+},
+allowedHere:function(ent,zk){
+return zk===ZNATIVE[ent]||this.isHeld(ent);
+},
+/* robo/re cobro: recalcula permisos y retira entidades que dejaron de estar
+   liberadas (idempotente: despawn por estado, nunca duplica spawns) */
+refresh:function(){
+if(typeof this._onChange==='function'){
+try{this._onChange();}catch(_){}
+}
+},
+state:function(){
+const out={};
+for(const k in ZNATIVE){
+const it=this.itemFor(k);
+out[k]={native:ZNATIVE[k],held:this.isHeld(k),collected:!!(it&&it.collected),stolenBy:it?(it.stolenBy||null):null};
+}
+return out;
+}
+};
+window.DREAMRELEASE=DREAMRELEASE;
 function checkDreamPickups(){
 for(const item of dreamItems){
 if(item.collected)continue;
 const dx=pos.x-item.grp.position.x,dy=pos.y-item.grp.position.y,dz=pos.z-item.grp.position.z;
 if(dx*dx+dy*dy+dz*dz<3.4*3.4){
-const stolenOrigin=item.stolenBy;
 item.collected=true;
+lastDreamItem=item;
+/* [v3.12] ORIGEN EXPLÍCITO: el objeto del sueño dice quién lo robó.
+   `respawned` ya NO decide nada por sí solo: se consume aquí, una sola vez. */
+const origin=item.stolenBy||null;
 item.stolenBy=null;
 item.respawned=false;
-lastDreamItem=item;
 item.grp.visible=false;
 item.glow.visible=false;
 item.beam.visible=false;
-syncDreamsCount();
+if(lastStolenItem===item)lastStolenItem=null;
 AudioFX.pickup();
-if(stolenOrigin==='final_pursuit'){
-announce('SUEÑO RECUPERADO',item.data.name+' · '+item.data.zone);
-}else{
-announce(liberationTitle(item.data.entityKey),'Ahora puede aparecer en cualquier zona.');
-}
+syncDreamCount();
 firePulse(0.4,0.6,false);
-if(stolenOrigin==='final_pursuit'){
-/* [v3.12] SOLO un sueño robado por la persecución narrativa final
-   ('final_pursuit') puede reactivar TERROR.requeuePursuit(). Los robos
-   locales (p. ej. 'ladron_city', 'patrullador_room') jamás disparan huida. */
+const ent=item.data.ent||null;
+let main='SUEÑO ENCONTRADO',sub=item.data.name+' · '+item.data.zone;
+if(origin==='final_pursuit'){
+main='SUEÑO RECUPERADO';
+sub=item.data.name+' · la persecución vuelve a por ti';
+}else if(origin){
+main='SUEÑO RECUPERADO';
+sub=item.data.name+' · '+item.data.zone;
+}
+if(ent){
+main='LIBERASTE '+ENT_LABEL[ent];
+sub=item.data.name+' · ahora puede aparecer en cualquier zona';
+if(origin==='final_pursuit')sub+=' · y ELLA te busca';
+}
+announce(main,sub);
+/* el permiso de la entidad se recalcula desde el inventario */
+DREAMRELEASE.refresh();
+if(origin==='final_pursuit'){
+/* única ruta narrativa: recuperar un sueño robado POR LA PERSECUCIÓN */
 respawnedDreamPending=false;
 if(TERROR&&!TERROR.pursuit&&!TERROR.pursuitDone){
 showWhisper('volvió a mirarte');
 TERROR.requeuePursuit();
 }
+}else if(origin){
+/* robo LOCAL (Ladrón/Patrullador/...): sin persecución, sin temporizador */
+respawnedDreamPending=false;
+showWhisper('el sueño volvió a ti');
 }
 if(dreamsCollected>=6&&!completed&&collapseAt===0){
 collapseAt=sagaSeconds()+2.0;
@@ -4617,37 +4707,67 @@ announce('SEÑAL INESTABLE','algo se está rompiendo');
 }
 }
 }
+/* [v3.12] CAUSA RAÍZ: un único robo, con el origen explícito en el sueño.
+   Una sola función para todas las entidades y para la persecución final. */
+function stealDreamCore(origin){
+if(dreamsCollected<=0)return null;
+let item=lastDreamItem;
+if(!item||item.collected){
+for(let i=dreamItems.length-1;i>=0;i--){if(dreamItems[i].collected){item=dreamItems[i];break}}
+}
+if(!item)return null;
+item.collected=false;item.respawned=true;
+/* el origen viaja EN el sueño; sin origen no hay narrativa final */
+item.stolenBy=origin||null;
+item.home=[item.data.pos[0],item.data.pos[1],item.data.pos[2]];
+item.grp.position.set(item.home[0],item.home[1],item.home[2]);
+item.glow.position.set(item.home[0],item.home[1],item.home[2]);
+item.beam.position.set(item.home[0],item.home[1]+29,item.home[2]);
+item.grp.visible=true;item.mesh.visible=true;item.glow.visible=true;item.beam.visible=true;
+lastStolenItem=item;
+syncDreamCount();
+/* al perder el sueño, la entidad asociada deja de estar liberada YA */
+DREAMRELEASE.refresh();
+return item;
+}
 /* ========== 12B+ · CAPA 6 · EL BUCLE DEL SUEÑO ROBADO ==========
-[v3.12] Cada sueño registra explícitamente `stolenBy`:
-- null: nunca robado o ya recuperado limpiamente
-- 'ladron_city' / 'patrullador_room': robo local de entidad de zona
-- 'final_pursuit': robo durante la persecución narrativa final hacia THE BROKEN */
+Al morir cazado por la Entidad, el ÚLTIMO SUEÑO QUE AGARRASTE reaparece
+en su sitio original (siempre visible, sin niebla). Al agarrarlo de nuevo,
+la Entidad vuelve a aparecer y a cazarte: bucle hasta que sobrevivas la
+cacería el tiempo suficiente para llegar a THE BROKEN. */
 let lastDreamItem=null;
+let lastStolenItem=null;      /* [v3.12] el ÚLTIMO sueño realmente robado */
 let respawnedDreamPending=false;
-function respawnLastDream(origin){
-const stealSrc=origin||'final_pursuit';
-let item=(lastDreamItem&&lastDreamItem.collected)?lastDreamItem:null;
+/* el contador SIEMPRE se deriva del inventario real: nunca puede desviarse */
+function syncDreamCount(){
+dreamsCollected=0;
+for(const it of dreamItems)if(it.collected)dreamsCollected++;
+elDreams.textContent='SUEÑOS '+dreamsCollected+'/6';
+return dreamsCollected;
+}
+function respawnLastDream(){
+/* [v3.12] se re-coloca el sueño que se robó de verdad, no "el último que
+   tocaste": si no, el contador y la liberación de la entidad se desviaban. */
+let item=(lastStolenItem&&!lastStolenItem.collected)?lastStolenItem:lastDreamItem;
 if(!item){
 for(let i=dreamItems.length-1;i>=0;i--){
 if(dreamItems[i].collected){item=dreamItems[i];break;}
 }
 }
-if(!item||!item.collected)return null;
+if(!item)return false;
 item.collected=false;
-item.stolenBy=stealSrc;
-item.respawned=(stealSrc==='final_pursuit');
-lastDreamItem=null;
-for(let i=dreamItems.length-1;i>=0;i--){
-if(dreamItems[i].collected){lastDreamItem=dreamItems[i];break;}
-}
-syncDreamsCount();
+item.respawned=true;
+item.stolenBy='final_pursuit';   /* [v3.12] origen explícito del reaparición */
 let hx=item.data.pos[0],hy=item.data.pos[1],hz=item.data.pos[2];
 let where=item.data.name+' · '+item.data.zone;
-/* CAPA 7: si la persecución final te cazó dentro de THE BROKEN, el sueño robado
-   reaparece allí mismo — a la vista del respawn (0,-730) y camino del faro (-40,-805). */
-if(stealSrc==='final_pursuit'&&completed&&(curZone==='broken'||pos.z<-680)){
+/* CAPA 7: si te cazó dentro de THE BROKEN, el sueño robado reaparece
+   ALLÍ mismo — a la vista del respawn y camino del faro — para que
+   el bucle (agarrarlo → la Entidad reaparece) siga en SU terreno.
+   Nota de scope: el faro (redGroup) vive dentro del IIFE de TERROR y
+   su posición es FIJA (-40,-545); se usa la constante, no la referencia. */
+if(completed&&(curZone==='broken'||pos.z<BRK_ZONE_Z)){
 const rx=lastSafe.p[0],rz=lastSafe.p[1];
-const bdx=-40-rx,bdz=(-805)-rz;
+const bdx=BRK_BEACON_X-rx,bdz=BRK_BEACON_Z-rz;
 const bl=Math.max(.001,Math.hypot(bdx,bdz));
 hx=rx+bdx/bl*20+10;
 hz=rz+bdz/bl*20-7;
@@ -4662,11 +4782,11 @@ item.grp.visible=true;
 item.mesh.visible=true;
 item.glow.visible=true;
 item.beam.visible=true;
-if(stealSrc==='final_pursuit'){
+lastStolenItem=item;
+syncDreamCount();
 respawnedDreamPending=true;
 announce('EL SUEÑO ROBADO VOLVIÓ',where+' · vuelven a mirarte');
-}
-return item;
+return true;
 }
 /* ========== 12C · PORTALES ========== */
 let portalCd=0;
@@ -5055,22 +5175,30 @@ gray.sil=0;
 const props=[];
 let propCd=48,propCheck=0;
 (function markProps(){
-const zc={spawn:[0,0,95],grayA:[0,300,80],grayB:[0,392,58],red:[0,-345,70],lagoon:[0,660,90]};
+const zc={spawn:[0,0,95],grayA:[0,200,80],grayB:[0,292,58],red:[0,-230,70],lagoon:[0,430,90]};
 for(const m of snapTargets){
 if(!m||!m.position)continue;
-const zk=zoneAt(m.position.x,m.position.z);
+/* [v3.12] m.position es LOCAL al grupo del sector: zoneAt trabaja en
+   coordenadas de mundo, así que sumamos el offset del grupo contenedor. */
+const wp=p=>m.position[p]+((m.parent&&m.parent.position)?m.parent.position[p]:0);
+const zk=zoneAt(wp('x'),wp('z'));
 if(zk!=='spawn'&&zk!=='room'&&zk!=='gray'&&zk!=='red'&&zk!=='lagoon')continue;
 if(m.position.y>28)continue;
 let cl;
-if(zk==='room')cl={rect:[257,343,-33,33]};
-else if(zk==='gray')cl={c:m.position.z>350?zc.grayB:zc.grayA};
+if(zk==='room')cl={rect:[157,243,-33,33]};
+else if(zk==='gray')cl={c:m.position.z>250?zc.grayB:zc.grayA};
 else cl={c:zc[zk]};
 m.userData.tp={mode:'base',bx:m.position.x,bz:m.position.z,restoreAt:0};
 props.push({m:m,cl:cl});
 }
 })();
+/* [v3.12] los props viven dentro del grupo de su sector: su position es
+   LOCAL. Estas dos funciones dan la posición de mundo para comparar con
+   el jugador (antes la comparación se desviaba ~100 m por sector). */
+function wxOf(m){return m.position.x+((m.parent&&m.parent.position)?m.parent.position.x:0);}
+function wzOf(m){return m.position.z+((m.parent&&m.parent.position)?m.parent.position.z:0);}
 function unseen(m){
-const dx=m.position.x-pos.x,dz=m.position.z-pos.z;
+const dx=wxOf(m)-pos.x,dz=wzOf(m)-pos.z;
 const d=Math.hypot(dx,dz);
 if(d<15)return false;
 const fx=-Math.sin(yaw),fz=-Math.cos(yaw);
@@ -5078,7 +5206,7 @@ return (dx*fx+dz*fz)/d<-0.08;
 }
 function forcePropChange(){
 const near=props.filter(function(p){
-return p.m.userData.tp.mode!=='hidden'&&Math.hypot(p.m.position.x-pos.x,p.m.position.z-pos.z)<75&&unseen(p.m);
+return p.m.userData.tp.mode!=='hidden'&&Math.hypot(wxOf(p.m)-pos.x,wzOf(p.m)-pos.z)<75&&unseen(p.m);
 });
 if(!near.length)return false;
 const p=pick(near);
@@ -5114,7 +5242,7 @@ propCheck=0;
 for(const p of props){
 const tp=p.m.userData.tp;
 if(tp.mode==='hidden'&&sagaSeconds()>tp.restoreAt&&
-(unseen(p.m)||Math.hypot(p.m.position.x-pos.x,p.m.position.z-pos.z)>24)){
+(unseen(p.m)||Math.hypot(wxOf(p.m)-pos.x,wzOf(p.m)-pos.z)>24)){
 p.m.visible=true;
 tp.mode='moved';
 }
@@ -5204,7 +5332,7 @@ const storyCam=new THREE.PerspectiveCamera(58,REC_W/REC_H,0.1,700);
 storyCam.layers.enable(1);
 storyCam.updateProjectionMatrix();
 const STORY_VIEWS={
-lagoon:{cam:[6,5,625],look:[0,8,675],zone:'lagoon',walk:[-8,640,10,644],ella:[0,3.4,651]},
+lagoon:{cam:[6,5,610],look:[0,8,660],zone:'lagoon',walk:[-8,625,10,629],ella:[0,3.4,636]},
 red:{cam:[10,4.5,-321],look:[-8,3.5,-345],zone:'red',walk:[4,-323,-8,-347],ella:[-10,3.2,-341]},
 gray:{cam:[22,6,297],look:[-4,4,281],zone:'gray',walk:[14,290,-8,284],ella:[-2,3.6,287]},
 city:{cam:[-250,5,28],look:[-270,3,41],zone:'city',walk:[-256,44,-274,36],ella:[-266,3.2,39]},
@@ -5243,7 +5371,7 @@ if(!figOccluded(m.cam,p))return p;
 return {x:m.cam.position.x+cd.x*10.5,y:0,z:m.cam.position.z+cd.z*10.5,d:10.5};
 }
 /* las niñas junto a las dos bolas de la Sala Estática */
-const ROOM_GIRLS={a1:[270,-15],a2:[274.5,-6],a3:[273,-3.5],b1:[278,14]};
+const ROOM_GIRLS={a1:[170,-15],a2:[174.5,-6],a3:[173,-3.5],b1:[178,14]};
 /* silueta del jugador, con retardo */
 function makeProxy(){
 const g=new THREE.Group();
@@ -6000,22 +6128,22 @@ const doorMat=new THREE.MeshBasicMaterial({map:ctex(cvVHS,1,2),color:0x9a8d76});
 const doorEdge=new THREE.LineBasicMaterial({color:0xffc27a,transparent:true,opacity:0.8});
 const doorOut=new THREE.Mesh(new THREE.BoxGeometry(0.3,7,4.2),doorMat);
 doorOut.add(new THREE.LineSegments(new THREE.EdgesGeometry(doorOut.geometry),doorEdge));
-doorOut.position.set(344.68,3.5,24);
+doorOut.position.set(244.68,3.5,24);
 doorOut.visible=false;
 scene.add(doorOut);
 const doorIn=new THREE.Mesh(new THREE.BoxGeometry(0.28,6.4,3.4),doorMat);
 doorIn.add(new THREE.LineSegments(new THREE.EdgesGeometry(doorIn.geometry),doorEdge));
-doorIn.position.set(363.6,3.2,0);
+doorIn.position.set(263.6,3.2,0);
 scene.add(doorIn);
 (function buildPocket(){
 /* isla de suelo propia: existe aunque el mundo diga que no */
-islands.push({type:'r',minX:362,maxX:390,minZ:-13,maxZ:13});
-box(28,0.06,26,M.platTop,376,0.03,0);
-box(2,12,26,M.vhs,362.5,6,0,{solid:true});
-box(2,12,26,M.vhs,389.5,6,0,{solid:true});
-box(28,12,2,M.vhs,376,6,-12.5,{solid:true});
-box(28,12,2,M.vhs,376,6,12.5,{solid:true});
-box(28,0.6,26,M.vhs,376,12.3,0);
+islands.push({type:'r',minX:262,maxX:290,minZ:-13,maxZ:13});
+box(28,0.06,26,M.platTop,276,0.03,0);
+box(2,12,26,M.vhs,262.5,6,0,{solid:true});
+box(2,12,26,M.vhs,289.5,6,0,{solid:true});
+box(28,12,2,M.vhs,276,6,-12.5,{solid:true});
+box(28,12,2,M.vhs,276,6,12.5,{solid:true});
+box(28,0.6,26,M.vhs,276,12.3,0);
 /* la silla */
 const chair=new THREE.Group();
 const cm=new THREE.MeshBasicMaterial({map:noiseGray.reg(3,3)});
@@ -6032,10 +6160,10 @@ const leg=new THREE.Mesh(new THREE.BoxGeometry(0.11,0.95,0.11),cm);
 leg.position.set(l[0],0.47,l[1]);
 chair.add(leg);
 });
-chair.position.set(370,0.06,5);
+chair.position.set(270,0.06,5);
 chair.rotation.y=2.4;
 scene.add(chair);
-cylCol(370,5,0.75);
+cylCol(270,5,0.75);
 pocket.chairCol=colliders.cyl[colliders.cyl.length-1];
 pocket.chair=chair;
 /* monitor interior */
@@ -6091,16 +6219,16 @@ pocket.chairUnseen=0;
 pocket.chairSteps=0;
 pocket.chairLookT=0;
 pocket.ellaWatch=0;
-pocket.chair.position.set(370,0.06,5);
+pocket.chair.position.set(270,0.06,5);
 pocket.chair.rotation.y=2.4;
-if(pocket.chairCol){pocket.chairCol.x=370;pocket.chairCol.z=5;}
+if(pocket.chairCol){pocket.chairCol.x=270;pocket.chairCol.z=5;}
 figREC.visible=false;
 figREC.material.opacity=0;
-pos.set(373,EYE+0.35,7.5);
+pos.set(273,EYE+0.35,7.5);
 vel.set(0,0,0);
 pitch=0;
-yaw=Math.atan2(-(376-373),-(-1-7.5));
-WR.warmup(376,0,24);
+yaw=Math.atan2(-(276-273),-(-1-7.5));
+WR.warmup(276,0,24);
 AudioFX.duckAmbient(true);
 humOn();
 const m3=monById(3);
@@ -6108,11 +6236,11 @@ if(m3){m3.state='static';m3.stateT=0;m3.mat.uniforms.uStatic.value=1;}
 }
 function exitPocket(){
 S.pocket=false;
-pos.set(341.5,EYE,24);
+pos.set(241.5,EYE,24);
 vel.set(0,0,0);
 pitch=0;
 yaw=Math.PI/2;
-WR.warmup(332,20,45);
+WR.warmup(232,20,45);
 AudioFX.duckAmbient(false);
 humOff();
 cancelGirlFeeds();
@@ -6201,9 +6329,9 @@ if(pocket.chairSteps<CHAIR_STEPS.length&&pocket.chairLookT>=0.9){
 const need=3.0+pocket.chairSteps*0.75;
 if(pocket.chairUnseen>need){
 const st=CHAIR_STEPS[pocket.chairSteps];
-pocket.chair.position.set(370+st.dx,0.06,5+st.dz);
+pocket.chair.position.set(270+st.dx,0.06,5+st.dz);
 pocket.chair.rotation.y=st.ry;
-if(pocket.chairCol){pocket.chairCol.x=370+st.dx;pocket.chairCol.z=5+st.dz;}
+if(pocket.chairCol){pocket.chairCol.x=270+st.dx;pocket.chairCol.z=5+st.dz;}
 pocket.chairSteps++;
 if(!MEM.kp.silla)MEM.kp.silla='mundo';
 pocket.chairTurned=true;
@@ -6842,7 +6970,7 @@ redGlow.material.color.set(0xff3848);
 const redGlow2=addSprite(cvGlow,0,2.6,0,60,60,0.4);
 redGlow2.material.color.set(0xb01830);
 redGroup.add(redCore);redGroup.add(redInner);redGroup.add(redCol);redGroup.add(redBeam);redGroup.add(redNucleus);redGroup.add(redSky);redGroup.add(redGlow);redGroup.add(redGlow2);
-redGroup.position.set(-40,2.3,-805);
+redGroup.position.set(BRK_BEACON_X,2.3,BRK_BEACON_Z);
 redGroup.visible=false;
 scene.add(redGroup);
 addAnim(function(t){
@@ -7111,21 +7239,22 @@ camera.fov=76;camera.updateProjectionMatrix();
 /* CAPA 6: la escala vuelve SIEMPRE a la altura normal — nunca queda gigante */
 obsResetSize();
 if(wasLethal){
-/* ===== CAPA 6 · MUERTE POR CAZADA (final_pursuit) =====
-obsDeathEnd() devuelve el último sueño a su sitio con stolenBy='final_pursuit'
-y sincroniza dreamsCollected. */
+/* ===== CAPA 6 · MUERTE POR CAZADA =====
+Te quita 1 sueño, la Entidad que te persigue DESAPARECE y el último sueño
+que agarraste REAPARECE en su sitio: agárralo y volverá a lanzarse sobre ti.
+Bucle hasta que sobrevivas la cacería y llegues a THE BROKEN. */
 PURS.catches++;MEM.catches++;
+/* [v3.12] el sueño sale del inventario de verdad (el contador se deriva) */
+if(dreamsCollected>0)stealDreamCore('final_pursuit');
 obsDeathEnd();
 return;
 }
 /* ===== APARICIÓN: la cacería empieza ===== */
-const inBroken=completed&&(curZone==='broken'||pos.z<-680);
+const inBroken=completed&&(curZone==='broken'||pos.z<BRK_ZONE_Z);
 /* CAPA 7: mientras DECLARA no te caza — te deja leer su promesa */
 PURS.guard=inBroken?6:15;
 /* te arranca un sueño (la primera aparición; luego te lo quita al morir) */
-if(PURS.appearances<2&&dreamsCollected>0){
-respawnLastDream('final_pursuit');
-}
+if(PURS.appearances<2&&dreamsCollected>0)stealDreamCore('final_pursuit');
 /* y te suelta lejos: fade a negro, reapareces sin ese sueño */
 respawnState='out';fadeBt=1;
 AudioFX.burst(0.45,0.16);
@@ -7172,8 +7301,8 @@ if(!completed&&collapseT<0)collapseAt=0;
 respawnState='out';fadeBt=1;
 AudioFX.burst(0.45,0.16);
 AudioFX.blip(120,0.6,'sawtooth',0.06,40);
-/* el sueño robado VUELVE a su sitio marcado como 'final_pursuit' */
-respawnLastDream('final_pursuit');
+/* el sueño robado VUELVE a su sitio: agárralo para provocarla otra vez */
+respawnLastDream();
 showWhisper('te solt\u00f3... por ahora');
 setTimeout(function(){
 showObsDeclare('NO PUEDES ESCAPAR DE M\u00cd',2600);
@@ -7222,6 +7351,7 @@ AudioFX.obsScare(1);
 if(!J.sfxLive)sfxEntityKill.play(1,1.0);
 heart.cut();
 stingerBurst=1.6;
+/* [v3.12] sin sangre: la interferencia de #sigdeath cubre la muerte */
 camera.fov=78;camera.updateProjectionMatrix();
 }
 if(J.lunged){
@@ -7299,7 +7429,7 @@ if(!girlState.active)entityThreat=1;
 if(PURS.phase===1){
 if(!PURS.eyesDone&&PURS.t>5){PURS.eyesDone=true;showEyes(true,1.1);}
 /* la persecución CRUZA el colapso y entra en THE BROKEN */
-if(completed&&(curZone==='broken'||pos.z<-680)){
+if(completed&&(curZone==='broken'||pos.z<BRK_ZONE_Z)){
 PURS.phase=2;
 PURS.t2=0;
 const bx=Math.sin(yaw),bz=Math.cos(yaw);
@@ -7343,7 +7473,7 @@ if(PURS.dist<9&&PURS.e4helps<(MEM.catches>2?4:3)&&PURS.helpCd<=0)interfere();
 if(!PURS.stuckMsg&&t>150){PURS.stuckMsg=true;redBoost=1;e4Msg('EL PUNTO ROJO. AHORA.');}
 /* aviso si insiste con la salida blanca vieja: ahora TAMBIÉN despierta */
 if(!PURS.portalHint){
-if(Math.hypot(pos.x-0,pos.z+822)<9){PURS.portalHint=true;e4Msg('LA SALIDA DESPERT\u00d3. ENTRA.');}
+if(Math.hypot(pos.x-0,pos.z-BRK_EXIT_Z)<9){PURS.portalHint=true;e4Msg('LA SALIDA DESPERT\u00d3. ENTRA.');}
 }
 }
 function interfere(){
@@ -7412,7 +7542,14 @@ if(MEM.profile==='superficial')return 'NUNCA MIRASTE LAS C\u00C1MARAS. YO S\u00C
 if(MEM.profile==='obsesivo')return 'T\u00DA TAMBI\u00C9N MIRASTE. DEMASIADO.';
 return 'NOS MIR\u00C1BAMOS.';
 }
-function mapXY(x,z){return [360+x*0.235,222-(z+45)*0.235];}
+/* [v3.12] transformación cartográfica ÚNICA (mundo → mapa). El eje Z
+   (el largo del nivel) va en horizontal; +X sube en pantalla. Encuadra
+   TODO el mundo trasladado: x ∈ [-412,398], z ∈ [-872,762]. */
+/* [v3.12] MAPB/MAPPAD/mapScaleFor son GLOBALES: los usan el mapa de la
+   cinta (TERROR) y el mapa en primera persona (ZENT404). */
+const _ms=mapScaleFor(720,460);
+function mapXY(x,z){return [MAPPAD.l+((720-MAPPAD.l-MAPPAD.r)-_ms.cw)/2+(z-MAPB.minZ)*_ms.s,
+MAPPAD.t+((460-MAPPAD.t-MAPPAD.b)-_ms.ch)/2+_ms.ch-(x-MAPB.minX)*_ms.s];}
 function fmtMS(s){const p=function(n){return (n<10?'0':'')+n;};return p(Math.floor(s/60))+':'+p(Math.floor(s)%60);}
 function firstSighting(zk){
 for(const s of sightingLocs)if(s.zone===zk)return s;
@@ -7614,8 +7751,8 @@ if(t>PB.dur)startReveal();
 function drawMap(c,hiZone){
 const W=720;
 const zonesDraw=[
-['PLAZA NE\u00D3N',0,0,112,'spawn'],['SALA EST\u00C1TICA',300,0,0,'room'],['CIUDAD FEBRIL',-300,0,106,'city'],
-['MONOLITOS',0,300,92,'gray'],['VOID ROJO',0,-345,88,'red'],['LAGUNA',0,660,106,'lagoon'],['THE BROKEN',0,-780,85,'broken']
+['PLAZA NE\u00D3N',0,0,95,'spawn'],['SALA EST\u00C1TICA',300,0,0,'room'],['CIUDAD FEBRIL',-300,0,85,'city'],
+['MONOLITOS',0,300,80,'gray'],['VOID ROJO',0,-345,70,'red'],['LAGUNA',0,645,90,'lagoon'],['THE BROKEN',0,-780,85,'broken']
 ];
 c.lineWidth=1;
 for(let i=0;i<zonesDraw.length;i++){
@@ -7623,26 +7760,26 @@ const zd=zonesDraw[i];
 const hi=hiZone&&zd[4]===hiZone.zone;
 const p=mapXY(zd[1],zd[2]);
 if(zd[3]===0){
-const a=mapXY(253,-55),b=mapXY(347,55);
+const a=mapXY(253,-37),b=mapXY(347,37);
 c.strokeStyle=hi?'rgba(190,240,225,0.6)':'rgba(160,200,190,0.28)';
 c.strokeRect(a[0],Math.min(a[1],b[1]),b[0]-a[0],Math.abs(b[1]-a[1]));
 }else{
 c.beginPath();
-c.arc(p[0],p[1],zd[3]*0.235,0,TAU);
+c.arc(p[0],p[1],zd[3]*0.41,0,TAU);
 c.strokeStyle=hi?'rgba(190,240,225,0.6)':'rgba(160,200,190,0.28)';
 c.stroke();
 c.fillStyle=hi?'rgba(190,240,225,0.10)':'rgba(160,200,190,0.05)';
 c.fill();
 }
 c.fillStyle=hi?'rgba(220,250,240,0.85)':'rgba(160,200,190,0.45)';
-c.font='10px monospace';
+c.font='11px monospace';
 c.textAlign='center';
 c.fillText(zd[0],p[0],p[1]);
 }
-c.strokeStyle='rgba(160,200,190,0.22)';
+c.strokeStyle='rgba(160,200,190,0.18)';
 c.beginPath();
 const seg=function(x1,z1,x2,z2){const a=mapXY(x1,z1),b=mapXY(x2,z2);c.moveTo(a[0],a[1]);c.lineTo(b[0],b[1]);};
-seg(112,0,253,0);seg(-112,0,-194,0);seg(0,112,0,208);seg(0,-112,0,-257);seg(0,458,0,554);
+seg(95,0,253,0);seg(-95,0,-194,0);seg(0,95,0,208);seg(0,-95,0,-257);seg(0,458,0,539);
 c.stroke();
 }
 function drawRoute(c,progT,dot){
@@ -7851,9 +7988,9 @@ pocket.ellaChairDone=false;
 pocket.ellaWatch=0;
 pocket.scriptT=0;
 pocket.roomT=0;
-pocket.chair.position.set(370,0.06,5);
+pocket.chair.position.set(270,0.06,5);
 pocket.chair.rotation.y=2.4;
-if(pocket.chairCol){pocket.chairCol.x=370;pocket.chairCol.z=5;}
+if(pocket.chairCol){pocket.chairCol.x=270;pocket.chairCol.z=5;}
 doorOut.visible=false;
 figREC.visible=false;
 figREC.material.opacity=0;
@@ -8009,7 +8146,7 @@ return PURS.active?'pursuit-1:collapse@'+Math.round(collapseAt-sagaSeconds()):'o
 pursue2:function(){
 completed=true;brokenEnding=true;solarHold=-1;solar=0;glitchEnv=0;
 collapseT=8;collapseAt=0;
-noclipTo(0,-730,0);
+noclipTo(0,BRK_SPAWN_Z,0);
 if(!PURS.active){PURS.done=false;startPursuit(2);}
 return 'pursuit-2';
 },
@@ -8018,8 +8155,8 @@ lethalCatch:function(){
 /* CAPA 7 · QA: simula que la Entidad te CAZA — fase 1 pre-colapso o
    fase 2 dentro de THE BROKEN (muerte con bucle del sueño robado) */
 if(PURS.active&&!obsJs&&((PURS.phase===1&&collapseT<0&&!completed)||PURS.phase===2)){
-startObsJumpscare(true);
-return 'lethal-jump:on';
+const started=startObsJumpscare(true);
+return started?'lethal-jump:on':'blocked:'+state;
 }
 return 'no-catchable-phase';
 },
@@ -8155,7 +8292,7 @@ if(noiseAcc>0.045){
 noiseAcc=0;
 [noiseTV1,noiseTV2,noiseGray][noiseIdx++%3].refresh();
 }
-if(started&&dyingT<0&&!dead&&state==='play'&&!TERROR.lock)updatePlayer(dt);
+if(started&&dyingT<0&&!dead&&state==='play'&&!TERROR.lock&&!SIGD.active)updatePlayer(dt);
 else if(!started)camera.lookAt(0,26,-55);
 for(const f of anim)f(t,dt);
 if(!Number.isFinite(pos.x)||!Number.isFinite(pos.y)||!Number.isFinite(pos.z))pos.set(0,EYE,60);
@@ -8186,20 +8323,21 @@ updateEnv(dt);
 WR.update(dt,t);
 updateFades(dt);
 updateCollapse(dt);
+sigDeathTick(dt);   /* [v3.12] secuencia de interferencia (muerte) */
 if(dyingT>=0){
 dyingT+=dt;
 const u=compMat.uniforms;
-u.uGlitch.value=0.45+Math.random()*0.25;
-u.uInvert.value=0;
-u.uNoise.value=0.45+0.20*(dyingT/1.2);
-camera.position.x=pos.x+(Math.random()-0.5)*0.07;
-camera.position.z=pos.z+(Math.random()-0.5)*0.07;
+u.uGlitch.value=0.9+Math.random()*0.4;
+u.uInvert.value=Math.random()<0.3?0.85:0;
+u.uNoise.value=0.8;
+camera.position.x=pos.x+(Math.random()-0.5)*0.1;
+camera.position.z=pos.z+(Math.random()-0.5)*0.1;
 if(dyingT>1.2){
 dyingT=-1;
 u.uInvert.value=0;
 if(!devMode){lives--;updateLivesHud();}   /* [v1.7-DEV] inmortal: no gasta vidas */
 if(lives<=0){
-beginGameOver('ELLA','ELLA TE ALCANZÓ · SEÑAL INTERRUMPIDA');
+sigDeathBegin('ELLA');
 }else{
 girlState.active=false;girlState.mode='watch';
 girl.visible=false;girlAura.visible=false;
@@ -8236,7 +8374,7 @@ J.lunged=true;
 if(!J.sfxLive&&!sfxEntityKill.play(1,1.0))AudioFX.jumpscareSting();
 heart.cut();
 stingerBurst=1.5;
-camera.fov=78;camera.updateProjectionMatrix();
+/* [v3.12] sin sangre: la interferencia de #sigdeath cubre la muerte */camera.fov=78;camera.updateProjectionMatrix();
 }
 if(J.lunged){
 const lt=J.t-APPROACH,ld=Math.max(.4,1.6-lt/.12*1.2);
@@ -8251,7 +8389,7 @@ girlAura.position.set(ex,EYE+1.2,ez);girlAura.scale.set(sc*2.4,sc*2.6,1);
 const shakeA=Math.max(0,.09-lt*.06);
 camera.rotation.set((Math.random()-.5)*shakeA,J.targetYaw+(Math.random()-.5)*shakeA,(Math.random()-.5)*shakeA*1.4);
 camera.position.set(J.camX+(Math.random()-.5)*shakeA*.5,EYE+(Math.random()-.5)*shakeA*.5,J.camZ+(Math.random()-.5)*shakeA*.5);
-panicRedEl.style.opacity='0.65';post.uniforms.uGlitch.value=Math.min(.95,.55+lt*.45+stingerBurst*.35);
+panicRedEl.style.opacity='1';post.uniforms.uGlitch.value=Math.min(.95,.55+lt*.45+stingerBurst*.35);
 if(lt>HOLD){
 sfxEntityKill.stop(0.05);
 const doDeath=!devMode&&lives<=1;   /* [v1.7-DEV] inmortal */
@@ -8263,7 +8401,8 @@ bloodEl.classList.remove('show');panicRedEl.style.opacity='0';
 heart.setDying(false);
 camera.fov=72;camera.updateProjectionMatrix();
 if(doDeath){
-beginGameOver('ELLA','ELLA TE ALCANZÓ · SEÑAL INTERRUMPIDA');
+recordLevelDeath('3', Math.floor(sagaSeconds()), Math.max(0, lives));
+sigDeathBegin('ELLA');
 }else{
 invulnT=2.5;
 pos.set(lastSafe.p[0],EYE,lastSafe.p[1]);
@@ -8276,7 +8415,6 @@ showWhisper('todavía no');
 /* CAPA 5+ · JUMPSCARE DEL OBSERVADOR (la animación vive dentro de TERROR) */
 TERROR.obsJumpTick(dt);
 }
-updateDeathSeq(dt);
 if(invulnT>0)invulnT-=dt;
 hudAcc+=dt;
 if(hudAcc>0.25&&started){
@@ -9095,44 +9233,28 @@ S.whCd=8+Math.random()*8;
 const w=SUSURROS[k];if(w)showWhisper(w[Math.random()*w.length|0]);
 }
 function zoneAllows(){
-return started&&!dead&&state==='play'&&!completed&&collapseT<0&&!TERROR.pursuit&&!TERROR.pocket&&!TERROR.lock;
+return started&&!dead&&state==='play'&&!completed&&collapseT<0&&!TERROR.pursuit&&!TERROR.pocket&&!TERROR.lock&&!SIGD.active;
 }
-const HOME_ZONE={ella:'spawn',patrullador:'room',ladron:'city',acechador:'gray',corredor:'red',merodeador:'lagoon'};
-function canEntityAct(ek,zk){
-if(!isExplorableZone(zk))return false;
-return zk===HOME_ZONE[ek]||isEntityLiberated(ek);
-}
-function dodgeThreatActive(){
-return LAD.on||COR.on||!!COR.cine||!!MER.warn||!!MER.debris||(girlState.active&&!girlState.vanishing&&girlState.mode==='hunt');
-}
-/* ---------- robo de sueño local (origen explícito, nunca 'final_pursuit') ---------- */
+/* ---------- robo de sueño (misma regla que la Entidad) ---------- */
 function stealDream(origin){
-return respawnLastDream(origin||'ladron_city');
+/* [v3.12] puerta única al robo; el cuerpo vive en el ámbito principal para
+   que tanto ELLA/TERROR como el Ladrón/Patrullador usen EXACTAMENTE la misma
+   regla (sin copias ni contadores paralelos). */
+return stealDreamCore(origin);
 }
-/* ---------- muerte por entidad (misma regla que ELLA: -1 vida, cero sangre) ---------- */
-function kill(title,sub,stealOrigin){
-if(state!=='play'||dyingT>=0||js||dead||invulnT>0)return false;
-const stolen=stealOrigin?stealDream(typeof stealOrigin==='string'?stealOrigin:'ladron_city'):null;
-announce(title,stolen?('se llevó '+stolen.data.name+' · vuelve a su sitio'):sub);
-firePulse(0.85,0.9,false);
-if(!devMode&&lives<=1){
-lives=0;updateLivesHud();
-S.killAnim=-1;S.killWho=title;
-if(FLSH.charging){FLSH.charging=false;if(FLSH.chargeSnd){FLSH.chargeSnd.stop(true);FLSH.chargeSnd=null}}
-FLSH.charge=0;FLSH.ready=false;FLSH.anim=null;
-window.__FLB={on:false,t:0};
-blkEl.style.opacity='0';flshEl.style.opacity='0';
-if(MAP.open)mapClose(true);
-if(REG.on)regEnd();
-beginGameOver(title,title+' TE MATÓ · SEÑAL INTERRUMPIDA');
-return true;
-}
+/* ---------- muerte por entidad (misma regla que ELLA: -1 vida) ---------- */
+function kill(title,sub,steal,origin){
+if(state!=='play'||dyingT>=0||js||dead||invulnT>0||SIGD.active||S.killAnim>=0)return false;
 S.killAnim=0;S.killWho=title;
 heart.setDying(true);heart.setThreat(1);
 chaseMusic.stop(0.3);
 sfxEntityKill.load();
 if(!sfxEntityKill.play(1))AudioFX.jumpscareSting();
-panicRedEl.style.opacity='0.55';
+/* [v3.12] sin sangre: la interferencia de #sigdeath cubre la muerte */
+panicRedEl.style.opacity='1';
+const stolen=steal?stealDream(origin):null;
+announce(title,stolen?('se llevó '+stolen.data.name+' · vuelve a su sitio'):sub);
+firePulse(1,1,true);
 return true;
 }
 /* ============================================================
@@ -9182,16 +9304,23 @@ pat.g.visible=false;scene.add(pat.g);
 const PAT={on:false,grace:0,t:90,anchor:new THREE.Vector3(),spawnCd:3,visits:0};
 function patSpawn(force){
 if(PAT.on||state!=='play'||TERROR.pursuit||TERROR.pocket||TERROR.lock)return;
-const zk=S.zone||curZone;
-if(!canEntityAct('patrullador',zk)||dodgeThreatActive()){PAT.spawnCd=6;return;}
 if(!force){
 PAT.visits++;
-if((zk==='room'&&PAT.visits<2)||Math.random()>0.5){PAT.spawnCd=zk==='room'?8:16;return}
+if(PAT.visits<2||Math.random()>0.5){PAT.spawnCd=8;return}
 }
+/* [v3.10] aparece a 8-13 m DELANTE del jugador (antes 14-20 m y, por el
+   yaw+PI, a sus ESPALDAS: imposible de identificar). Cerca, de frente y
+   con margen de reacción justo. */
 const a=yaw+rand(-.45,.45);
 const d=8+Math.random()*5;
-const cl=clampToZone(zk,pos.x-Math.sin(a)*d,pos.z-Math.cos(a)*d);
-pat.g.position.set(cl[0],0,cl[1]);
+/* [v3.12] el recorte a la Sala Estática sólo aplica si el Patrullador está
+   en su isla; liberado, aparece alrededor del jugador en cualquier zona. */
+let px2=pos.x-Math.sin(a)*d,pz2=pos.z-Math.cos(a)*d;
+let px,pz;
+if(S.zone===ZNATIVE.patrullador){
+px=Math.max(258,Math.min(342,px2));pz=Math.max(-50,Math.min(50,pz2));
+}else{px=px2;pz=pz2;}
+pat.g.position.set(px,0,pz);
 pat.g.visible=true;
 PAT.on=true;PAT.grace=1.6;PAT.t=90;
 PAT.anchor.set(pos.x,pos.y,pos.z);
@@ -9206,9 +9335,7 @@ pat.g.visible=false;
 freezeEl.style.display='none';
 }
 function patTick(dt,t){
-const zk=S.zone||curZone;
-if(PAT.on&&!canEntityAct('patrullador',zk)){patDespawn();return;}
-if(!PAT.on){PAT.spawnCd-=dt;return}
+if(!PAT.on){PAT.spawnCd-=dt;return} /* [v3.10] faltaba: el spawnCd jamás bajaba → nunca aparecía solo */
 pat.u(t,dt);
 const dx=pat.g.position.x-pos.x,dz=pat.g.position.z-pos.z;
 pat.g.rotation.y=Math.atan2(dx,dz)+Math.PI;
@@ -9219,7 +9346,7 @@ if(PAT.grace<=0){showWhisper('él también cuenta');AudioFX.blip(120,.4,'square'
 }else{
 const moved=Math.hypot(pos.x-PAT.anchor.x,pos.z-PAT.anchor.z)+Math.abs(pos.y-PAT.anchor.y);
 if(moved>0.55){
-if(kill('EL PATRULLADOR ESTÁTICO','te moviste','patrullador_room'))patDespawn();
+if(kill('EL PATRULLADOR ESTÁTICO','te moviste',true,'patrullador_room'))patDespawn();
 return;
 }
 PAT.t-=dt;
@@ -9256,24 +9383,27 @@ ladH.add(lad.g);
 lad.g.visible=false;scene.add(ladH);
 const LAD={on:false,state:'stalk',t:0,tx:0,tz:0,charges:0,stun:0,cd:7};
 function ladSpawn(){
-if(LAD.on||PAT.on||state!=='play'||TERROR.pursuit||TERROR.pocket||TERROR.lock)return;
-const zk=S.zone||curZone;
-if(!canEntityAct('ladron',zk)){LAD.cd=8;return;}
+if(LAD.on||state!=='play'||TERROR.pursuit||TERROR.pocket)return;
+/* [v3.10] FALLO «El Ladrón no aparece»: spawnea A LA VISTA (±60° de tu
+   mirada — antes 360° aleatorio, casi siempre a tu espalda o escondido
+   entre edificios) y algo más cerca, para que el encuentro se detecte. */
 const a=yaw+rand(-1.05,1.05);
 const d=20+Math.random()*8;
-const cl=clampToZone(zk,pos.x-Math.sin(a)*d,pos.z-Math.cos(a)*d);
-if(Math.hypot(cl[0]-pos.x,cl[1]-pos.z)<10){LAD.cd=6;return;}
-ladH.position.set(cl[0],0,cl[1]);
+let lx=pos.x-Math.sin(a)*d,lz=pos.z-Math.cos(a)*d;
+/* [v3.12] el recorte al círculo de la Ciudad Febril sólo aplica en su isla */
+if(S.zone===ZNATIVE.ladron){
+const gx=lx+300,gz=lz,rr=Math.hypot(gx,gz);
+if(rr>92){lx=-300+gx/rr*88;lz=gz/rr*88}
+}
+ladH.position.set(lx,0,lz);
 lad.g.visible=true;
 LAD.on=true;LAD.state='stalk';LAD.t=2.2;LAD.charges=0;LAD.stun=0;
 caption('ladron');whisper('ladron');
 showWhisper('viene recto hacia ti');
 AudioFX.whisper();
 }
-function ladDespawn(){LAD.on=false;lad.g.visible=false;LAD.cd=((S.zone||curZone)==='city'?12:18)+Math.random()*6}
+function ladDespawn(){LAD.on=false;lad.g.visible=false;LAD.cd=12+Math.random()*6}
 function ladTick(dt,t){
-const zk=S.zone||curZone;
-if(LAD.on&&!canEntityAct('ladron',zk)){ladDespawn();return;}
 if(!LAD.on){LAD.cd-=dt;return}
 lad.u(t,dt);
 const dx=pos.x-ladH.position.x,dz=pos.z-ladH.position.z;
@@ -9286,12 +9416,18 @@ if(LAD.t<=0){LAD.state='charge';LAD.tx=pos.x;LAD.tz=pos.z;LAD.charges++}
 }else if(LAD.state==='charge'){
 const cx=LAD.tx-ladH.position.x,cz=LAD.tz-ladH.position.z;
 const cl=Math.max(.01,Math.hypot(cx,cz));
+/* [v3.11] VELOCIDAD DEL LADRÓN subida moderadamente (pidió el usuario):
+   la embestida pasa de 10.8 a 12.6 m/s (+17%) y la retirada de 13 a
+   14.5 m/s. Sigue siendo esquivable porque embiste en línea RECTA al
+   punto donde estabas al arrancar (sigue habiendo margen de reacción:
+   aviso de 2.2 s + pausa de 1.1 s entre cargas). Solo cambian las dos
+   fases de desplazamiento; aparecer, aturdir y robar quedan igual. */
 const sp=12.6*dt;
 ladH.position.x+=cx/cl*sp;ladH.position.z+=cz/cl*sp;
 if(dist<1.8){
 if(dreamsCollected>0){
-if(kill('EL LADRÓN OLVIDADO','se estampó contra ti','ladron_city')){
-if(started&&!dead){fadeBt=1;setTimeout(function(){if(fadeBt>.9&&!dead)fadeBt=0},120);}
+if(kill('EL LADRÓN OLVIDADO','se estampó contra ti',true,'ladron_city')){
+fadeBt=1;setTimeout(function(){if(fadeBt>.9)fadeBt=0},120);
 ladDespawn();
 }
 return;
@@ -9350,8 +9486,6 @@ return{m:p,h:h,alive:false};
 const ACD={dwell:0,dmg:0};
 const staticEl=document.getElementById('zent-static');
 function aceSpawn(){
-const zk=S.zone||curZone;
-if(!zoneAllows()||!canEntityAct('acechador',zk))return false;
 for(const p of parasites){
 if(p.alive)continue;
 p.alive=true;
@@ -9373,19 +9507,17 @@ staticEl.style.opacity='0';
 return had;
 }
 function aceTick(dt,t){
-const zk=S.zone||curZone;
-if(!canEntityAct('acechador',zk)){
-aceClear();
-return;
-}
 let n=0;
 for(const p of parasites){if(p.alive){n++;p.m.u(t,dt)}}
 staticEl.style.opacity=n?(Math.min(.5,n*.09+ACD.dmg*.18)).toFixed(2):'0';
 if(n>0){
+/* [v3.10] DPS 0.062→0.05 por parásito: con los 4 acumulados tienes 5 s
+   de margen (antes ~4) y la tasa de aparición baja (ver spawn): la zona
+   sigue siendo peligrosa pero cruzable sin suerte excepcional. */
 ACD.dmg+=0.05*n*dt;
 entityThreat=Math.max(entityThreat,.55);
 if(ACD.dmg>=1){
-if(kill('EL ACECHADOR','se acumularon en tu señal',null))aceClear();
+if(kill('EL ACECHADOR','se acumularon en tu señal',false))aceClear();
 }
 }else if(ACD.dmg>0){
 ACD.dmg=Math.max(0,ACD.dmg-dt*.08);
@@ -9436,9 +9568,7 @@ const warnDisc=new THREE.Mesh(new THREE.CircleGeometry(3.2,32),new THREE.MeshBas
 warnDisc.rotation.x=-Math.PI/2;warnDisc.visible=false;scene.add(warnDisc);
 const debMat=new THREE.MeshBasicMaterial({color:0xff2bd6,fog:false});
 function merSpawn(){
-if(MER.on||state!=='play'||TERROR.pursuit||TERROR.pocket||TERROR.lock)return;
-const zk=S.zone||curZone;
-if(!canEntityAct('merodeador',zk))return;
+if(MER.on)return;
 MER.on=true;
 mer.g.visible=true;
 caption('merodeador');whisper('merodeador');
@@ -9451,12 +9581,10 @@ if(MER.debris){scene.remove(MER.debris.mesh);MER.debris=null}
 MER.warn=null;MER.t=5;
 }
 function merTick(dt,t){
-const zk=S.zone||curZone;
-if((MER.on||MER.warn||MER.debris)&&!canEntityAct('merodeador',zk)){merDespawn();return;}
 if(!MER.on)return;
-const zc=zoneCenter(zk);
-if(zk==='room')mer.g.position.set(zc[0]+Math.sin(t*.18)*22,6.3+Math.sin(t*.5)*0.35,zc[1]+Math.cos(t*.13)*18);
-else mer.g.position.set(zc[0]+Math.sin(t*.13)*38,26+Math.sin(t*.5)*2,zc[1]+Math.cos(t*.09)*30);
+/* [v3.12] en su laguna sobrevuela el centro; liberado, sobrevuela al jugador */
+if(S.zone===ZNATIVE.merodeador)mer.g.position.set(Math.sin(t*.13)*38,26+Math.sin(t*.5)*2,645+Math.cos(t*.09)*30);
+else mer.g.position.set(pos.x+Math.sin(t*.13)*38,26+Math.sin(t*.5)*2,pos.z+Math.cos(t*.09)*30);
 mer.u(t,dt);
 if(MER.debris){
 const d=MER.debris;
@@ -9471,13 +9599,12 @@ AudioFX.blip(70,.5,'sawtooth',.2,30);
 firePulse(.8,.9,true);
 scene.remove(d.mesh);
 MER.debris=null;
-if(dd<3.4)kill('EL MERODEADOR DE LOS CIELOS','el cielo te eligió',null);
-MER.t=(zk==='lagoon'?8:13)+Math.random()*6;
+if(dd<3.4)kill('EL MERODEADOR DE LOS CIELOS','el cielo te eligió',false);
+MER.t=8+Math.random()*6;
 }
 return;
 }
 if(MER.warn){
-if(PAT.on){MER.warn=null;warnDisc.visible=warnRing.visible=false;MER.t=6;return;}
 const w=MER.warn;
 w.t+=dt;
 const pu=.55+.45*Math.sin(t*9);
@@ -9490,17 +9617,20 @@ const mesh=new THREE.Mesh(new THREE.BoxGeometry(1.7,1.7,1.7),debMat);
 mesh.position.set(mer.g.position.x,mer.g.position.y,mer.g.position.z);
 scene.add(mesh);
 MER.debris={mesh:mesh,x:w.x,z:w.z,y0:mer.g.position.y,fall:0,dur:dur};
+/* [v3.10] FALLO «mantiene siempre el primer objetivo» ARREGLADO: MER.warn
+   nunca se limpiaba → el bloque if(MER.warn) seguía disparándose y cada
+   escombro nuevo caía en la posición del PRIMER aviso para siempre. Al
+   limpiarlo aquí, el ciclo vuelve a pasar por MER.t y elige un objetivo
+   NUEVO (prediciendo tu posición) en cada ataque. */
 MER.warn=null;
 warnDisc.visible=warnRing.visible=false;
 AudioFX.blip(300,.5,'sine',.06,60);
 }
 return;
 }
-if(PAT.on)return;
 MER.t-=dt;
 if(MER.t<=0){
-const cl=clampToZone(zk,pos.x+vel.x*1.1,pos.z+vel.z*1.1);
-const px=cl[0],pz=cl[1];
+const px=pos.x+vel.x*1.1,pz=pos.z+vel.z*1.1;
 MER.warn={x:px,z:pz,t:0,dur:2.5};
 warnRing.position.set(px,.1,pz);warnRing.visible=true;
 warnDisc.position.set(px,.06,pz);warnDisc.visible=true;
@@ -9545,17 +9675,26 @@ cor.head.add(corGlow);
 const corXEl=document.getElementById('cor-x');
 const corHintEl=document.getElementById('cor-hint');
 function corStart(){
-if(COR.on||PAT.on||state!=='play'||TERROR.pursuit||TERROR.pocket||TERROR.lock)return;
-const zk=S.zone||curZone;
-if(!canEntityAct('corredor',zk)){COR.cd=8;return;}
+if(COR.on||state!=='play'||TERROR.pursuit||TERROR.pocket)return;
 const a=rand(TAU);
 const dx=Math.cos(a),dz=Math.sin(a);
-const L=zk==='room'?42:58;
-let c0=clampToZone(zk,pos.x-dx*L,pos.z-dz*L);
-let c2=clampToZone(zk,pos.x+dx*L,pos.z+dz*L);
+const L=58;
+function clampIn(px,pz){
+/* [v3.12] la ruta se recorta al Void Rojo sólo si el Corredor está allí */
+if(S.zone!==ZNATIVE.corredor)return[px,pz];
+const gx=px,gz=pz+345,r=Math.hypot(gx,gz);
+if(r>80)return[gx/r*80,gz/r*80-345];
+return[px,pz];
+}
+let c0=clampIn(pos.x-dx*L,pos.z-dz*L);
+let c2=clampIn(pos.x+dx*L,pos.z+dz*L);
+/* [v3.10] FALLO RAÍZ del «rango de trail insuficiente»: la curva pasaba por
+   pos+10·dir±12 → el punto más cercano al jugador quedaba a 5-12 m y la
+   pasada NUNCA lo cruzaba (ni encuentro, ni cinemática: solo dibujos).
+   Ahora la ruta cruza POR el jugador (desvío lateral ≤3 m): estar quieto
+   sobre la banda = cinemática de la X; moverse fuera a tiempo = seguro. */
 const perp=rand(-3,3);
-const p1c=clampToZone(zk,pos.x-dz*perp,pos.z+dx*perp);
-const p1x=p1c[0],p1z=p1c[1];
+const p1x=pos.x-dz*perp,p1z=pos.z+dx*perp;
 const samples=[];
 for(let i=0;i<=40;i++){
 const q=i/40,iq=1-q;
@@ -9568,23 +9707,14 @@ caption('corredor');whisper('corredor');
 AudioFX.blip(60,1.6,'sawtooth',.10,42);
 showWhisper('el zumbido avisa');
 }
-function corDivert(){
-if(!corLastSamples||corLastSamples.length<3)return null;
-const zk=S.zone||curZone;
-const rx=Math.cos(yaw),rz=-Math.sin(yaw);
-const side=(Math.random()<0.5?-1:1)*14;
-return corLastSamples.map(function(pt,idx){
-const w=Math.sin((idx/(corLastSamples.length-1))*Math.PI);
-const cl=clampToZone(zk,pt.x+rx*side*w,pt.z+rz*side*w);
-return{x:cl[0],z:cl[1]};
-});
-}
 function corStop(){
 if(!COR.on)return;
 COR.on=false;
 cor.stopRun();
 cor.g.visible=false;
-COR.cd=((S.zone||curZone)==='red'?6:14)+Math.random()*6;
+/* [v3.10] frecuencia razonable (fallo 12): 6-12 s entre encuentros
+   (antes 9-17 tras cada pasada). */
+COR.cd=6+Math.random()*6;
 }
 /* ============================================================
    [v3.10] CINEMÁTICA DEL CORREDOR (ficha del rework, antes ausente):
@@ -9705,11 +9835,12 @@ cor.head.scale.setScalar(1+lk*1.6);
 S.shake=Math.max(S.shake,.12+lk*.2);
 panicRedEl.style.opacity=Math.min(1,.4+lk*.6).toFixed(2);
 if(c.t>=0.55){
-/* apagón breve + muerte limpia por interferencia (cero sangre) */
+/* apagón de 2 frames + sangre + muerte (la entidad SE VE, fallo 11) */
 fadeB=1;fadeBt=0;
+/* [v3.12] sin sangre: la interferencia de #sigdeath cubre la muerte */
 const killer='EL CORREDOR DEL VACÍO';
 corCineEnd();
-kill(killer,'no esquivaste la X',null);
+kill(killer,'no esquivaste la X',false);
 return;
 }
 }
@@ -9725,13 +9856,11 @@ camera.lookAt(pos.x,EYE,pos.z);
 if(camera.fov!==68){camera.fov=68;camera.updateProjectionMatrix()}
 }
 function corTick(dt,t){
-const zk=S.zone||curZone;
 if(COR.cine){
-if((!zoneAllows()||!canEntityAct('corredor',zk))&&COR.cine.phase!=='lunge'){corCineEnd();return}
+if(!zoneAllows()&&COR.cine.phase!=='lunge'){corCineEnd();return}
 corCineTick(dt,t);
 return;
 }
-if(COR.on&&!canEntityAct('corredor',zk)){corStop();return;}
 if(!COR.on){COR.cd-=dt;return}
 cor.u(t,dt);
 if(cor.rev<1){
@@ -9871,8 +10000,13 @@ const mapOv=document.getElementById('map-overlay');
 const mapCv=document.getElementById('map-canvas');
 const mapCx=mapCv.getContext('2d');
 const MW=720,MH=460;
-const MSC=.242,MCX=360,MCY=241;
-function w2m(x,z){return[MCX+x*MSC,MCY+z*MSC]}
+/* [v3.12] MAPA LEGIBLE — encuadre automático del mundo trasladado */
+const MW2=720,MH2=460;
+const MSC=mapScaleFor(MW2,MH2).s;
+const MOX=MAPPAD.l+((MW2-MAPPAD.l-MAPPAD.r)-mapScaleFor(MW2,MH2).cw)/2;
+const MOY=MAPPAD.t+((MH2-MAPPAD.t-MAPPAD.b)-mapScaleFor(MW2,MH2).ch)/2;
+function w2m(x,z){return[MOX+(z-MAPB.minZ)*MSC,MOY+mapScaleFor(MW2,MH2).ch-(x-MAPB.minX)*MSC]}
+
 /* --- objeto recogible: panel holográfico que brilla al inicio --- */
 const MAP_ITEM={taken:false};
 const mapItem=(function(){
@@ -9902,41 +10036,34 @@ const m=new THREE.Mesh(new THREE.OctahedronGeometry(.09),new THREE.MeshBasicMate
 m.userData={a:i/8*Math.PI*2,ph:Math.random()};g.add(m);motes.push(m);
 }
 scene.add(g);
-const MINI_SC=0.142,MINI_CX=128,MINI_CY=132;
+/* [v3.12] mini-mapa del objeto con la MISMA geografía trasladada */
+function MMX(z){return 8+(z-MAPB.minZ)/(MAPB.maxZ-MAPB.minZ)*240;}
+function MMY(x){return 248-(x-MAPB.minX)/(MAPB.maxX-MAPB.minX)*240;}
 const ZONESD=dreamsData.map(function(d){
-return{mx:MINI_CX+d.pos[0]*MINI_SC,my:MINI_CY+d.pos[2]*MINI_SC,c:'#'+('000000'+d.color.toString(16)).slice(-6)};
+return{mx:MMX(d.pos[2]),my:MMY(d.pos[0]),c:'#'+('000000'+d.color.toString(16)).slice(-6)};
 });
 function drawMini(t){
 x.fillStyle='#050a10';x.fillRect(0,0,W,W);
-x.strokeStyle='rgba(0,255,247,.12)';x.lineWidth=1;
+x.strokeStyle='rgba(0,255,247,.14)';x.lineWidth=1;
 for(let i=0;i<=8;i++){const q=i*32;x.beginPath();x.moveTo(q,0);x.lineTo(q,W);x.moveTo(0,q);x.lineTo(W,q);x.stroke()}
-/* puentes holográficos */
-x.strokeStyle='rgba(0,255,247,.38)';x.lineWidth=1.4;
-[[112,0,253,0],[-112,0,-194,0],[0,112,0,208],[0,-112,0,-257],[0,458,0,554]].forEach(function(b){
-x.beginPath();
-x.moveTo(MINI_CX+b[0]*MINI_SC,MINI_CY+b[1]*MINI_SC);
-x.lineTo(MINI_CX+b[2]*MINI_SC,MINI_CY+b[3]*MINI_SC);
-x.stroke();
+x.strokeStyle='rgba(255,238,0,.45)';x.lineWidth=1.6;
+MAPBRI.forEach(function(b){
+const a=[MMX(b[1]),MMY(b[0])],d2=[MMX(b[3]),MMY(b[2])];
+x.beginPath();x.moveTo(a[0],a[1]);x.lineTo(d2[0],d2[1]);x.stroke();
 });
-/* 6 zonas principales + THE BROKEN con geometría v3.12 */
-const Z=[[0,0,112,'#ff2bd6',0],[300,0,48,'#9b8cc2',1],[-300,0,106,'#00fff7',0],[0,300,92,'#c8ccd2',0],[0,-345,88,'#ff3040',0],[0,660,106,'#ffb094',0],[0,-780,85,'#7a4294',0]];
-Z.forEach(function(z){
-const zx=MINI_CX+z[0]*MINI_SC,zy=MINI_CY+z[1]*MINI_SC,zr=z[2]*MINI_SC;
-x.fillStyle=z[3];x.strokeStyle=z[3];x.lineWidth=1.2;
-if(z[4]){
-x.globalAlpha=.20;x.fillRect(zx-zr,zy-zr*1.1,zr*2,zr*2.2);
-x.globalAlpha=.85;x.strokeRect(zx-zr,zy-zr*1.1,zr*2,zr*2.2);
-}else{
-x.globalAlpha=.20;x.beginPath();x.arc(zx,zy,zr,0,TAU);x.fill();
-x.globalAlpha=.85;x.beginPath();x.arc(zx,zy,zr,0,TAU);x.stroke();
-}
+MAPZ.forEach(function(zd){
+const px=MMX(zd.z),py=MMY(zd.x);
+x.strokeStyle=zd.c+'aa';
+if(zd.rect){const w0=zd.rect[0]/815*240,h0=zd.rect[1]/1616*240;x.strokeRect(px-w0/2,py-h0/2,w0,h0);}
+else{x.globalAlpha=.22;x.fillStyle=zd.c;x.beginPath();x.arc(px,py,Math.max(3,zd.r/1616*240),0,7);x.fill();x.globalAlpha=1;x.beginPath();x.arc(px,py,Math.max(3,zd.r/1616*240),0,7);x.stroke();}
 });
-x.globalAlpha=1;
 ZONESD.forEach(function(d,i){
-const r=3.4+Math.sin(t*3+i)*1.3;
+const r=3.4+Math.sin(t*3+i)*1.4;
 x.fillStyle=d.c;
-x.beginPath();x.arc(d.mx,d.my,r,0,TAU);x.fill();
+x.beginPath();x.arc(d.mx,d.my,r,0,7);x.fill();
 });
+const px2=MMX(pos.z),py2=MMY(pos.x);
+x.fillStyle='#fff';x.beginPath();x.arc(px2,py2,2.2,0,7);x.fill();
 tex.needsUpdate=true;
 }
 return{g:g,glow:glow,
@@ -9966,171 +10093,113 @@ g.visible=false;glow.visible=false;
 })();
 function mapDraw(t){
 const c=mapCx;
-c.fillStyle='#050911';c.fillRect(0,0,MW,MH);
-/* retícula cartográfica sutil */
-c.strokeStyle='rgba(0,255,247,.07)';c.lineWidth=1;
-for(let i=1;i<18;i++){const q=i*MW/18;c.beginPath();c.moveTo(q,24);c.lineTo(q,MH-12);c.stroke()}
-for(let i=1;i<11;i++){const q=i*MH/11;c.beginPath();c.moveTo(0,q);c.lineTo(MW,q);c.stroke()}
-/* marco exterior: sector especial EL VACÍO */
+c.fillStyle='#04070c';c.fillRect(0,0,MW,MH);
+/* --- EL VACÍO: el fondo no cartografiado, con trama diagonal --- */
 c.save();
-c.setLineDash([5,5]);
-c.strokeStyle='rgba(92,118,214,.32)';
-c.strokeRect(236,27,256,412);
+c.beginPath();c.rect(2,2,MW-4,MH-4);c.clip();
+c.strokeStyle='rgba(70,80,110,.16)';c.lineWidth=1;
+for(let x=-MH;x<MW;x+=14){c.beginPath();c.moveTo(x,0);c.lineTo(x+MH,MH);c.stroke();}
 c.restore();
-c.fillStyle='rgba(128,154,235,.68)';c.font='9px monospace';c.textAlign='right';
-c.fillText('SECTOR EXTERIOR · EL VACÍO',MW-14,38);
-/* ruptura / salto dimensional hacia THE BROKEN */
-c.save();
-c.setLineDash([3,4]);
-c.strokeStyle='rgba(176,92,212,.45)';c.lineWidth=1.2;
-const brkA=w2m(0,-433),brkB=w2m(0,-695);
-c.beginPath();c.moveTo(brkA[0],brkA[1]);c.lineTo(brkB[0],brkB[1]);c.stroke();
-c.restore();
-/* 5 puentes físicos entre sectores (doble carril legible) */
-const BRIDGES=[[112,0,253,0],[-112,0,-194,0],[0,112,0,208],[0,-112,0,-257],[0,458,0,554]];
-BRIDGES.forEach(function(s){
-const a=w2m(s[0],s[1]),b=w2m(s[2],s[3]);
-c.strokeStyle='rgba(0,255,247,.22)';c.lineWidth=5;
-c.beginPath();c.moveTo(a[0],a[1]);c.lineTo(b[0],b[1]);c.stroke();
-c.strokeStyle='rgba(195,250,242,.72)';c.lineWidth=1.5;
-c.beginPath();c.moveTo(a[0],a[1]);c.lineTo(b[0],b[1]);c.stroke();
-});
-/* lóbulo trasero de Monolitos Grises (0,392,r=66) */
-(function(){
-const pg=w2m(0,392),visG=visited.has('gray');
-c.beginPath();c.arc(pg[0],pg[1],66*MSC,0,TAU);
-c.fillStyle=visG?'rgba(200,206,216,.20)':'rgba(200,206,216,.07)';c.fill();
-c.strokeStyle=visG?'rgba(220,226,236,.85)':'rgba(200,206,216,.38)';
-c.lineWidth=visG?1.5:1;c.stroke();
-})();
-/* bolsillo REC / habitación imposible (sector especial anexo a Sala Estática) */
-(function(){
-const pa=w2m(362,-13),pb=w2m(390,13);
-const pw=pb[0]-pa[0],ph=Math.abs(pb[1]-pa[1]);
-const py=Math.min(pa[1],pb[1]);
-const pVis=TERROR.pocket||visited.has('room');
-c.fillStyle=TERROR.pocket?'rgba(255,204,102,.32)':'rgba(255,204,102,.10)';
-c.fillRect(pa[0],py,pw,ph);
-c.strokeStyle=pVis?'rgba(255,204,102,.80)':'rgba(255,204,102,.35)';
-c.lineWidth=1.1;c.strokeRect(pa[0],py,pw,ph);
-})();
-/* 6 zonas principales + THE BROKEN con etiquetas desplazadas sin solapamientos */
-const ZD=[
-{k:'broken',n:'THE BROKEN',x:0,z:-780,r:85,col:'#a95ce8',lx:390,ly:52,align:'left'},
-{k:'red',n:'VOID ROJO',x:0,z:-345,r:88,col:'#ff3b4e',lx:329,ly:159,align:'right'},
-{k:'city',n:'CIUDAD FEBRIL',x:-300,z:0,r:106,col:'#38d6ff',lx:252,ly:243,align:'right'},
-{k:'spawn',n:'PLAZA NEÓN',x:0,z:0,r:112,col:'#e8dcff',lx:327,ly:214,align:'right'},
-{k:'room',n:'SALA ESTÁTICA',x:300,z:0,r:0,col:'#a393cf',lx:460,ly:238,align:'left'},
-{k:'gray',n:'MONOLITOS GRISES',x:0,z:300,r:92,col:'#cfd6e2',lx:328,ly:317,align:'right'},
-{k:'lagoon',n:'LAGUNA VAPOR',x:0,z:660,r:106,col:'#ffa894',lx:394,ly:404,align:'left'}
-];
-ZD.forEach(function(zd){
+c.fillStyle='rgba(90,110,150,.35)';c.font='10px monospace';c.textAlign='left';
+c.fillText('EL VACÍO · SIN CARTografiar',MW-196,MH-12);
+/* --- rejilla de referencia --- */
+c.strokeStyle='rgba(0,255,247,.09)';c.lineWidth=1;
+for(let i=0;i<=18;i++){const q=i*MW/18;c.beginPath();c.moveTo(q,0);c.lineTo(q,MH);c.stroke()}
+for(let i=0;i<=11;i++){const q=i*MH/11;c.beginPath();c.moveTo(0,q);c.lineTo(MW,q);c.stroke()}
+/* --- puentes / conexiones --- */
+c.lineWidth=4;c.strokeStyle='rgba(255,238,0,.55)';
+for(const b of MAPBRI){
+const a=w2m(b[0],b[1]),d=w2m(b[2],b[3]);
+c.beginPath();c.moveTo(a[0],a[1]);c.lineTo(d[0],d[1]);c.stroke();
+}
+c.lineWidth=1;c.setLineDash([3,4]);c.strokeStyle='rgba(255,255,255,.55)';
+for(const b of MAPBRI){
+const a=w2m(b[0],b[1]),d=w2m(b[2],b[3]);
+c.beginPath();c.moveTo(a[0],a[1]);c.lineTo(d[0],d[1]);c.stroke();
+}
+c.setLineDash([]);
+/* --- sectores: contorno + relleno según VISITADO --- */
+const labelRects=[];
+function freeRect(x,y,w,h){
+for(const r of labelRects){
+if(x<r[0]+r[2]+3&&x+w>r[0]-3&&y<r[1]+r[3]+2&&y+h>r[1]-2)return false;
+}
+return true;
+}
+function label(txt,px,py,color,size){
+c.font=(size||9)+'px monospace';
+const w=c.measureText(txt).width,h=(size||9)+2;
+const cands=[[px-w/2,py-11],[px-w/2,py+3],[px-w-8,py-4],[px+8,py-4],[px-w/2,py-20],[px-w/2,py+12]];
+for(const cd of cands){
+const x=Math.max(4,Math.min(MW-w-4,cd[0])),y=Math.max(12,Math.min(MH-h-6,cd[1]+h/2));
+if(freeRect(x,y,w,h)){labelRects.push([x,y,w,h]);c.fillStyle=color;c.textAlign='left';c.fillText(txt,x,y+h-4);return;}
+}
+const x=Math.max(4,Math.min(MW-w-4,px-w/2)),y=Math.max(12,Math.min(MH-h-6,py-11));
+labelRects.push([x,y,w,h]);c.fillStyle=color;c.textAlign='left';c.fillText(txt,x,y+h-4);
+}
+MAPZ.forEach(function(zd){
 const p=w2m(zd.x,zd.z);
-const isCur=(curZone===zd.k);
-const isVis=visited.has(zd.k)||isCur;
-c.save();
-if(!isVis)c.setLineDash([4,3]);
-c.lineWidth=isCur?2.2:(isVis?1.6:1.0);
-c.strokeStyle=isVis?zd.col:(zd.col+'77');
-c.fillStyle=isCur?(zd.col+'36'):(isVis?(zd.col+'20'):(zd.col+'0c'));
-if(zd.r===0){
-const a=w2m(253,-55),b=w2m(347,55);
-const rx=a[0],ry=Math.min(a[1],b[1]),rw=b[0]-a[0],rh=Math.abs(b[1]-a[1]);
-c.fillRect(rx,ry,rw,rh);
-c.strokeRect(rx,ry,rw,rh);
+const seen=zd.k==='grayB'?visited.has('gray'):visited.has(zd.k);
+const cur=(zd.k==='room'&&curZone==='room')||zd.k===curZone;
+if(zd.rect){
+const a=w2m(zd.x-zd.rect[0]/2,zd.z-zd.rect[1]/2),b=w2m(zd.x+zd.rect[0]/2,zd.z+zd.rect[1]/2);
+const x0=Math.min(a[0],b[0]),y0=Math.min(a[1],b[1]),w0=Math.abs(b[0]-a[0]),h0=Math.abs(b[1]-a[1]);
+c.fillStyle=zd.c+(seen?'38':'14');c.fillRect(x0,y0,w0,h0);
+c.lineWidth=cur?2.4:1.6;c.setLineDash(seen?[]:[4,4]);
+c.strokeStyle=zd.c+(seen?'ee':'66');c.strokeRect(x0,y0,w0,h0);c.setLineDash([]);
+label(zd.n,p[0],p[1]-(h0/2+12)*zd.side,seen?zd.c+'ee':zd.c+'77',10);
 }else{
-c.beginPath();c.arc(p[0],p[1],zd.r*MSC,0,TAU);
-c.fill();c.stroke();
-}
-c.restore();
-/* línea guía corta y etiqueta nítida fuera del contorno */
-const edgeX=zd.r===0?(zd.align==='left'?w2m(347,0)[0]:w2m(253,0)[0]):(p[0]+(zd.align==='left'?1:-1)*zd.r*MSC);
-c.strokeStyle=isVis?(zd.col+'88'):(zd.col+'40');c.lineWidth=1;
-c.beginPath();c.moveTo(edgeX,zd.ly-3);c.lineTo(zd.lx+(zd.align==='left'?-4:4),zd.ly-3);c.stroke();
-c.fillStyle=isCur?'#ffffff':(isVis?zd.col:(zd.col+'99'));
-c.font=(isCur?'bold ':'')+'10px monospace';
-c.textAlign=zd.align;
-const badge=isVis?'● ':'○ ';
-c.fillText(zd.align==='left'?(badge+zd.n):(zd.n+' '+(isVis?'●':'○')),zd.lx,zd.ly);
-if(zd.k==='room'){
-c.fillStyle='rgba(255,204,102,.72)';c.font='8px monospace';c.textAlign='left';
-c.fillText('+ BOLSILLO CAM-04',zd.lx,zd.ly+11);
-}else if(zd.k==='broken'){
-c.fillStyle='rgba(255,95,115,.78)';c.font='8px monospace';c.textAlign='left';
-c.fillText('SALIDA / FARO ROJO',zd.lx,zd.ly+11);
+const rr=zd.r*MSC;
+c.beginPath();c.arc(p[0],p[1],rr,0,7);
+c.fillStyle=zd.c+(seen?'30':'10');c.fill();
+c.lineWidth=cur?2.6:1.6;c.setLineDash(seen?[]:[4,4]);
+c.strokeStyle=zd.c+(seen?'ee':'55');c.stroke();c.setLineDash([]);
+if(cur){c.beginPath();c.arc(p[0],p[1],rr+3.5,0,7);c.strokeStyle='rgba(255,255,255,.55)';c.lineWidth=1;c.stroke();}
+label(zd.n,p[0],p[1]+(rr+13)*zd.side,seen?zd.c+'ee':zd.c+'88',10);
 }
 });
-/* 6 sueños en el mapa: diferencia pendiente, robado y recogido */
+/* --- los seis sueños: ubicación + estado --- */
 dreamItems.forEach(function(it,i){
+const isCollected=!!it.collected;
 const p=w2m(it.grp.position.x,it.grp.position.z);
 const col='#'+('000000'+it.data.color.toString(16)).slice(-6);
-if(it.collected){
-c.fillStyle='rgba(90,245,195,.22)';
-c.beginPath();c.arc(p[0],p[1],5.2,0,TAU);c.fill();
-c.strokeStyle='#5af5c3';c.lineWidth=1.3;
-c.beginPath();c.arc(p[0],p[1],5.2,0,TAU);c.stroke();
-c.fillStyle='#dffcf4';c.font='bold 9px monospace';c.textAlign='center';
-c.fillText('\u2713',p[0],p[1]+3);
-return;
-}
-const r=(it.stolenBy?5.8:4.4)+Math.sin(t*3.2+i)*1.5;
-const gr=c.createRadialGradient(p[0],p[1],0,p[0],p[1],r*2.3);
-gr.addColorStop(0,'#ffffff');
-gr.addColorStop(.42,(it.stolenBy?'#ff6b4a':col)+'cc');
-gr.addColorStop(1,col+'00');
-c.fillStyle=gr;c.beginPath();c.arc(p[0],p[1],r*2.3,0,TAU);c.fill();
-c.fillStyle=it.stolenBy?'#ff6b4a':col;
-c.beginPath();c.arc(p[0],p[1],2.8,0,TAU);c.fill();
-if(it.stolenBy){
-c.strokeStyle='#ff453a';c.lineWidth=1.2;
-c.beginPath();c.arc(p[0],p[1],6.6,0,TAU);c.stroke();
-}
-});
-/* panel lateral izquierdo: registro legible de los 6 sueños y leyenda (sin tapar islas) */
-c.fillStyle='rgba(8,15,26,.78)';
-c.fillRect(12,34,206,144);
-c.strokeStyle='rgba(0,255,247,.25)';c.lineWidth=1;
-c.strokeRect(12,34,206,144);
-c.fillStyle='rgba(195,245,236,.88)';c.font='bold 10px monospace';c.textAlign='left';
-c.fillText('REGISTRO DE SUEÑOS ('+dreamsCollected+'/6)',20,50);
-dreamItems.forEach(function(it,idx){
-const ry=67+idx*17;
-const col='#'+('000000'+it.data.color.toString(16)).slice(-6);
-if(it.collected){
-c.fillStyle='#5af5c3';c.font='bold 10px monospace';
-c.fillText('\u2713',20,ry);
-c.fillStyle='rgba(175,235,215,.88)';c.font='9px monospace';
-c.fillText(it.data.name,33,ry);
-}else if(it.stolenBy){
-c.fillStyle='#ff6b4a';c.font='bold 10px monospace';
-c.fillText('!',21,ry);
-c.fillStyle='#ffb199';c.font='9px monospace';
-c.fillText(it.data.name+' [ROBADO]',33,ry);
-}else{
-c.fillStyle=col;c.beginPath();c.arc(24,ry-3.2,3,0,TAU);c.fill();
-c.fillStyle='rgba(220,236,242,.78)';c.font='9px monospace';
-c.fillText(it.data.name,33,ry);
-}
-});
-/* leyenda compacta abajo a la izquierda */
-c.fillStyle='rgba(175,215,210,.68)';c.font='9px monospace';c.textAlign='left';
-c.fillText('● ZONA VISITADA   ○ SIN EXPLORAR',14,MH-28);
-c.fillText('═ PUENTE FÍSICO   ▲ TU POSICIÓN / MIRADA',14,MH-15);
-/* jugador: cono de orientación + flecha nítida */
-const pp=w2m(pos.x,pos.z);
-c.save();c.translate(pp[0],pp[1]);c.rotate(-yaw);
-c.fillStyle='rgba(0,255,247,.18)';
-c.beginPath();c.moveTo(0,0);c.arc(0,0,22,-Math.PI/2-0.52,-Math.PI/2+0.52);c.closePath();c.fill();
-c.strokeStyle='#041018';c.lineWidth=2.2;
-c.beginPath();c.moveTo(0,-9);c.lineTo(-5.5,6.5);c.lineTo(0,3.2);c.lineTo(5.5,6.5);c.closePath();c.stroke();
-c.fillStyle='#ffffff';c.fill();
+const r=isCollected?3.4:4.2+Math.sin(t*3+i)*1.2;
+c.save();c.translate(p[0],p[1]);c.rotate(Math.PI/4);
+c.fillStyle=isCollected?'rgba(150,170,165,.55)':col;
+c.fillRect(-r/1.4,-r/1.4,r*1.4,r*1.4);
+c.strokeStyle=isCollected?'rgba(150,170,165,.5)':'#ffffff';
+c.lineWidth=1;c.strokeRect(-r/1.4,-r/1.4,r*1.4,r*1.4);
 c.restore();
-/* barra de atención de Los Reguladores */
+if(isCollected){
+c.fillStyle='rgba(150,170,165,.6)';c.font='9px monospace';c.textAlign='center';
+c.fillText('\u2713',p[0],p[1]+3.5);
+}else{
+label(it.data.name,p[0],p[1]-3,col,8);
+}
+});
+/* --- jugador: posición y orientación reales --- */
+const pp=w2m(pos.x,pos.z);
+const fx=-Math.sin(yaw),fz=-Math.cos(yaw);
+const ang=Math.atan2(fz,fx);   /* +Z → derecha, +X → arriba */
+c.save();c.translate(pp[0],pp[1]);c.rotate(ang);
+c.fillStyle='#ffffff';
+c.beginPath();c.moveTo(8,0);c.lineTo(-5,-5);c.lineTo(-3,0);c.lineTo(-5,5);c.closePath();c.fill();
+c.strokeStyle='rgba(0,255,247,.9)';c.lineWidth=1;c.stroke();
+c.restore();
+c.fillStyle='rgba(255,255,255,.75)';c.font='9px monospace';c.textAlign='center';
+c.fillText('TÚ',pp[0],pp[1]-9);
+/* --- leyenda --- */
+c.textAlign='left';c.font='9px monospace';
+c.fillStyle='rgba(255,238,0,.8)';c.fillText('═ PUENTE',8,14);
+c.fillStyle='rgba(220,240,235,.8)';c.fillText('◆ SUEÑO PENDIENTE',8,26);
+c.fillStyle='rgba(150,170,165,.8)';c.fillText('\u2713 SUEÑO RECOGIDO',8,38);
+c.fillStyle='rgba(255,255,255,.8)';c.fillText('▲ JUGADOR (orientación)',8,50);
+/* --- peligro de los Reguladores (mecánica original intacta) --- */
 if(MAP.watch<4){
-c.fillStyle='rgba(0,255,247,.5)';c.fillRect(0,MH-5,MW*MAP.watch/4,5);
+c.fillStyle='rgba(0,255,247,.5)';c.fillRect(0,MH-6,MW*MAP.watch/4,6);
 }else{
 c.fillStyle='rgba(255,40,40,'+(0.55+0.45*Math.sin(t*10)).toFixed(2)+')';
-c.fillRect(0,MH-5,MW*Math.min(1,MAP.watch/8.5),5);
+c.fillRect(0,MH-6,MW*Math.min(1,MAP.watch/8.5),6);
 }
 if(MAP.watch>=4){
 const n=Math.min(MAP.eyes.length,(MAP.watch-4)*5|0);
@@ -10138,25 +10207,22 @@ c.fillStyle='rgba(120,0,0,'+Math.min(.55,(MAP.watch-4)*.16).toFixed(2)+')';
 c.fillRect(0,0,MW,MH);
 for(let i=0;i<n;i++){
 const e=MAP.eyes[i],s=Math.min(1,(MAP.watch-4-i/5)*2.4);
-const w=e[2]*2.2*s,h=w*.55*(Math.sin(t*2+i*3)>.95?.2:1);
-c.fillStyle='#f4eaea';c.beginPath();c.ellipse(e[0],e[1],w,h,0,0,TAU);c.fill();
-c.fillStyle='#e01010';c.beginPath();c.arc(e[0],e[1],h*.9,0,TAU);c.fill();
-c.fillStyle='#000';c.beginPath();c.arc(e[0],e[1],h*.4,0,TAU);c.fill();
+const ww=e[2]*2.2*s,hh=ww*.55*(Math.sin(t*2+i*3)>.95?.2:1);
+c.fillStyle='#f4eaea';c.beginPath();c.ellipse(e[0],e[1],ww,hh,0,0,7);c.fill();
+c.fillStyle='#e01010';c.beginPath();c.arc(e[0],e[1],hh*.9,0,7);c.fill();
+c.fillStyle='#000';c.beginPath();c.arc(e[0],e[1],hh*.4,0,7);c.fill();
 }
 if(MAP.watch>5.5){
-c.font='bold 24px monospace';c.textAlign='center';
+c.font='bold 26px monospace';c.textAlign='center';
 c.fillStyle='rgba(255,60,60,'+(0.6+0.4*Math.sin(t*8)).toFixed(2)+')';
-c.fillText('¿POR QUÉ SIGUES MIRÁNDOME?',MW/2,40);
+c.fillText('¿PORQUÉ SIGUES MIRÁNDOME?',MW/2,40);
 }
 }
-/* cabecera superior */
-c.fillStyle='rgba(5,10,18,.86)';c.fillRect(0,0,MW,23);
-c.fillStyle='rgba(210,242,235,.82)';c.font='11px monospace';c.textAlign='left';
-const zCurName=(ZONES[curZone]&&ZONES[curZone].name)||'TRÁNSITO';
-c.fillText('MAPA DE ENSUEÑO · SECTOR: '+zCurName+' · SUEÑOS '+dreamsCollected+'/6',12,15);
-if(Math.floor(t*1.6)%2===0){c.fillStyle='#ff453a';c.fillRect(MW-74,7,8,8)}
-c.fillStyle='rgba(210,242,235,.75)';c.textAlign='right';
-c.fillText('SEÑAL',MW-14,15);
+c.fillStyle='rgba(210,235,225,.75)';c.font='12px monospace';c.textAlign='left';
+c.fillText('SUEÑOS '+dreamsCollected+'/6 · MAPA DE ENSUEÑO · SEÑAL ANALÓGICA',10,MH-16);
+c.textAlign='right';
+c.fillText('CASSETTE '+(DREAMRELEASE.isHeld('ella')?'LIBERADA':'—'),MW-10,MH-16);
+if(Math.floor(t*1.6)%2===0){c.fillStyle='#ff453a';c.fillRect(MW-88,8,9,9)}
 }
 let mapAnimT=0,mapVMyaw=0;
 /* ============================================================
@@ -10385,15 +10451,15 @@ return null;
 const lint=(function(){
 const L=ENT404.linterna();
 L.g.scale.setScalar(.85);
-L.g.position.set(-255,-0.1,26);  /* el foco vive en y local 1.5 → ~1.4 m de alto */
+L.g.position.set(-155,-0.1,26);  /* el foco vive en y local 1.5 → ~1.4 m de alto */
 scene.add(L.g);
-const glow=addSprite(cvGlow,-255,1.6,26,8,8,.55);
+const glow=addSprite(cvGlow,-155,1.6,26,8,8,.55);
 glow.material.color.set(0xcfe8e2);
 const beam=new THREE.Mesh(new THREE.CylinderGeometry(.35,.6,36,10,1,true),
 new THREE.MeshBasicMaterial({color:0x9ffcf0,transparent:true,opacity:.10,blending:THREE.AdditiveBlending,depthWrite:false,fog:false,side:THREE.DoubleSide}));
-beam.position.set(-255,18,26);scene.add(beam);
+beam.position.set(-155,18,26);scene.add(beam);
 const ring=new THREE.Mesh(new THREE.TorusGeometry(1.3,.05,8,40),new THREE.MeshBasicMaterial({color:0xff2bd6,fog:false}));
-ring.rotation.x=Math.PI/2;ring.position.set(-255,.12,26);scene.add(ring);
+ring.rotation.x=Math.PI/2;ring.position.set(-155,.12,26);scene.add(ring);
 return{g:L.g,m:L,glow:glow,beam:beam,ring:ring,taken:false};
 })();
 /* [v3.11] el disparo ya NO es una esfera DOM+fade: es el DISPARO v2 del
@@ -10441,7 +10507,7 @@ if(!lint.taken){
 /* en el mundo: idle del visor de referencia (swing, calcos, espiral tenue) */
 lint.m.uWorld(t,dt);
 lint.g.rotation.y=t*.45;
-const dx=pos.x+255,dz=pos.z-26;
+const dx=pos.x+155,dz=pos.z-26;
 if(dx*dx+dz*dz<3.6*3.6&&state==='play'&&zoneAllows()){
 lint.taken=true;FLSH.has=true;
 lint.glow.visible=false;lint.beam.visible=false;lint.ring.visible=false;
@@ -10520,69 +10586,65 @@ if(e.code==='KeyF')flashRelease();
    parásito, marca la bandera que el touchstart del joystick consulta para
    NO mover al jugador con ese mismo dedo. */
 document.addEventListener('pointerdown',function(e){
-if(canEntityAct('acechador',S.zone||curZone)&&acePtr(e)){
+if(S.zone==='gray'&&acePtr(e)){
 aceTapT=performance.now();
 e.stopPropagation();e.preventDefault();
 }
 },true);
 /* ============================================================
-   GESTIÓN POR ZONA (local + entidades liberadas por sueño actual)
+   GESTIÓN POR ZONA
    ============================================================ */
 function onZone(zk){
 if(zk===S.zone)return;
 const prev=S.zone;
 S.zone=zk;S.zoneT=0;
-/* Al cambiar de sector, las entidades de suelo ancladas al sector anterior
-   se retiran limpiamente; si están liberadas por su sueño actual, podrán
-   reaparecer en el nuevo sector explorable respetando sus cooldowns. */
-if(prev!==zk){
-if(PAT.on){patDespawn();PAT.spawnCd=Math.max(PAT.spawnCd,8);}
-if(LAD.on)ladDespawn();
-if(COR.cine)corCineEnd();else if(COR.on)corStop();
-if(MER.on||MER.warn||MER.debris)merDespawn();
-if(!canEntityAct('ella',zk)&&girlState.active){
-girlState.active=false;girlState.vanishing=false;girlState.mode='watch';
-girl.visible=false;girlAura.visible=false;
-}else if(girlState.active&&!girlState.vanishing){
-vanishGirl(false);
-}
-}
-if(!canEntityAct('acechador',zk))aceClear();
+/* [v3.12] la entidad anterior desaparece SALVO que su sueño siga
+   contigo: entonces puede seguir activa en cualquier zona. */
+const keep=function(ent){return DREAMRELEASE.isHeld(ent)};
+if(prev===ZNATIVE.patrullador&&zk!=='room'&&!keep('patrullador'))patDespawn();
+if(prev===ZNATIVE.ladron&&zk!=='city'&&LAD.on&&!keep('ladron'))ladDespawn();
+if(prev===ZNATIVE.acechador&&zk!=='gray'&&!keep('acechador'))aceClear();
+if(prev===ZNATIVE.corredor&&zk!=='red'&&!keep('corredor'))corStop();
+if(prev===ZNATIVE.merodeador&&zk!=='lagoon'&&!keep('merodeador'))merDespawn();
+if(prev===ZNATIVE.ella&&zk!=='spawn'&&girlState.active&&!girlState.vanishing&&!keep('ella'))vanishGirl(false);
 S.lastDreams=dreamsCollected;
 }
-function resetZent(){
-patDespawn();PAT.spawnCd=3;PAT.visits=0;
-ladDespawn();LAD.cd=7;
-aceClear();
-if(COR.cine)corCineEnd();else corStop();
-COR.cd=7;COR.xFirst=true;
-merDespawn();
-if(REG.on)regEnd();
-if(MAP.open)mapClose(true);
-MAP.cd=0;MAP.watch=0;
-if(FLSH.charging){FLSH.charging=false;if(FLSH.chargeSnd){FLSH.chargeSnd.stop(true);FLSH.chargeSnd=null}}
-FLSH.charge=0;FLSH.ready=false;FLSH.cd=0;FLSH.anim=null;
-window.__FLB={on:false,t:0};
-blkEl.style.opacity='0';flshEl.style.opacity='0';
-S.killAnim=-1;S.killWho='';S.shake=0;S.zoneT=0;S.lastDreams=0;S.dreamGrabCd=0;
-ellaDizzy=0;ellaShownOnce=false;
+/* [v3.12] al perder un sueño, las entidades que sólo estaban fuera de su
+   isla por ese sueño vuelven a su restricción (inmediato e idempotente) */
+function refreshRelease(){
+const zk=S.zone;
+if(PAT.on&&zk!=='room'&&!DREAMRELEASE.isHeld('patrullador'))patDespawn();
+if(LAD.on&&zk!=='city'&&!DREAMRELEASE.isHeld('ladron'))ladDespawn();
+if(zk!=='gray'&&!DREAMRELEASE.isHeld('acechador')){
+let alive=false;for(const p of parasites)if(p.alive)alive=true;
+if(alive)aceClear();
 }
+if(COR.on&&zk!=='red'&&!DREAMRELEASE.isHeld('corredor'))corStop();
+if(MER.on&&zk!=='lagoon'&&!DREAMRELEASE.isHeld('merodeador'))merDespawn();
+if(girlState.active&&zk!=='spawn'&&!DREAMRELEASE.isHeld('ella'))vanishGirl(false);
+}
+DREAMRELEASE._onChange=refreshRelease;
 function tick(dt,t){
 S.whCd-=dt;
 S.zoneT+=dt;
-/* ---------- golpe no letal por entidad (cuando quedan vidas > 1) ---------- */
+/* ---------- muerte por entidad (animación corta + reglas de vida) ---------- */
 if(S.killAnim>=0){
 S.killAnim+=dt;
 const u2=compMat.uniforms;
-u2.uGlitch.value=.48+Math.random()*.24;
-u2.uInvert.value=0;
-u2.uNoise.value=.44+.18*(S.killAnim/1.1);
-camera.position.x=pos.x+(Math.random()-.5)*.08;
-camera.position.z=pos.z+(Math.random()-.5)*.08;
+u2.uGlitch.value=.9+Math.random()*.4;
+u2.uInvert.value=Math.random()<.3?.85:0;
+u2.uNoise.value=.8;
+camera.position.x=pos.x+(Math.random()-.5)*.1;
+camera.position.z=pos.z+(Math.random()-.5)*.1;
 if(S.killAnim>1.1){
 S.killAnim=-1;
 u2.uInvert.value=0;
 if(!devMode){lives--;updateLivesHud()}
+/* [v3.11] RESET de los sistemas v3.11 al morir/respawnear: la carga del
+FLASH nunca sobrevive a una muerte (ni un audio de carga colgado), el
+mapa se guarda (baja las manos) sin penalización extra, los Reguladores
+terminan su encuentro de forma legítima y el bloom vuelve al look normal
+del nivel. Sin esto quedaban cargas inválidas tras reintentar. */
 if(FLSH.charging){FLSH.charging=false;if(FLSH.chargeSnd){FLSH.chargeSnd.stop(true);FLSH.chargeSnd=null}}
 FLSH.charge=0;FLSH.ready=false;FLSH.anim=null;
 window.__FLB={on:false,t:t};
@@ -10591,12 +10653,14 @@ if(MAP.open)mapClose(true);
 if(REG.on)regEnd();
 if(lint.taken)lint.m.u(t,dt,-1,-1);
 if(lives<=0){
-beginGameOver(S.killWho,S.killWho+' TE MATÓ · SEÑAL INTERRUMPIDA');
+/* [v3.12] una sola ruta de Game Over (interferencia -> perdida -> fade-in) */
+panicRedEl.style.opacity='0';
+sigDeathBegin(S.killWho);
 }else{
 invulnT=3;
 pos.set(lastSafe.p[0],EYE+.3,lastSafe.p[1]);
 vel.set(0,0,0);yaw=lastSafe.yaw;pitch=0;
-fadeB=1;
+fadeB=1; /* negro un instante: fadeBt sigue en 0 → vuelve a aclarar solo */
 bloodEl.classList.remove('show');
 panicRedEl.style.opacity='0';
 heart.setDying(false);
@@ -10614,6 +10678,11 @@ S.shake*=Math.pow(.02,dt);
 if(S.shake<.004)S.shake=0;
 }
 if(!started||dead||state!=='play'){
+/* [v3.11] LIMPIEZA AUTO-CURABLE: cubre TODOS los estados de no-juego
+   (jumpscare/obsjump del nivel, muerte, pausa de menú). Los kills del
+   NIVEL (Ella/Observador) pasan por states propios y antes dejaban la
+   carga del FLASH colgada, el mapa abierto y el bloom elevado tras
+   respawnear. Aquí se corta todo de forma idempotente. */
 if(FLSH.charging||FLSH.anim||FLSH.chargeSnd){
 if(FLSH.charging&&FLSH.chargeSnd)snd404('cancel');
 if(FLSH.chargeSnd){FLSH.chargeSnd.stop(true);FLSH.chargeSnd=null}
@@ -10628,11 +10697,15 @@ return;
 }
 const zk=S.zone||curZone;
 const ok=zoneAllows();
+/* [v3.12] elegibilidad por IDENTIDAD del sueño, no por el contador */
+const entOK=function(ent){return ok&&DREAMRELEASE.allowedHere(ent,zk)};
+/* si la historia se apodera del nivel (persecución, bolsillo, colapso),
+   las entidades locales se retiran */
 if(!ok){
 if(PAT.on)patDespawn();
 if(LAD.on)ladDespawn();
 aceClear();
-if(COR.cine)corCineEnd();else if(COR.on)corStop();
+if(COR.on)corStop();
 if(MER.on)merDespawn();
 }
 /* pickup del mapa */
@@ -10651,44 +10724,43 @@ if(!MAP_ITEM.taken)mapItem.anim(t);
 if(dreamsCollected!==S.lastDreams){
 const grabbed=S.lastDreams<dreamsCollected;
 S.lastDreams=dreamsCollected;
-if(grabbed&&zk==='room'&&ok&&!PAT.on)S.dreamGrabCd=1.2;
+if(grabbed&&zk===ZNATIVE.patrullador&&entOK('patrullador')&&!PAT.on)S.dreamGrabCd=1.2;
 }
 if(S.dreamGrabCd>0){
 S.dreamGrabCd-=dt;
-if(S.dreamGrabCd<=0&&zk==='room'&&ok&&!PAT.on){
+if(S.dreamGrabCd<=0&&entOK('patrullador')&&!PAT.on){
 patSpawn(true);
 if(!PAT.on)PAT.spawnCd=4;
 }
 }
-/* sistemas locales + entidades liberadas según inventario real de cada sueño */
-if(ok&&canEntityAct('patrullador',zk)){
-const needT=zk==='room'?5:12;
-if(!PAT.on&&PAT.spawnCd<=0&&S.zoneT>needT){
+/* sistemas por zona */
+if(entOK('patrullador')){
+if(!PAT.on&&PAT.spawnCd<=0&&S.zoneT>5){
 patSpawn(false);
-if(!PAT.on)PAT.spawnCd=zk==='room'?8:16;
+if(!PAT.on)PAT.spawnCd=8;
 }
 }
 patTick(dt,t);
-if(ok&&canEntityAct('ladron',zk)){
-const needT=zk==='city'?4:10;
-if(!LAD.on&&LAD.cd<=0&&S.zoneT>needT)ladSpawn();
+if(entOK('ladron')){
+if(!LAD.on&&LAD.cd<=0&&S.zoneT>4)ladSpawn();
 }
 ladTick(dt,t);
-if(ok&&canEntityAct('acechador',zk)){
+if(entOK('acechador')){
 ACD.dwell+=dt;
-const needD=zk==='gray'?5:9;
-const rate=zk==='gray'?.09:.055;
-if(ACD.dwell>needD&&Math.random()<dt*rate)aceSpawn();
+/* [v3.10] tasa de aparición 0.16→0.09/s (≈1 cada 11 s tras los primeros
+   5 s): cruzar los Monolitos sigue siendo tenso pero sin condena (fallo 8) */
+if(ACD.dwell>5&&Math.random()<dt*.09)aceSpawn();
 }
 aceTick(dt,t);
-if(ok&&canEntityAct('corredor',zk)){
-const needT=zk==='red'?2.5:9;
-if(!COR.on&&COR.cd<=0&&S.zoneT>needT)corStart();
+if(entOK('corredor')){
+/* [v3.10] encuentro más pronto en la zona (fallo 12): 2.5 s de zona en
+   vez de 4, junto con el CD de 6-12 s tras cada pasada */
+if(!COR.on&&COR.cd<=0&&S.zoneT>2.5)corStart();
 }
 corTick(dt,t);
-if(ok&&canEntityAct('merodeador',zk))merSpawn();
+if(entOK('merodeador'))merSpawn();
 merTick(dt,t);
-if(canEntityAct('ella',zk))ellaTick(dt,t);
+if(entOK('ella'))ellaTick(dt,t);
 /* susurros de la entidad local */
 if(ok&&zk&&ZKEY[zk]&&Math.random()<dt*.02)whisper(ZKEY[zk]);
 mapTick(dt,t);
@@ -10706,9 +10778,7 @@ if(COR.cine)corCineCam();
 if(REG.on){panicRedEl.style.opacity=REG.red;blkEl.style.opacity=REG.blk;regFillEl.style.opacity=REG.fill||'0'}
 }
 return{
-tick:tick,onZone:onZone,syncVisuals:syncVisuals,reset:resetZent,
-anyBusy:function(){return !!(PAT.on||COR.cine);},
-canEntityAct:canEntityAct,
+tick:tick,onZone:onZone,syncVisuals:syncVisuals,
 /* [v3.10] true mientras dura la cinemática del Corredor: el jugador no
    se mueve (updatePlayer consulta esta función) */
 blockMove:function(){return !!COR.cine},
@@ -10725,11 +10795,66 @@ if(acePtr({clientX:x,clientY:y}))n++;
 return n;
 },
 FICHAS:FICHAS,SUSURROS:SUSURROS,
+/* [v3.12] QA: liberación por sueño, robo con origen y mapa */
+releaseState:function(){return DREAMRELEASE.state();},
+isHeld:function(ent){return DREAMRELEASE.isHeld(ent);},
+qaDreams:function(){return dreamItems.map(function(it){return{id:it.data.id,name:it.data.name,ent:it.data.ent,collected:!!it.collected,stolenBy:it.stolenBy||null,respawned:!!it.respawned,pos:[+it.grp.position.x.toFixed(1),+it.grp.position.z.toFixed(1)]};});},
+qaSteal:function(origin){
+const it=stealDream(origin);
+return it?{id:it.data.id,name:it.data.name,stolenBy:it.stolenBy,collected:it.collected,respawned:!!it.respawned}:null;
+},
+qaRespawnLast:function(){const ok=respawnLastDream();const it=lastStolenItem||lastDreamItem;return{ok:ok,id:it?it.data.id:null,stolenBy:it?(it.stolenBy||null):null};},
+qaSetDreamHeld:function(id,held){
+const it=dreamItems[clamp((id|0)-1,0,5)];
+if(!it)return false;
+it.collected=!!held;
+it.stolenBy=null;
+it.grp.visible=!held;it.mesh.visible=!held;it.glow.visible=!held;it.beam.visible=!held;
+dreamsCollected=dreamItems.filter(function(d){return d.collected}).length;
+elDreams.textContent='SUE\u00D1OS '+dreamsCollected+'/6';
+DREAMRELEASE.refresh();
+return true;
+},
+mapZones:function(){return MAPZ;},
+mapBridges:function(){return MAPBRI;},
+mapPoint:function(x,z){const p=w2m(x,z);return[+p[0].toFixed(1),+p[1].toFixed(1)];},
+mapDrawTexts:function(){
+const prev=window.__QATEXT;window.__QATEXT=[];
+mapDraw(mapAnimT);
+const out=window.__QATEXT;window.__QATEXT=prev;
+return out;
+},
+announceText:function(){return{main:elAnnMain.textContent,sub:elAnnSub.textContent};},
+/* [v3.12] QA de las rutas reales (no sólo de los helpers) */
+qaKill:function(who){return kill(who||'QA','prueba',false);},
+qaSetLives:function(n){lives=n|0;updateLivesHud();return lives;},
+qaZoneSet:function(zk){if(ZONES[zk]){S.zone=zk;S.zoneT=99;}return S.zone;},
+qaGating:function(zk){const out={};for(const e in ZNATIVE)out[e]=!!DREAMRELEASE.allowedHere(e,zk);out.ok=zoneAllows();return out;},
 ellaDizzy:function(){return ellaDizzy>0},
 map:function(){return{has:MAP.has,open:MAP.open,cd:MAP.cd,watch:MAP.watch,taken:MAP_ITEM.taken}},
 mapOpen:mapOpen,mapClose:function(){mapClose(false)},
 qaWatch:function(v){if(MAP.open&&typeof v==='number')MAP.watch=v;return MAP.watch},
-qaCd:function(kind,v){if(kind==='map')MAP.cd=v;if(kind==='flash')FLSH.cd=v;return true;},
+qaCd:function(kind,v){
+if(kind==='map')MAP.cd=v;
+if(kind==='flash')FLSH.cd=v;
+/* [v3.12] QA: adelanta los enfriamientos de las entidades locales */
+if(kind==='lad')LAD.cd=v;
+if(kind==='pat')PAT.spawnCd=v;
+if(kind==='cor')COR.cd=v;
+if(kind==='mer')MER.t=v;
+if(kind==='reg')REG.cd=v===undefined?20:v;
+return true;
+},
+/* [v3.12] QA: estado de las cinco entidades locales + ELLA (sin render) */
+qaEntState:function(){
+return{zone:S.zone,ok:zoneAllows(),
+pat:{on:PAT.on,t:Math.round(PAT.t)},lad:{on:LAD.on,state:LAD.state,cd:Math.round(LAD.cd)},
+par:parasites.filter(function(p){return p.alive}).length,
+cor:{on:COR.on,cd:Math.round(COR.cd)},mer:{on:MER.on},
+acd:{dwell:+ACD.dwell.toFixed(1),dmg:+ACD.dmg.toFixed(2)},
+ella:{active:girlState.active,mode:girlState.mode},
+release:DREAMRELEASE.state()};
+},
 entityPos:function(){
 const out={};
 if(PAT.on)out.pat=[+pat.g.position.x.toFixed(1),+pat.g.position.z.toFixed(1)];
@@ -10829,7 +10954,7 @@ const d=dreamsData[clamp(i-1,0,5)];
 pos.set(d.pos[0],Math.max(EYE,d.pos[1]+0.6),d.pos[2]+2.4);
 vel.set(0,0,0);respawnState='none';fadeBt=0;
 },
-broken:function(){noclipTo(0,-730,0);},
+broken:function(){noclipTo(0,BRK_SPAWN_Z,0);},
 collapse:function(){if(started)collapseAt=sagaSeconds()+0.5;},
 e404:function(){startErr404();},
 girl:function(){spawnGirl();},
@@ -10841,6 +10966,24 @@ solarHold:function(v){solarHold=v;},
 noComplete:function(){collapseAt=0;collapseT=-1;completed=false;overlayShown=false;entering4=false;},
 pulse:function(){firePulse(0.5,0.9,true);},
 post:function(n,v){if(compMat.uniforms[n])compMat.uniforms[n].value=v;},
+sky:function(){return{SKY:SKY,cur:skyCur,tgt:skyTgt};},
+pursuit:function(){return{active:!!TERROR.pursuit,done:!!TERROR.pursuitDone,phase:TERROR.pursuitPhase,obsJumping:!!TERROR.obsJumping};},
+fx:function(){const u=compMat.uniforms;return{noise:u.uNoise.value,aberr:u.uAberr.value,glitch:u.uGlitch.value,scan:u.uScan.value,vig:u.uVig.value,ghost:u.uGhost.value,dof:u.uDof.value,bloom:u.uBloom.value};},
+/* [v3.12] QA determinista: avanza el tick de entidades y la recogida sin
+   depender del render (mismo código de juego, mismo estado) */
+qaSteps:function(n,dt){
+n=n|0;dt=dt||0.05;
+for(let i=0;i<n;i++){
+simT+=dt;
+TRY:{
+checkZone();                       /* igual que updatePlayer: sincroniza S.zone */
+if(invulnT>0)invulnT-=dt;          /* igual que el bucle principal */
+if(window.ZENT404)window.ZENT404.tick(dt,simT);
+checkDreamPickups();
+}
+}
+return{zone:curZone,dreams:dreamsCollected,pos:[+pos.x.toFixed(1),+pos.z.toFixed(1)]};
+},
 dreams:function(){return dreamsCollected;},
 playerZ:function(){return pos.z;},
 playerY:function(){return pos.y;},
@@ -10848,6 +10991,28 @@ lives:function(){return lives;},
 perf:function(){return {fps:Math.round(fpsAvg),degraded:degraded};},
 entering:function(){return entering4;},
 testJumpscare:function(){spawnGirl();girlState.mode='hunt';girlState.x=pos.x-Math.sin(yaw)*8;girlState.z=pos.z-Math.cos(yaw)*8;startGirlDeath();},
+/* [v3.12] QA de la secuencia de muerte por interferencia */
+sigDeath:function(who){return sigDeathBegin(who||'QA');},
+sigState:function(){
+return{active:SIGD.active,phase:SIGD.phase,who:SIGD.who,
+overlay:!deathOverlay.classList.contains('hidden'),
+overlayOpacity:+(deathOverlay.style.opacity||''),
+blood:bloodEl.classList.contains('show'),
+staticOpacity:+(sigDeathEl&&sigDeathEl.style.opacity||0),
+noise:+compMat.uniforms.uNoise.value.toFixed(3),
+glitch:+compMat.uniforms.uGlitch.value.toFixed(3),
+scan:+compMat.uniforms.uScan.value.toFixed(3),
+fadeB:+fadeB.toFixed(2),fadeBt:+fadeBt.toFixed(2),
+lives:lives,dead:dead,started:started,state:state};
+},
+sigTick:function(dt){sigDeathTick(dt);return this.sigState();},
+worldInfo:function(){
+return{zones:MAPZ.length,bridges:MAPBRI.length,colliders:{cyl:colliders.cyl.length,box:colliders.box.length},
+islands:islands.length,ramps:ramps.length,dreams:dreamItems.length,
+zoneAtSpawn:zoneAt(0,60),zoneAtRoom:zoneAt(300,0),zoneAtCity:zoneAt(-300,0),
+zoneAtGray:zoneAt(0,300),zoneAtRed:zoneAt(0,-345),zoneAtLagoon:zoneAt(0,645),zoneAtBroken:zoneAt(0,-780),
+bridgeGround:[groundAt(176,0,5),groundAt(-149,0,5),groundAt(0,159,5),groundAt(0,-183,5),groundAt(0,492,5)]};
+},
 obsScare:function(){return TERROR.obsScare()?'obsjump-on':'obsjump-blocked';},
 lethalCatch:function(){return TERROR.qa.lethalCatch();},
 requeue:function(){return TERROR.requeuePursuit();},
@@ -10864,6 +11029,10 @@ terror:TERROR.qa,
 /* ===== [v3.9] hooks QA del rework ===== */
 v39:{
 map:function(){return window.ZENT404?ZENT404.map():null;},
+release:function(){return window.ZENT404?ZENT404.releaseState():null;},
+steal:function(o){return window.ZENT404?ZENT404.qaSteal(o):null;},
+respawnLast:function(){return window.ZENT404?ZENT404.qaRespawnLast():null;},
+setDreamHeld:function(i,h){return window.ZENT404?ZENT404.qaSetDreamHeld(i,h):false;},
 mapTake:function(){return ZENT404.mapTake();},
 mapOpen:function(){return ZENT404.mapOpen();},
 mapClose:function(){ZENT404.mapClose();return true;},
@@ -10905,29 +11074,27 @@ overlays:function(){return{blk:+document.getElementById('blk404').style.opacity|
 /* ===== [v3.10] hooks QA: caminar de verdad (input del joystick) ===== */
 qaSpd:function(v){window.__QA=window.__QA||{};window.__QA.spd=v;return true;},
 qaSetDreams:function(n){
-/* [QA] marca los primeros n sueños como recogidos con inventario real sincronizado */
+/* [QA] marca los primeros n sueños como recogidos (para continuar la
+   progresión en otra página sin teleportear): cada página posterior
+   CAMINA hasta el siguiente sueño y lo recoge de verdad. */
 n=clamp(n,0,5);
 for(let i=0;i<n;i++){
 const it=dreamItems[i];
-if(it&&!it.collected){it.collected=true;it.stolenBy=null;it.respawned=false;lastDreamItem=it;it.grp.visible=false;it.glow.visible=false;it.beam.visible=false;}
+if(it&&!it.collected){it.collected=true;it.grp.visible=false;it.glow.visible=false;it.beam.visible=false;}
 }
-return syncDreamsCount();
+dreamsCollected=Math.max(dreamsCollected,n);
+elDreams.textContent='SUEÑOS '+dreamsCollected+'/6';
+return dreamsCollected;
 },
-liberated:function(){return liberatedMap();},
-dreamsDetail:function(){return dreamItems.map(function(it,idx){return{i:idx+1,name:it.data.name,entity:it.data.entityKey,collected:it.collected,stolenBy:it.stolenBy,respawned:it.respawned,pos:[+it.grp.position.x.toFixed(1),+it.grp.position.y.toFixed(1),+it.grp.position.z.toFixed(1)]};});},
-deathSeq:function(){return{phase:DEATH_SEQ.phase,t:+DEATH_SEQ.t.toFixed(2),who:DEATH_SEQ.who,sub:DEATH_SEQ.sub,dead:dead,state:state,fadeB:+fadeB.toFixed(2)};},
-skyState:function(){return{zone:curZone,top:'#'+skyCur.top.getHexString(),hor:'#'+skyCur.hor.getHexString(),cl:'#'+skyCur.cl.getHexString(),hi:'#'+skyCur.hi.getHexString(),cover:+skyCur.cover.toFixed(2)};},
 qaJoy:function(x,y){joyX=clamp(x,-1,1);joyY=clamp(y,-1,1);joySprint=Math.hypot(joyX,joyY)>0.96;},
 qaFace:function(tx,tz){yaw=Math.atan2(-(tx-pos.x),-(tz-pos.z));},
 qaPos:function(){return[+pos.x.toFixed(1),+pos.y.toFixed(1),+pos.z.toFixed(1)];},
 qaGeo:function(){
 const bridges=[];
 scene.traverse(function(o){
-if(o.isMesh&&o.geometry&&o.geometry.type==='BoxGeometry'){
+if(o.isMesh&&o.userData&&o.userData.bridge){
 const p=o.position,g=o.geometry.parameters;
-if((o.userData&&o.userData.isBridge)||(g&&((g.width===141&&g.depth===10)||(g.width===82&&g.depth===10)||(g.width===10&&g.depth===96)||(g.width===10&&g.depth===145))&&Math.abs(g.height-1)<0.01)){
-bridges.push({x:+p.x.toFixed(1),z:+p.z.toFixed(1),w:g.width,d:g.depth,top:+(p.y+g.height/2).toFixed(3)});
-}
+bridges.push({x:+p.x.toFixed(0),z:+p.z.toFixed(0),top:+(p.y+g.height/2).toFixed(3),w:g.width,d:g.depth});
 }
 });
 return{bridges:bridges,
@@ -10935,6 +11102,26 @@ ground:function(x,z){return groundAt(x,z,5);},
 push:function(x,z){const c=collide(x,z,0);return[+c[0].toFixed(2),+c[1].toFixed(2)];},
 cylNear:function(x,z,r){let hit=null;for(const c of colliders.cyl){if(Math.hypot(c.x-x,c.z-z)<c.r+r){hit=[+c.x.toFixed(0),+c.z.toFixed(0),+c.r.toFixed(1)];break}}return hit;}
 };
+},
+qaStrays:function(margin){
+/* auditoría de geometría huérfana: objetos lejos de toda isla */
+const m=margin==null?30:margin, out=[], v=new THREE.Vector3();
+scene.traverse(function(o){
+if(!(o.isMesh||o.isSprite||o.isPoints))return;
+if(o.userData&&o.userData.wrSkip)return;
+o.getWorldPosition(v);
+if(v.y>95)return;
+let d=1e9;
+for(const is of islands){
+ let dd;
+ if(is.type==='r')dd=Math.max(Math.abs(v.x-(is.minX+is.maxX)/2)-(is.maxX-is.minX)/2,Math.abs(v.z-(is.minZ+is.maxZ)/2)-(is.maxZ-is.minZ)/2);
+ else dd=Math.hypot(v.x-is.x,v.z-is.z)-is.r;
+ if(dd<d)d=dd;
+}
+if(d>m)out.push({y:+v.y.toFixed(0),x:+v.x.toFixed(0),z:+v.z.toFixed(0),d:+d.toFixed(0)});
+});
+out.sort(function(a,b){return b.d-a.d;});
+return out.slice(0,40);
 }
 }
 };
